@@ -12,6 +12,7 @@ if ('addEventListener' in document && 'ontouchstart' in window) {
     targetElement.focus()
   }
   document.addEventListener('DOMContentLoaded', function () {
+    FastClick.attach(document.body)
   }, false)
 }
 
