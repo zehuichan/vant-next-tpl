@@ -18,12 +18,9 @@ if ('addEventListener' in document && 'ontouchstart' in window) {
 
 // init
 import {createApp} from 'vue'
-import Vant from 'vant'
-import 'vant/lib/index.css'
 import App from './App.vue'
 
-const app = createApp(App)
+import Vant from 'vant'
+import 'vant/lib/index.css'
 
-app.use(Vant)
-
-app.mount('#app')
+createApp(App).use(Vant).mount('#app')
