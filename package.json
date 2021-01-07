@@ -8,6 +8,7 @@
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",
+    "release": "npm run build:prod && release-it",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -29,13 +30,17 @@
     "babel-eslint": "^10.1.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "chalk": "^4.1.0",
+    "connect": "^3.7.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0-0",
     "less": "^4.0.0",
     "less-loader": "^7.2.1",
     "postcss-px-to-viewport": "^1.1.1",
     "regenerator-runtime": "^0.13.7",
-    "release-it": "^14.2.2"
+    "release-it": "^14.2.2",
+    "runjs": "^4.4.2",
+    "serve-static": "^1.14.1"
   },
   "eslintConfig": {
     "root": true,
