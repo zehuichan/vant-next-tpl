@@ -14,6 +14,8 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 
+import './permission'
+
 import FastClick from 'fastclick'
 
 if ('addEventListener' in document && 'ontouchstart' in window) {
@@ -24,6 +26,7 @@ if ('addEventListener' in document && 'ontouchstart' in window) {
     FastClick.attach(document.body)
   }, false)
 }
+
 const app = createApp(App)
 
 app.use(Vant)
