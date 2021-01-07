@@ -1,10 +1,19 @@
 // with polyfills
+import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
-// 兼容pc端手势插件
 import '@vant/touch-emulator'
 
-// 移动端click300ms延迟
+import {createApp} from 'vue'
+
+import Vant from 'vant'
+import 'vant/lib/index.css'
+import '@/assets/less/index.less'
+
+import App from './App.vue'
+import store from './store'
+import router from './router'
+
 import FastClick from 'fastclick'
 
 if ('addEventListener' in document && 'ontouchstart' in window) {
@@ -15,12 +24,9 @@ if ('addEventListener' in document && 'ontouchstart' in window) {
     FastClick.attach(document.body)
   }, false)
 }
+const app = createApp(App)
 
-// init
-import {createApp} from 'vue'
-import App from './App.vue'
-
-import Vant from 'vant'
-import 'vant/lib/index.css'
-
-createApp(App).use(Vant).mount('#app')
+app.use(Vant)
+app.use(store)
+app.use(router)
+app.mount('#app')
