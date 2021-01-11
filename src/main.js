@@ -29,6 +29,8 @@ if ('addEventListener' in document && 'ontouchstart' in window) {
 
 const app = createApp(App)
 
+console.log(app.version)
+
 app.use(Vant)
 app.use(store)
 app.use(router)
