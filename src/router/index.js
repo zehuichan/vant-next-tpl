@@ -11,6 +11,12 @@ const routes = [
     children: [
       // tabs
       {
+        path: '/components',
+        name: 'components',
+        component: () => import('@/views/tabs/components'),
+        meta: { title: '组件' }
+      },
+      {
         path: '/home',
         name: 'home',
         component: () => import('@/views/tabs/home'),

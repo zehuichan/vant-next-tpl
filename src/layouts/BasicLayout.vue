@@ -27,11 +27,19 @@
 </template>
 
 <script>
+  // vue
+  import {ref} from 'vue'
   // components
   import AppMain from './components/AppMain'
 
   export default {
     name: 'basic-layout',
+    setup() {
+      const { active } = ref()
+      return {
+        active
+      }
+    },
     components: {
       AppMain
     }

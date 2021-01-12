@@ -29,7 +29,8 @@ if ('addEventListener' in document && 'ontouchstart' in window) {
 
 const app = createApp(App)
 
-console.log(app.version)
+console.log('vue', `v${app.version}`)
+console.log('vant', `v${Vant.version}`)
 
 app.use(Vant)
 app.use(store)
