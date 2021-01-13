@@ -8,27 +8,13 @@
 </template>
 
 <script>
-  // vue
-  import {ref} from 'vue'
-  // hooks
-  import {useHeight} from '@/hooks/use-height'
-
   export default {
     name: 'AppMain',
     computed: {
       key() {
         return this.$route.path
-      },
-    },
-    setup() {
-      const root = ref()
-
-      console.log(root)
-      console.log(useHeight(root))
-      return {}
-    },
-    mounted() {
-    },
+      }
+    }
   }
 </script>
 
