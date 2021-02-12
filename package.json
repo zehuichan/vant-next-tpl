@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@vant/touch-emulator": "^1.2.0",
-    "@vant/use": "^1.0.2",
+    "@vant/use": "^1.0.4",
     "axios": "^0.21.1",
     "core-js": "^3.8.3",
     "fastclick": "^1.0.6",
