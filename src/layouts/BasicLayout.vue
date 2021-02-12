@@ -35,13 +35,13 @@
   export default {
     name: 'basic-layout',
     setup() {
-      const { active } = ref()
+      const {active} = ref()
       return {
         active
       }
     },
     components: {
-      AppMain
+      AppMain,
     }
   }
 </script>
