@@ -4,23 +4,23 @@
     <app-main/>
     <!--tabbar-->
     <van-tabbar route fixed placeholder>
-      <van-tabbar-item replace to="/home">
+      <van-tabbar-item replace to="/components">
         <template #icon>
-          <i class="iconfont icon-shouye"></i>
+          <v-svg-icon name="icon-all"/>
         </template>
-        首页
+        components
       </van-tabbar-item>
-      <van-tabbar-item replace to="/message">
+      <van-tabbar-item replace to="/api">
         <template #icon>
           <i class="iconfont icon-xiaoxi"></i>
         </template>
-        信息
+        api
       </van-tabbar-item>
-      <van-tabbar-item replace to="/mine">
+      <van-tabbar-item replace to="/about">
         <template #icon>
-          <i class="iconfont icon-wode"></i>
+          <i class="iconfont icon-xiaoxi"></i>
         </template>
-        我的
+        about
       </van-tabbar-item>
     </van-tabbar>
   </div>

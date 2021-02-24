@@ -4,7 +4,7 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 import BasicLayout from '@/layouts/BasicLayout'
 
 const routes = [
-  { path: '/', redirect: '/home' },
+  { path: '/', redirect: '/components' },
   {
     path: '/',
     component: BasicLayout,
@@ -14,25 +14,19 @@ const routes = [
         path: '/components',
         name: 'components',
         component: () => import('@/views/tabs/components'),
-        meta: { title: '组件' }
+        meta: { title: 'components' }
       },
       {
-        path: '/home',
-        name: 'home',
-        component: () => import('@/views/tabs/home'),
-        meta: { title: '首页' }
+        path: '/api',
+        name: 'api',
+        component: () => import('@/views/tabs/api'),
+        meta: { title: 'api' }
       },
       {
-        path: '/message',
-        name: 'message',
-        component: () => import('@/views/tabs/message'),
-        meta: { title: '消息' }
-      },
-      {
-        path: '/mine',
-        name: 'mine',
-        component: () => import('@/views/tabs/mine'),
-        meta: { title: '我的' }
+        path: '/about',
+        name: 'about',
+        component: () => import('@/views/tabs/about'),
+        meta: { title: 'about' }
       },
     ]
   }

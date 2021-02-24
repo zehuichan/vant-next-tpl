@@ -10,6 +10,8 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 import '@/assets/less/index.less'
 
+import '@/constants/vcomponents' // global components
+
 import App from './App.vue'
 import store from './store'
 import router from './router'
@@ -28,6 +30,11 @@ if ('addEventListener' in document && 'ontouchstart' in window) {
 }
 
 const app = createApp(App)
+
+if (process.env.NODE_ENV !== 'production') {
+  const vConsole = require('vconsole')
+  new vConsole()
+}
 
 console.log('vue', `v${app.version}`)
 console.log('vant', `v${Vant.version}`)
