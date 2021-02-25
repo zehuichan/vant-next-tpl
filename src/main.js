@@ -10,7 +10,7 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 import '@/assets/less/index.less'
 
-import '@/constants/vcomponents' // global components
+import VComponents from '@/constants/vcomponents' // global components
 
 import App from './App.vue'
 import store from './store'
@@ -40,6 +40,7 @@ console.log('vue', `v${app.version}`)
 console.log('vant', `v${Vant.version}`)
 
 app.use(Vant)
+app.use(VComponents)
 app.use(store)
 app.use(router)
 app.mount('#app')
