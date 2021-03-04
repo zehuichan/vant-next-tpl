@@ -6,10 +6,15 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 // NProgress Configuration
 NProgress.configure({ showSpinner: false })
+// hooks
+import useTitle from '@/hooks/use-title'
 
 router.beforeEach(async (to, from) => {
   // start progress bar
   NProgress.start()
+
+  // set page title
+  useTitle(to.meta.title)
 })
 
 router.afterEach(() => {
