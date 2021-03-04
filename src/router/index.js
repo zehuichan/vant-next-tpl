@@ -17,9 +17,9 @@ const routes = [
         meta: { title: 'components' }
       },
       {
-        path: '/api',
-        name: 'api',
-        component: () => import('@/views/tabs/api'),
+        path: '/hooks',
+        name: 'hooks',
+        component: () => import('@/views/tabs/hooks'),
         meta: { title: 'api' }
       },
       {

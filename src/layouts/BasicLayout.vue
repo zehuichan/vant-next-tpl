@@ -10,11 +10,11 @@
         </template>
         components
       </van-tabbar-item>
-      <van-tabbar-item replace to="/api">
+      <van-tabbar-item replace to="/hooks">
         <template #icon>
           <v-svg-icon name="icon-vehivles"/>
         </template>
-        api
+        hooks
       </van-tabbar-item>
       <van-tabbar-item replace to="/about">
         <template #icon>
