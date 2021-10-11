@@ -1,12 +1,31 @@
-import { defineConfig, loadEnv } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { loadEnv } from 'vite'
+import { createVitePlugins } from './build'
+import { wrapperEnv } from './build/utils'
+import path from 'path'
+
+function resolve(dir) {
+  return path.resolve(__dirname, dir)
+}
 
 // https://vitejs.dev/config/
-export default defineConfig((command, mode) => {
+export default ({ command, mode }) => {
   const root = process.cwd()
+
   const env = loadEnv(mode, root)
-  console.log(root, env)
+
+  const viteEnv = wrapperEnv(env)
+
+  const isBuild = command === 'build'
+
   return {
-    plugins: [vue()]
+    define: {},
+    resolve: {
+      alias: {
+        '@': resolve('src')
+      },
+      dedupe: ['vue'],
+      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
+    },
+    plugins: createVitePlugins(viteEnv, isBuild),
   }
-})
+}

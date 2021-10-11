@@ -2,16 +2,41 @@
   "name": "vant-next-tpl",
   "version": "0.0.0",
   "scripts": {
+    "start": "npm run dev",
     "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "build:prod": "vite build",
+    "build:stage": "vite build --mode staging",
+    "serve": "vite preview",
+    "release": "release-it && git push --follow-tags origin master"
   },
   "dependencies": {
-    "vue": "^3.2.6"
+    "axios": "^0.22.0",
+    "mitt": "^3.0.0",
+    "vant": "^3.2.5",
+    "vue": "^3.2.6",
+    "vue-router": "^4.0.11",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.6.0",
+    "@vitejs/plugin-vue-jsx": "^1.2.0",
     "@vue/compiler-sfc": "^3.2.6",
-    "vite": "^2.5.2"
+    "autoprefixer": "^10.3.7",
+    "less": "^4.1.2",
+    "postcss": "^8.3.9",
+    "postcss-px-to-viewport": "^1.1.1",
+    "vite": "^2.5.2",
+    "vite-plugin-compression": "^0.3.5",
+    "vite-plugin-html": "^2.1.1"
+  },
+  "release-it": {
+    "npm": {
+      "publish": false
+    },
+    "git": {
+      "push": false,
+      "tagName": "v${version}",
+      "commitMessage": "chore: release v${version}"
+    }
   }
 }
