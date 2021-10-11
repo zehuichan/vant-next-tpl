@@ -7,7 +7,7 @@
       <van-tabbar-item replace to="/home">
         <span>商城</span>
         <template #icon="props">
-          <v-svg-icon name="icon-agriculture"/>
+          <v-svg-icon name="icon-feed-logo"/>
         </template>
       </van-tabbar-item>
       <van-tabbar-item replace to="/circle">
@@ -42,7 +42,6 @@
 // components
 import AppMain from './components/AppMain'
 import VSvgIcon from '@/components/VSvgIcon'
-
 </script>
 
 <style lang="less">
