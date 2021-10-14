@@ -1,6 +1,6 @@
 <template>
   <van-cell-group>
-    <van-cell title="Mode">
+    <van-cell title="模式">
       <template #value>
         <mode-picker/>
       </template>
