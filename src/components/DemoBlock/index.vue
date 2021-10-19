@@ -1,0 +1,50 @@
+<template>
+  <div class="demo-block">
+    <div v-if="title" class="demo-block__title">{{ title }}</div>
+    <div v-if="card" class="demo-block__card">
+      <slot/>
+    </div>
+    <slot v-else/>
+  </div>
+</template>
+
+<script setup>
+defineProps({
+  card: Boolean,
+  title: String,
+})
+</script>
+
+<style lang="less">
+.demo-block {
+  &__title {
+    margin: 0;
+    padding: 32px 16px 16px;
+    color: var(--vant-FG-0);
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  &__card {
+    margin: 12px 12px 0;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  &__title + &__card {
+    margin-top: 0;
+  }
+
+  &:first-of-type {
+    .demo-block__title {
+      padding-top: 20px;
+    }
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.517;
+  }
+}
+</style>
