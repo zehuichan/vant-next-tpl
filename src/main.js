@@ -7,8 +7,9 @@ import './theme/dark.less'
 import vant from 'vant'
 import components from './components'
 
-import store from './store'
-import router from './router'
+// import store from './store' // for vuex
+import { setupStore } from './store'
+import { setupRouter } from './router'
 
 import './permission'
 
@@ -16,6 +17,7 @@ const app = createApp(App)
 
 app.use(vant)
 app.use(components)
-app.use(store)
-app.use(router)
+// app.use(store) // for vuex
+setupStore(app)
+setupRouter(app)
 app.mount('#app')

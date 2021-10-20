@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.22.0",
     "mitt": "^3.0.0",
+    "pinia": "^2.0.0-rc.14",
     "vant": "^3.2.5",
     "vue": "^3.2.6",
     "vue-router": "^4.0.11",
