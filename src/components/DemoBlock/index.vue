@@ -8,6 +8,12 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'DemoBlock'
+}
+</script>
+
 <script setup>
 defineProps({
   card: Boolean,

@@ -5,6 +5,12 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: 'ModePicker'
+}
+</script>
+
 <script setup>
 import { computed } from 'vue'
 // vuex
