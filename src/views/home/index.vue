@@ -12,7 +12,7 @@
     </van-cell-group>
   </demo-block>
   <demo-block title="只设置 value">
-    <van-cell value="内容"/>
+    <van-cell value="内容" clickable/>
   </demo-block>
 </template>
 
