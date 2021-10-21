@@ -16,6 +16,6 @@ export function setupRouterGuard(router) {
   })
 
   router.onError((error) => {
-    console.log(error)
+    console.log(error, '路由错误')
   })
 }
