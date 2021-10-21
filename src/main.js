@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
-//
+// global css
 import './assets/less/index.less'
 import './theme/dark.less'
 
@@ -20,7 +20,6 @@ function bootstrap() {
   setupStore(app)
   setupRouter(app)
   setupRouterGuard(router)
-  setupRouter(app)
   app.mount('#app')
 }
 
