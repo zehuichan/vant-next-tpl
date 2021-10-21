@@ -8,8 +8,6 @@ const RouteView = {
   render: (h) => h('router-view')
 }
 
-const WHITE_NAME_LIST = []
-
 const routes = [
   { path: '/', redirect: '/home' },
   {
@@ -45,21 +43,10 @@ const routes = [
   }
 ]
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
-
-
-// reset router
-export function resetRouter() {
-  router.getRoutes().forEach((route) => {
-    const { name } = route
-    if (name && !WHITE_NAME_LIST.includes(name)) {
-      router.hasRoute(name) && router.removeRoute(name)
-    }
-  })
-}
 
 // config router
 export function setupRouter(app) {

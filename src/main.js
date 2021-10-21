@@ -1,23 +1,26 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
-import 'vant/lib/index.css'
+// global css
 import './assets/less/index.less'
 import './theme/dark.less'
-import vant from 'vant'
-import components from './components'
 
-// import store from './store' // for vuex
+import { setupVant } from './plugins/vant'
+import { setupGlobComponents } from './components'
+
 import { setupStore } from './store'
-import { setupRouter } from './router'
+import { router, setupRouter } from './router'
+import { setupRouterGuard } from './router/guard'
 
-import './permission'
+function bootstrap() {
+  const app = createApp(App)
 
-const app = createApp(App)
+  setupVant(app)
+  setupGlobComponents(app)
+  setupStore(app)
+  setupRouter(app)
+  setupRouterGuard(router)
+  app.mount('#app')
+}
 
-app.use(vant)
-app.use(components)
-// app.use(store) // for vuex
-setupStore(app)
-setupRouter(app)
-app.mount('#app')
+bootstrap()
