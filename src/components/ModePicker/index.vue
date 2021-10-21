@@ -13,15 +13,14 @@ export default {
 
 <script setup>
 import { computed } from 'vue'
-// vuex
-import { useStore } from 'vuex'
+import { useAppStore } from '@/store/modules/app'
 // components
 import VSvgIcon from '@/components/VSvgIcon'
 
-const store = useStore()
-const theme = computed(() => store.getters.theme)
+const appStore = useAppStore()
+const theme = computed(() => appStore.theme)
 const toggle = (theme) => {
-  store.dispatch('app/setThemeMode', theme)
+  appStore.setThemeMode(theme)
 }
 </script>
 
