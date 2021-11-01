@@ -6,6 +6,8 @@ base vue3 + router@4 + vuex@4 + vant@next
 
 also support pinia
 
+default store for pinia
+
 ## Project setup
 
 ```
