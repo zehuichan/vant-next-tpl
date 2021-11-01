@@ -1,17 +1,13 @@
-const state = {
-  avatar: '',
-  cellphone: '',
-  username: '',
-  github: '',
-}
+import { defineStore } from 'pinia'
 
-const mutations = {}
-
-const actions = {}
-
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
-}
+export const useUserStore = defineStore({
+  id: 'user',
+  state: () => ({
+    avatar: '',
+    cellphone: '',
+    username: '',
+    github: '',
+  }),
+  getters: {},
+  actions: {}
+})

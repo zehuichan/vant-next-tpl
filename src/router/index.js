@@ -43,9 +43,12 @@ const routes = [
   }
 ]
 
+// init router
 export const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
+  strict: true,
+  scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 
 // config router

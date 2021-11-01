@@ -1,14 +1,15 @@
-import { store } from '@/store'
+import { useAppStore } from '@/store/modules/app'
 import { useTitle } from '@/hooks/useTitle'
 
-
 export function setupRouterGuard(router) {
+  const appStore = useAppStore()
+
   router.beforeEach(async (to, from) => {
 
     // set page title
     document.title = useTitle(to.meta.title)
 
-    await store.dispatch('app/setThemeMode', store.getters.theme)
+    appStore.setThemeMode(appStore.theme)
   })
 
   router.afterEach((to, from) => {
