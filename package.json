@@ -15,6 +15,7 @@
     "pinia": "^2.0.0-rc.15",
     "vant": "^3.2.6",
     "vue": "^3.2.20",
+    "vue-i18n": "^9.2.0-beta.17",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
