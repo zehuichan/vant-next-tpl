@@ -9,7 +9,7 @@ import { setupGlobComponents } from './components'
 import { setupStore } from './store'
 import { router, setupRouter } from './router'
 import { setupRouterGuard } from './router/guard'
-import { setupI18n } from '@/lang'
+import { setupI18n } from './lang'
 
 async function bootstrap() {
   const app = createApp(App)
