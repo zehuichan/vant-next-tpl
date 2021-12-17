@@ -1,8 +1,17 @@
 import path from 'path'
+import pkg from './package.json'
 import { loadEnv } from 'vite'
 import { wrapperEnv } from './build/utils'
 import { createVitePlugins } from './build/plugin'
 import { createProxy } from './build/proxy'
+
+const { name, version } = pkg
+
+const __APP_INFO__ = {
+  name,
+  version,
+  lastBuildTime: new Date(),
+}
 
 function resolve(dir) {
   return path.resolve(__dirname, dir)
@@ -21,7 +30,9 @@ export default ({ command, mode }) => {
   const isBuild = command === 'build'
 
   return {
-    define: {},
+    define: {
+      __APP_INFO__: JSON.stringify(__APP_INFO__),
+    },
     plugins: createVitePlugins(viteEnv, isBuild),
     resolve: {
       alias: {
@@ -29,6 +40,13 @@ export default ({ command, mode }) => {
       },
       dedupe: ['vue'],
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
+    },
+    css: {
+      preprocessorOptions: {
+        less: {
+          additionalData: `@import "@/assets/less/var.less";`,
+        }
+      }
     },
     server: {
       host: true,

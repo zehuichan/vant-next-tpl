@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { store } from '..'
 import { addClass, removeClass } from '@/utils/dom'
 import cache from '@/utils/cache'
 
@@ -17,3 +18,7 @@ export const useAppStore = defineStore({
     }
   },
 })
+
+export function useAppStoreWithInstall() {
+  return useAppStore(store)
+}

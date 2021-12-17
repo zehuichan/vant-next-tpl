@@ -24,6 +24,7 @@
     "@vue/compiler-sfc": "^3.2.20",
     "autoprefixer": "^10.3.7",
     "less": "^4.1.2",
+    "plop": "^3.0.5",
     "postcss-px-to-viewport": "^1.1.1",
     "release-it": "^14.11.6",
     "unplugin-vue-components": "^0.16.0",
