@@ -1,16 +1,10 @@
-{{#if state}}
-const state = {}
-{{/if}}
+import { defineStore } from 'pinia'
 
-{{#if mutations}}
-const mutations = {}
-{{/if}}
-
-{{#if actions}}
-const actions = {}
-{{/if}}
-
-export default {
-  namespaced: true,
-  {{options}}
-}
+export const use{{pascalCase name}}Store = defineStore({
+  id: '{{name}}',
+  state: () => {
+    return {}
+  },
+  getters: {},
+  actions: {}
+})

@@ -1,5 +1,5 @@
 import { useAppStore } from '@/store/modules/app'
-import { useTitle } from '@/hooks/useTitle'
+import { useTitle } from '@/hooks'
 
 export function setupRouterGuard(router) {
   const appStore = useAppStore()

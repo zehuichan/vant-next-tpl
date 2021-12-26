@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia'
-import { store } from '..'
 import { addClass, removeClass } from '@/utils/dom'
 import cache from '@/utils/cache'
 
 export const useAppStore = defineStore({
   id: 'app',
-  state: () => ({
-    theme: cache.getItem('theme') || 'light'
-  }),
+  state: () => {
+    return {
+      theme: cache.getItem('theme') || 'light'
+    }
+  },
   getters: {},
   actions: {
     setThemeMode(theme) {
@@ -18,7 +19,3 @@ export const useAppStore = defineStore({
     }
   },
 })
-
-export function useAppStoreWithInstall() {
-  return useAppStore(store)
-}
