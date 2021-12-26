@@ -17,7 +17,10 @@
 </template>
 
 <script setup>
-
+let a = null
+if (a.length > 1) {
+  // ...
+}
 </script>
 
 <style lang="less">
