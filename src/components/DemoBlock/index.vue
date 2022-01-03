@@ -9,15 +9,14 @@
 </template>
 
 <script>
-export default {
-  name: 'DemoBlock'
-}
-</script>
+import { defineComponent } from 'vue'
 
-<script setup>
-defineProps({
-  card: Boolean,
-  title: String,
+export default defineComponent({
+  name: 'DemoBlock',
+  props: {
+    card: Boolean,
+    title: String,
+  }
 })
 </script>
 

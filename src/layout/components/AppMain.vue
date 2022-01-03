@@ -1,18 +1,28 @@
 <template>
   <div class="app-main">
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive" :key="key"/>
+      <router-view v-if="route.meta.keepAlive" :key="key"/>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive" :key="key"/>
+    <router-view v-if="!route.meta.keepAlive" :key="key"/>
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script>
+import { defineComponent, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-const route = useRoute()
-const key = computed(() => route.path)
+export default defineComponent({
+  name: 'AppMain',
+  setup() {
+    const route = useRoute()
+    const key = computed(() => route.path)
+
+    return {
+      route,
+      key
+    }
+  },
+})
 </script>
 
 <style lang="less">

@@ -1,12 +1,15 @@
 <template>
   <div class="center">
     <div class="user-info">
-      <div class="avatar">
-        <van-image :src="userStore.avatar" width="100%" height="100%"/>
-      </div>
-      <div class="user">
-        <div class="name">{{ userStore.username }}</div>
-        <div class="text">{{ userStore.github }}</div>
+      <div>ABOUT</div>
+      <div class="user-info__bottom">
+        <div class="user">
+          <div class="name">{{ userStore.username }}</div>
+          <div class="text">{{ userStore.github }}</div>
+        </div>
+        <div class="avatar">
+          <van-image :src="userStore.avatar" width="100%" height="100%"/>
+        </div>
       </div>
     </div>
     <van-cell-group title="info" inset>
@@ -45,9 +48,21 @@ const value = ref('')
 .center {
 
   .user-info {
+    position: relative;
     display: flex;
-    background-color: #fff;
+    flex-direction: column;
+    justify-content: space-between;
     padding: 16px;
+    height: 268px;
+    background: url("./brand.jpg") 0 0 no-repeat;
+    background-size: 100% 268px;
+    color: @white;
+  }
+
+  .user-info__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .avatar {
@@ -60,15 +75,13 @@ const value = ref('')
   }
 
   .user {
-    margin-left: 10px;
 
     .name {
-      font-size: @font16;
+      font-size: @font18;
       font-weight: @fw-600;
     }
 
     .text {
-      color: @text-l;
     }
   }
 }

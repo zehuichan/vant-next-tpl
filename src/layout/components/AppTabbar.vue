@@ -34,8 +34,14 @@
 </template>
 
 <script>
-import VSvgIcon from '@/components/VSvgIcon'
-export default {
-  name: 'AppTabbar'
-}
+import { defineComponent } from 'vue'
+// components
+import { VSvgIcon } from '@/components'
+
+export default defineComponent({
+  name: 'AppTabbar',
+  components: {
+    VSvgIcon
+  }
+})
 </script>

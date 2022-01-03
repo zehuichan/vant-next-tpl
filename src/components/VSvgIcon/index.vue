@@ -5,25 +5,29 @@
 </template>
 
 <script>
-export default {
-  name: 'VSvgIcon'
-}
-</script>
+import { defineComponent } from 'vue'
 
-<script setup>
-defineProps({
-  name: String,
-  classPrefix: String,
-  size: [String, Number]
+export default defineComponent({
+  name: 'VSvgIcon',
+  props: {
+    name: String,
+    classPrefix: String,
+    size: [String, Number]
+  },
+  setup() {
+    const addUnit = (value) => {
+      return isNumeric(value) ? `${value}px` : String(value)
+    }
+
+    const isNumeric = (val) => {
+      return typeof val === 'number' || /^\d+(\.\d+)?$/.test(val)
+    }
+
+    return {
+      addUnit
+    }
+  }
 })
-
-function addUnit(value) {
-  return isNumeric(value) ? `${value}px` : String(value)
-}
-
-function isNumeric(val) {
-  return typeof val === 'number' || /^\d+(\.\d+)?$/.test(val)
-}
 </script>
 
 <style>

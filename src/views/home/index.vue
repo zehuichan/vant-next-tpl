@@ -17,10 +17,8 @@
 </template>
 
 <script setup>
-let a = null
-if (a.length > 1) {
-  // ...
-}
+// components
+import { DemoBlock } from '@/components'
 </script>
 
 <style lang="less">

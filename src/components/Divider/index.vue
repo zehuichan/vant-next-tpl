@@ -10,7 +10,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   name: 'Divider',
   props: {
     dashed: {
@@ -30,12 +32,11 @@ export default {
       return `divider-${this.type}`
     }
   }
-}
+})
 </script>
 
 <style lang="less">
 .divider {
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -44,7 +45,6 @@ export default {
   font-variant: tabular-nums;
   line-height: 1.5715;
   list-style: none;
-  -webkit-font-feature-settings: 'tnum';
   font-feature-settings: 'tnum';
   background: #f0f0f0;
 }

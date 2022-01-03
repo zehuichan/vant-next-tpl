@@ -7,29 +7,36 @@
 </template>
 
 <script>
+import { defineComponent, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 // settings
 import defaultSettings from '@/settings'
 
-export default {
+export default defineComponent({
   name: 'AppNavBar',
   inheritAttrs: false,
-  computed: {
-    attrs() {
-      return Object.assign(
-        {},
-        { ...defaultSettings.navbar },
-        this.$route.meta.navbar.showTitle && { title: this.$route.meta.title },
-        !this.$route.meta.navbar.showTitle && { leftText: this.$route.meta.title },
-        { ...this.$route.meta.navbar }
-      )
-    },
-  },
-  methods: {
-    onClickLeft() {
-      this.$router.go(-1)
+  setup() {
+    const router = useRouter()
+    const route = useRoute()
+
+    const attrs = computed(() => Object.assign(
+      {},
+      { ...defaultSettings.navbar },
+      route.meta.navbar?.showTitle && { title: route.meta.title },
+      !route.meta.navbar?.showTitle && { leftText: route.meta.title },
+      { ...route.meta.navbar }
+    ))
+
+    const onClickLeft = () => {
+      router.back()
     }
-  }
-}
+
+    return {
+      attrs,
+      onClickLeft
+    }
+  },
+})
 </script>
 
 <style lang="less">

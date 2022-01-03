@@ -28,6 +28,10 @@ const routes = [
         component: () => import('@/views/home'),
         meta: {
           title: '首页',
+          navbar: {
+            showTitle: false,
+            leftArrow: false,
+          },
           tabbar: true,
         },
       },
@@ -36,6 +40,10 @@ const routes = [
         component: () => import('@/views/circle'),
         meta: {
           title: '逛逛',
+          navbar: {
+            showTitle: false,
+            leftArrow: false,
+          },
           tabbar: true,
         },
       },
@@ -44,6 +52,10 @@ const routes = [
         component: () => import('@/views/message'),
         meta: {
           title: '消息',
+          navbar: {
+            showTitle: false,
+            leftArrow: false,
+          },
           tabbar: true,
         },
       },
@@ -52,6 +64,10 @@ const routes = [
         component: () => import('@/views/cart'),
         meta: {
           title: '购物车',
+          navbar: {
+            showTitle: false,
+            leftArrow: false,
+          },
           tabbar: true,
         },
       },
@@ -59,7 +75,7 @@ const routes = [
         path: '/center',
         component: () => import('@/views/center'),
         meta: {
-          title: '我的',
+          title: '关于我',
           tabbar: true,
         },
       },
@@ -70,7 +86,7 @@ const routes = [
 // init router
 export const router = createRouter({
   history: createWebHashHistory(),
-  routes,
+  routes: routes,
   strict: true,
   // scrollBehavior: () => ({ left: 0, top: 0 }),
 })

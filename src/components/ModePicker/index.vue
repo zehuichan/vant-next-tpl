@@ -6,22 +6,29 @@
 </template>
 
 <script>
-export default {
-  name: 'ModePicker'
-}
-</script>
-
-<script setup>
-import { computed } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 // components
-import VSvgIcon from '@/components/VSvgIcon'
+import { VSvgIcon } from '@/components'
 
-const appStore = useAppStore()
-const theme = computed(() => appStore.theme)
-const toggle = (theme) => {
-  appStore.setThemeMode(theme)
-}
+export default defineComponent({
+  name: 'ModePicker',
+  setup() {
+    const appStore = useAppStore()
+    const theme = computed(() => appStore.theme)
+    const toggle = (theme) => {
+      appStore.setThemeMode(theme)
+    }
+
+    return {
+      theme,
+      toggle
+    }
+  },
+  components: {
+    VSvgIcon
+  }
+})
 </script>
 
 <style lang="less">
