@@ -4,11 +4,11 @@
       <div>ABOUT</div>
       <div class="user-info__bottom">
         <div class="user">
-          <div class="name">{{ userStore.username }}</div>
-          <div class="text">{{ userStore.github }}</div>
+          <div class="name">{{ userinfo.username }}</div>
+          <div class="text">{{ userinfo.github }}</div>
         </div>
         <div class="avatar">
-          <van-image :src="userStore.avatar" width="100%" height="100%"/>
+          <van-image :src="userinfo.avatar" width="100%" height="100%"/>
         </div>
       </div>
     </div>
@@ -24,9 +24,9 @@
       </van-cell>
     </van-cell-group>
     <van-cell-group title="about" inset>
-      <van-field :value="appInfo.name" label="name" readonly/>
-      <van-field :value="appInfo.version" label="version" readonly/>
-      <van-field :value="appInfo.lastBuildTime" label="lastBuildTime" readonly/>
+      <van-field :modelValue="appInfo.name" label="name" readonly/>
+      <van-field :modelValue="appInfo.version" label="version" readonly/>
+      <van-field :modelValue="appInfo.lastBuildTime" label="lastBuildTime" readonly/>
     </van-cell-group>
   </div>
 </template>
@@ -35,11 +35,13 @@
 // vue
 import { ref } from 'vue'
 // store
+import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/modules/user'
 // components
 import { ModePicker } from '@/components'
 
 const userStore = useUserStore()
+const { userinfo } = storeToRefs(userStore)
 const appInfo = __APP_INFO__
 const value = ref('')
 </script>
@@ -68,6 +70,7 @@ const value = ref('')
   .avatar {
     width: 54px;
     height: 54px;
+    box-shadow: @shadow-1-down;
 
     img {
       border-radius: 4px;
