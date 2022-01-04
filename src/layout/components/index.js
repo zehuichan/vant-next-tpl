@@ -1,3 +1,3 @@
-export { default as AppNavBar } from './AppNavBar'
-export { default as AppMain } from './AppMain'
-export { default as AppTabbar } from './AppTabbar'
+export { default as AppNavBar } from './AppNavBar.vue'
+export { default as AppMain } from './AppMain.vue'
+export { default as AppTabbar } from './AppTabbar.vue'

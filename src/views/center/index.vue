@@ -37,7 +37,7 @@ import { ref } from 'vue'
 // store
 import { useUserStore } from '@/store/modules/user'
 // components
-import ModePicker from '@/components/ModePicker'
+import { ModePicker } from '@/components'
 
 const userStore = useUserStore()
 const appInfo = __APP_INFO__

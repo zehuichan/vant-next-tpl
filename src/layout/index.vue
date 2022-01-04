@@ -8,12 +8,29 @@
   </div>
 </template>
 
-<script setup>
+<script>
+import { defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
 // components
 import { AppMain, AppNavBar, AppTabbar } from './components'
 
 const route = useRoute()
+
+export default defineComponent({
+  name: 'Layout',
+  setup() {
+    const route = useRoute()
+
+    return {
+      route
+    }
+  },
+  components: {
+    AppMain,
+    AppNavBar,
+    AppTabbar
+  }
+})
 </script>
 
 <style lang="less">

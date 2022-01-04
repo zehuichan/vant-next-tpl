@@ -10,7 +10,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
  */
 
 // basic components
-import Layout from '@/layout'
+import Layout from '@/layout/index.vue'
 
 const RouteView = {
   name: 'RouteView',
@@ -25,7 +25,7 @@ const routes = [
     children: [
       {
         path: '/home',
-        component: () => import('@/views/home'),
+        component: () => import('@/views/home/index.vue'),
         meta: {
           title: '首页',
           navbar: {
@@ -37,7 +37,7 @@ const routes = [
       },
       {
         path: '/circle',
-        component: () => import('@/views/circle'),
+        component: () => import('@/views/circle/index.vue'),
         meta: {
           title: '逛逛',
           navbar: {
@@ -49,7 +49,7 @@ const routes = [
       },
       {
         path: '/message',
-        component: () => import('@/views/message'),
+        component: () => import('@/views/message/index.vue'),
         meta: {
           title: '消息',
           navbar: {
@@ -61,7 +61,7 @@ const routes = [
       },
       {
         path: '/cart',
-        component: () => import('@/views/cart'),
+        component: () => import('@/views/cart/index.vue'),
         meta: {
           title: '购物车',
           navbar: {
@@ -73,7 +73,7 @@ const routes = [
       },
       {
         path: '/center',
-        component: () => import('@/views/center'),
+        component: () => import('@/views/center/index.vue'),
         meta: {
           title: '关于我',
           tabbar: true,
