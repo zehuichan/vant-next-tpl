@@ -1,5 +1,5 @@
 <template>
-  <van-tabbar route placeholder>
+  <van-tabbar class="v-tabbar" route :fixed="false" placeholder safe-area-inset-bottom>
     <van-tabbar-item replace to="/home">
       <span>商城</span>
       <template #icon="props">

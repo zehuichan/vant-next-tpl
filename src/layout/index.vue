@@ -34,8 +34,13 @@ export default defineComponent({
 </script>
 
 <style lang="less">
+.basic-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .app-wrapper {
   position: relative;
-  height: 100%;
 }
 </style>

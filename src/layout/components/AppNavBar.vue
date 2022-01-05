@@ -1,7 +1,8 @@
 <template>
   <van-nav-bar
-    class="v-nav-bar"
+    :class="['v-nav-bar', classname]"
     v-bind="attrs"
+    :fixed="false"
     @click-left="onClickLeft"
   />
 </template>
@@ -27,12 +28,15 @@ export default defineComponent({
       { ...route.meta.navbar }
     ))
 
+    const classname = computed(() => route.meta.navbar?.classname)
+
     const onClickLeft = () => {
       router.back()
     }
 
     return {
       attrs,
+      classname,
       onClickLeft
     }
   },
