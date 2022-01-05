@@ -515,7 +515,7 @@ const routes = [
     children: [
       {
         path: "/home",
-        component: () => __vitePreload(() => import("./index.fa295721.js"), true ? ["assets/index.fa295721.js","assets/vendor.83a4d0dd.js","assets/vendor.1d99200a.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.edf25f56.js"), true ? ["assets/index.edf25f56.js","assets/vendor.83a4d0dd.js","assets/vendor.1d99200a.css"] : void 0),
         meta: {
           title: "\u9996\u9875",
           navbar: {
@@ -527,7 +527,7 @@ const routes = [
       },
       {
         path: "/circle",
-        component: () => __vitePreload(() => import("./index.9473163b.js"), true ? ["assets/index.9473163b.js","assets/vendor.83a4d0dd.js","assets/vendor.1d99200a.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.b15fdbb7.js"), true ? ["assets/index.b15fdbb7.js","assets/vendor.83a4d0dd.js","assets/vendor.1d99200a.css"] : void 0),
         meta: {
           title: "\u901B\u901B",
           navbar: {
@@ -539,7 +539,7 @@ const routes = [
       },
       {
         path: "/message",
-        component: () => __vitePreload(() => import("./index.fe3b5910.js"), true ? ["assets/index.fe3b5910.js","assets/vendor.83a4d0dd.js","assets/vendor.1d99200a.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.84387be1.js"), true ? ["assets/index.84387be1.js","assets/vendor.83a4d0dd.js","assets/vendor.1d99200a.css"] : void 0),
         meta: {
           title: "\u6D88\u606F",
           navbar: {
@@ -563,7 +563,7 @@ const routes = [
       },
       {
         path: "/center",
-        component: () => __vitePreload(() => import("./index.53fc6067.js"), true ? ["assets/index.53fc6067.js","assets/index.f427bcea.css","assets/vendor.83a4d0dd.js","assets/vendor.1d99200a.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.1069ba47.js"), true ? ["assets/index.1069ba47.js","assets/index.f427bcea.css","assets/vendor.83a4d0dd.js","assets/vendor.1d99200a.css"] : void 0),
         meta: {
           title: "\u5173\u4E8E\u6211",
           tabbar: true

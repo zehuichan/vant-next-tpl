@@ -1,5 +1,5 @@
 import { A as storeToRefs, x as ref, f as createElementBlock, h as createBaseVNode, B as toDisplayString, D as unref, j as createVNode, w as withCtx, I as Image, E as CellGroup, o as openBlock, F as Field, G as Cell } from "./vendor.83a4d0dd.js";
-import { u as useUserStore, M as ModePicker } from "./index.93d143a3.js";
+import { u as useUserStore, M as ModePicker } from "./index.d1432ae4.js";
 var index$3 = "";
 var index$2 = "";
 var index$1 = "";
@@ -17,7 +17,7 @@ const _sfc_main = {
   setup(__props) {
     const userStore = useUserStore();
     const { userinfo } = storeToRefs(userStore);
-    const appInfo = { "name": "vant-next-tpl", "version": "0.0.0", "lastBuildTime": "2022-01-05 11:28:11" };
+    const appInfo = { "name": "vant-next-tpl", "version": "0.0.0", "lastBuildTime": "2022-01-05 11:29:34" };
     const value = ref("");
     return (_ctx, _cache) => {
       const _component_van_image = Image;
