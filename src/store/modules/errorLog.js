@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { store } from '../'
 
 export const useErrorLogStore = defineStore({
   id: 'errorLog',
@@ -16,3 +17,7 @@ export const useErrorLogStore = defineStore({
     }
   }
 })
+
+export function useErrorLogStoreWithOut() {
+  return useErrorLogStore(store)
+}

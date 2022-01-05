@@ -7,7 +7,7 @@ import settings from '../settings'
 const { errorLog: needErrorLog } = settings
 
 function checkNeed() {
-  const env = process.env.NODE_ENV
+  const env = import.meta.env.MODE
   if (is(needErrorLog, 'String')) {
     return env === needErrorLog
   }
@@ -19,14 +19,16 @@ function checkNeed() {
 
 export function setupErrorLog(app) {
   if (checkNeed()) {
+    const errorLogStore = useErrorLogStore()
+
     app.config.errorHandler = (err, vm, info) => {
       // todo 前端错误上报到收集报错的平台
-      const errorLogStore = useErrorLogStore()
       errorLogStore.addErrorLog({
         err,
         info,
         url: location.href
       })
+      console.error(err)
     }
   }
 }

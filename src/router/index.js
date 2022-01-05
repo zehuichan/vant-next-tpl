@@ -79,8 +79,21 @@ const routes = [
           tabbar: true,
         },
       },
+      {
+        path: '/mockjs',
+        component: () => import('@/views/home/mockjs.vue'),
+        name: 'Mockjs',
+        meta: {
+          title: 'Mockjs',
+          navbar: {
+            showTitle: false,
+          },
+          tabbar: false
+        }
+      },
     ]
-  }
+  },
+  { path: '/:path(.*)*', redirect: '/404' }
 ]
 
 // init router

@@ -13,8 +13,8 @@
       </div>
     </div>
     <van-cell-group title="info" inset>
-      <van-field v-model="value" label="昵称" placeholder="昵称"/>
-      <van-field v-model="value" label="手机" placeholder="手机"/>
+      <van-field v-model="userinfo.realname" label="姓名" readonly/>
+      <van-field v-model="userinfo.cellphone" label="手机" readonly/>
     </van-cell-group>
     <van-cell-group title="setting" inset>
       <van-cell title="模式">
@@ -24,9 +24,9 @@
       </van-cell>
     </van-cell-group>
     <van-cell-group title="about" inset>
-      <van-field :modelValue="appInfo.name" label="name" readonly/>
-      <van-field :modelValue="appInfo.version" label="version" readonly/>
-      <van-field :modelValue="appInfo.lastBuildTime" label="lastBuildTime" readonly/>
+      <van-field v-model="appInfo.name" label="name" readonly/>
+      <van-field v-model="appInfo.version" label="version" readonly/>
+      <van-field v-model="appInfo.lastBuildTime" label="lastBuildTime" readonly/>
     </van-cell-group>
   </div>
 </template>

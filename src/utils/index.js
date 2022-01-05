@@ -1,5 +1,4 @@
 
-
 // 判断类型
 export function is(val, type) {
   const typeArr = Array.isArray(type) ? type : [type]
