@@ -1,7 +1,7 @@
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 
-import { configVantPlugin } from './vant'
+// import { configVantPlugin } from './vant'
 import { configHtmlPlugin } from './html'
 import { configMockPlugin } from './mock'
 import { configCompressPlugin } from './compress'
@@ -15,7 +15,7 @@ export function createVitePlugins(viteEnv, isBuild) {
     // have to
     vueJsx(),
     // vant
-    configVantPlugin()
+    // configVantPlugin()
   ]
 
   // vite-plugin-html
