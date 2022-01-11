@@ -82,7 +82,7 @@ function setupStore(app) {
 }
 const scriptRel = "modulepreload";
 const seen = {};
-const base = "/";
+const base = "/vant-next-tpl/";
 const __vitePreload = function preload(baseModule, deps) {
   if (!deps || deps.length === 0) {
     return baseModule();
@@ -546,7 +546,7 @@ const routes = [
     children: [
       {
         path: "/home",
-        component: () => __vitePreload(() => import("./index.1a559fdf.js"), true ? ["assets/index.1a559fdf.js","assets/index.d54d9699.css","assets/index.dfe82eeb.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.a4acf742.js"), true ? ["assets/index.a4acf742.js","assets/index.d54d9699.css","assets/index.dfe82eeb.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
         meta: {
           title: "\u9996\u9875",
           navbar: {
@@ -558,7 +558,7 @@ const routes = [
       },
       {
         path: "/circle",
-        component: () => __vitePreload(() => import("./index.c9f74307.js"), true ? ["assets/index.c9f74307.js","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.dbb3a81a.js"), true ? ["assets/index.dbb3a81a.js","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
         meta: {
           title: "\u901B\u901B",
           navbar: {
@@ -570,7 +570,7 @@ const routes = [
       },
       {
         path: "/message",
-        component: () => __vitePreload(() => import("./index.cb4b0e94.js"), true ? ["assets/index.cb4b0e94.js","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.ea36e79c.js"), true ? ["assets/index.ea36e79c.js","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
         meta: {
           title: "\u6D88\u606F",
           navbar: {
@@ -594,7 +594,7 @@ const routes = [
       },
       {
         path: "/center",
-        component: () => __vitePreload(() => import("./index.b49fddca.js"), true ? ["assets/index.b49fddca.js","assets/index.cb816812.css","assets/index.dfe82eeb.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.e1d14792.js"), true ? ["assets/index.e1d14792.js","assets/index.2f4998b5.css","assets/index.dfe82eeb.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
         meta: {
           title: "\u5173\u4E8E\u6211",
           tabbar: true
@@ -602,7 +602,7 @@ const routes = [
       },
       {
         path: "/mockjs",
-        component: () => __vitePreload(() => import("./mockjs.0d251fa1.js"), true ? ["assets/mockjs.0d251fa1.js","assets/index.dfe82eeb.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./mockjs.66194d91.js"), true ? ["assets/mockjs.66194d91.js","assets/index.dfe82eeb.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
         name: "Mockjs",
         meta: {
           title: "Mockjs",
