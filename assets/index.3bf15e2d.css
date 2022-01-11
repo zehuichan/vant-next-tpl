@@ -604,6 +604,38 @@ html.dark {
 /* font-weight */
 /* gutter */
 /* shadow @antd4.0 https://ant.design/docs/spec/shadow-cn */
+/* safe-area */
+.v-tool-bar__placeholder {
+  height: calc(11.73333vw + env(safe-area-inset-bottom));
+}
+.v-tool-bar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 2.13333vw 2.13333vw 5.86667vw;
+  box-shadow: 0 -1px 0.53333vw rgba(0, 0, 0, 0.03);
+}
+.v-tool-bar .van-button + .van-button {
+  margin-left: 2.13333vw;
+}
+.v-tool-bar__left {
+  text-align: left;
+}
+.v-tool-bar__center {
+  text-align: center;
+}
+.v-tool-bar__right {
+  text-align: right;
+}
+/* safe-area */
+/* color */
+/* text */
+/* font */
+/* font-weight */
+/* gutter */
+/* shadow @antd4.0 https://ant.design/docs/spec/shadow-cn */
 .basic-layout {
   display: flex;
   flex-direction: column;

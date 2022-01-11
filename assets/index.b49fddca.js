@@ -1,7 +1,5 @@
-import { A as storeToRefs, x as ref, f as createElementBlock, h as createBaseVNode, B as toDisplayString, D as unref, j as createVNode, w as withCtx, I as Image, E as CellGroup, o as openBlock, F as Field, G as Cell } from "./vendor.83a4d0dd.js";
-import { u as useUserStore, M as ModePicker } from "./index.d1432ae4.js";
-var index$3 = "";
-var index$2 = "";
+import { I as storeToRefs, E as ref, f as createElementBlock, h as createBaseVNode, J as toDisplayString, M as unref, k as createVNode, w as withCtx, O as Image, C as CellGroup, o as openBlock, P as Field, D as Cell } from "./vendor.95afa1b9.js";
+/* empty css                */import { u as useUserStore, M as ModePicker } from "./index.5f42bf3e.js";
 var index$1 = "";
 var index = "";
 var index_vue_vue_type_style_index_0_lang = "";
@@ -17,8 +15,8 @@ const _sfc_main = {
   setup(__props) {
     const userStore = useUserStore();
     const { userinfo } = storeToRefs(userStore);
-    const appInfo = { "name": "vant-next-tpl", "version": "0.0.0", "lastBuildTime": "2022-01-05 11:29:34" };
-    const value = ref("");
+    const appInfo = { "name": "vant-next-tpl", "version": "0.0.0", "lastBuildTime": "2022-01-11 15:28:28" };
+    ref("");
     return (_ctx, _cache) => {
       const _component_van_image = Image;
       const _component_van_field = Field;
@@ -47,16 +45,16 @@ const _sfc_main = {
         }, {
           default: withCtx(() => [
             createVNode(_component_van_field, {
-              modelValue: value.value,
-              "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => value.value = $event),
-              label: "\u6635\u79F0",
-              placeholder: "\u6635\u79F0"
+              modelValue: unref(userinfo).realname,
+              "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => unref(userinfo).realname = $event),
+              label: "\u59D3\u540D",
+              readonly: ""
             }, null, 8, ["modelValue"]),
             createVNode(_component_van_field, {
-              modelValue: value.value,
-              "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => value.value = $event),
+              modelValue: unref(userinfo).cellphone,
+              "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => unref(userinfo).cellphone = $event),
               label: "\u624B\u673A",
-              placeholder: "\u624B\u673A"
+              readonly: ""
             }, null, 8, ["modelValue"])
           ]),
           _: 1
@@ -82,16 +80,19 @@ const _sfc_main = {
           default: withCtx(() => [
             createVNode(_component_van_field, {
               modelValue: unref(appInfo).name,
+              "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => unref(appInfo).name = $event),
               label: "name",
               readonly: ""
             }, null, 8, ["modelValue"]),
             createVNode(_component_van_field, {
               modelValue: unref(appInfo).version,
+              "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => unref(appInfo).version = $event),
               label: "version",
               readonly: ""
             }, null, 8, ["modelValue"]),
             createVNode(_component_van_field, {
               modelValue: unref(appInfo).lastBuildTime,
+              "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => unref(appInfo).lastBuildTime = $event),
               label: "lastBuildTime",
               readonly: ""
             }, null, 8, ["modelValue"])
