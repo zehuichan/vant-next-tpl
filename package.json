@@ -9,7 +9,7 @@
     "serve": "vite preview",
     "release": "release-it && git push --follow-tags origin master",
     "new": "plop",
-    "gh-pages": "npm run build:prod && gh-pages -d dist"
+    "gh-pages": "npm run build:prod && gh-pages -d dist || gh-pages.sh"
   },
   "dependencies": {
     "axios": "^0.24.0",
