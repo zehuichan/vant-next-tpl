@@ -1,28 +1,22 @@
 <template>
   <div class="app-main">
-    <keep-alive>
-      <router-view v-if="route.meta.keepAlive" :key="key"/>
-    </keep-alive>
-    <router-view v-if="!route.meta.keepAlive" :key="key"/>
+    <router-view v-slot="{Component, route}">
+      <keep-alive>
+        <component
+          :is="Component"
+          :key="key"
+        />
+      </keep-alive>
+    </router-view>
   </div>
 </template>
 
-<script>
-import { defineComponent, computed } from 'vue'
+<script setup>
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-export default defineComponent({
-  name: 'AppMain',
-  setup() {
-    const route = useRoute()
-    const key = computed(() => route.path)
-
-    return {
-      route,
-      key
-    }
-  },
-})
+const route = useRoute()
+const key = computed(() => route.path)
 </script>
 
 <style lang="less">
@@ -30,6 +24,6 @@ export default defineComponent({
   position: relative;
   -webkit-overflow-scrolling: touch;
   flex: 1;
-  overflow-y: auto;   // 关键， 超出部分滚动
+  overflow-y: auto; // 关键， 超出部分滚动
 }
 </style>

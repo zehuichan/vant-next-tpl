@@ -33,15 +33,7 @@
   </van-tabbar>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 // components
 import { VSvgIcon } from '@/components'
-
-export default defineComponent({
-  name: 'AppTabbar',
-  components: {
-    VSvgIcon
-  }
-})
 </script>
