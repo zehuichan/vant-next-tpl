@@ -480,15 +480,6 @@ html.dark {
   flex: 1;
   overflow-y: auto;
 }
-
-.iconfont {
-  width: 1em;
-  height: 1em;
-  min-width: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
 /* safe-area */
 /* color */
 /* text */
@@ -518,6 +509,15 @@ html.dark {
 .demo-block p {
   font-size: 3.73333vw;
   line-height: 1.517;
+}
+
+.iconfont {
+  width: 1em;
+  height: 1em;
+  min-width: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }
 /* safe-area */
 /* color */

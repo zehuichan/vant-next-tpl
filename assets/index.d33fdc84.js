@@ -14,7 +14,7 @@ var __spreadValues = (a, b) => {
     }
   return a;
 };
-import { r as resolveComponent, o as openBlock, c as createBlock, L as Lazyload, a as createPinia, d as defineComponent, u as useRouter, b as useRoute, e as computed, m as mergeProps, N as NavBar, f as createElementBlock, g as createCommentVNode, K as KeepAlive, h as createBaseVNode, i as defineStore, j as renderSlot, n as normalizeClass, w as withCtx, T as Tabbar, k as createVNode, l as TabbarItem, p as createRouter, q as createWebHashHistory, s as axios, t as Toast, v as createI18n, x as Locale, z as zhCN, y as enUS, A as createApp } from "./vendor.95afa1b9.js";
+import { r as resolveComponent, o as openBlock, c as createBlock, L as Lazyload, a as createPinia, u as useRouter, b as useRoute, d as computed, m as mergeProps, e as unref, N as NavBar, f as createElementBlock, g as createVNode, w as withCtx, h as resolveDynamicComponent, K as KeepAlive, i as defineComponent, j as createBaseVNode, k as defineStore, l as renderSlot, n as normalizeClass, T as TabbarItem, p as Tabbar, q as createCommentVNode, s as createRouter, t as createWebHashHistory, v as axios, x as Toast, y as createI18n, z as Locale, A as zhCN, B as enUS, C as createApp } from "./vendor.646982f2.js";
 const p = function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -66,11 +66,11 @@ var _export_sfc = (sfc, props) => {
   return target;
 };
 const _sfc_main$7 = {};
-function _sfc_render$7(_ctx, _cache) {
+function _sfc_render$3(_ctx, _cache) {
   const _component_router_view = resolveComponent("router-view");
   return openBlock(), createBlock(_component_router_view);
 }
-var App = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$7]]);
+var App = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$3]]);
 var index = "";
 var dark = "";
 function setupVant(app) {
@@ -133,10 +133,8 @@ var settings = {
   errorLog: ["production", "staging", "development"]
 };
 var AppNavBar_vue_vue_type_style_index_0_lang = "";
-const _sfc_main$6 = defineComponent({
-  name: "AppNavBar",
-  inheritAttrs: false,
-  setup() {
+const _sfc_main$6 = {
+  setup(__props) {
     const router2 = useRouter();
     const route = useRoute();
     const attrs = computed(() => {
@@ -150,47 +148,47 @@ const _sfc_main$6 = defineComponent({
     const onClickLeft = () => {
       router2.back();
     };
-    return {
-      attrs,
-      classname,
-      onClickLeft
+    return (_ctx, _cache) => {
+      const _component_van_nav_bar = NavBar;
+      return openBlock(), createBlock(_component_van_nav_bar, mergeProps({
+        class: ["v-nav-bar", unref(classname)]
+      }, unref(attrs), {
+        fixed: false,
+        onClickLeft
+      }), null, 16, ["class"]);
     };
   }
-});
-function _sfc_render$6(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_van_nav_bar = NavBar;
-  return openBlock(), createBlock(_component_van_nav_bar, mergeProps({
-    class: ["v-nav-bar", _ctx.classname]
-  }, _ctx.attrs, {
-    fixed: false,
-    onClickLeft: _ctx.onClickLeft
-  }), null, 16, ["class", "onClickLeft"]);
-}
-var AppNavBar = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$6]]);
+};
 var AppMain_vue_vue_type_style_index_0_lang = "";
-const _sfc_main$5 = defineComponent({
-  name: "AppMain",
-  setup() {
+const _hoisted_1$5 = { class: "app-main" };
+const _sfc_main$5 = {
+  setup(__props) {
     const route = useRoute();
     const key = computed(() => route.path);
-    return {
-      route,
-      key
+    return (_ctx, _cache) => {
+      const _component_router_view = resolveComponent("router-view");
+      return openBlock(), createElementBlock("div", _hoisted_1$5, [
+        createVNode(_component_router_view, null, {
+          default: withCtx(({ Component, route: route2 }) => [
+            (openBlock(), createBlock(KeepAlive, null, [
+              (openBlock(), createBlock(resolveDynamicComponent(Component), { key: unref(key) }))
+            ], 1024))
+          ]),
+          _: 1
+        })
+      ]);
     };
   }
-});
-const _hoisted_1$5 = { class: "app-main" };
-function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_router_view = resolveComponent("router-view");
-  return openBlock(), createElementBlock("div", _hoisted_1$5, [
-    (openBlock(), createBlock(KeepAlive, null, [
-      _ctx.route.meta.keepAlive ? (openBlock(), createBlock(_component_router_view, { key: _ctx.key })) : createCommentVNode("", true)
-    ], 1024)),
-    !_ctx.route.meta.keepAlive ? (openBlock(), createBlock(_component_router_view, { key: _ctx.key })) : createCommentVNode("", true)
-  ]);
-}
-var AppMain = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$5]]);
+};
 var index_vue_vue_type_style_index_0_lang$5 = "";
+defineComponent({
+  name: "DemoBlock",
+  props: {
+    card: Boolean,
+    title: String
+  }
+});
+var index_vue_vue_type_style_index_0_lang$4 = "";
 const _sfc_main$4 = defineComponent({
   name: "VSvgIcon",
   props: {
@@ -211,7 +209,7 @@ const _sfc_main$4 = defineComponent({
   }
 });
 const _hoisted_1$4 = ["xlink:href"];
-function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("svg", mergeProps({
     class: [_ctx.classPrefix, "iconfont"],
     style: { fontSize: _ctx.addUnit(_ctx.size) },
@@ -222,15 +220,7 @@ function _sfc_render$4(_ctx, _cache, $props, $setup, $data, $options) {
     }, null, 8, _hoisted_1$4)
   ], 16);
 }
-var VSvgIcon = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$4]]);
-var index_vue_vue_type_style_index_0_lang$4 = "";
-defineComponent({
-  name: "DemoBlock",
-  props: {
-    card: Boolean,
-    title: String
-  }
-});
+var VSvgIcon = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$2]]);
 const trim = function(s) {
   return (s || "").replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, "");
 };
@@ -357,7 +347,7 @@ const _sfc_main$3 = defineComponent({
   }
 });
 const _hoisted_1$3 = { class: "mode-picker" };
-function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_v_svg_icon = VSvgIcon;
   return openBlock(), createElementBlock("div", _hoisted_1$3, [
     _ctx.theme === "dark" ? (openBlock(), createBlock(_component_v_svg_icon, {
@@ -371,7 +361,7 @@ function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     }))
   ]);
 }
-var ModePicker = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$3]]);
+var ModePicker = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$1]]);
 var index_vue_vue_type_style_index_0_lang$2 = "";
 defineComponent({
   name: "Divider",
@@ -407,7 +397,7 @@ const _sfc_main$2 = defineComponent({
 const _hoisted_1$2 = { class: "v-tool-bar__placeholder" };
 const _hoisted_2$1 = { class: "v-tool-bar van-clearfix" };
 const _hoisted_3$1 = { class: "fl" };
-function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("div", _hoisted_1$2, [
     createBaseVNode("div", _hoisted_2$1, [
       createBaseVNode("div", _hoisted_3$1, [
@@ -421,132 +411,114 @@ function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
     ])
   ]);
 }
-var VToolBar = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$2]]);
-const _sfc_main$1 = defineComponent({
-  name: "AppTabbar",
-  components: {
-    VSvgIcon
-  }
-});
+var VToolBar = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render]]);
 const _hoisted_1$1 = /* @__PURE__ */ createBaseVNode("span", null, "\u5546\u57CE", -1);
 const _hoisted_2 = /* @__PURE__ */ createBaseVNode("span", null, "\u901B\u901B", -1);
 const _hoisted_3 = /* @__PURE__ */ createBaseVNode("span", null, "\u6D88\u606F", -1);
 const _hoisted_4 = /* @__PURE__ */ createBaseVNode("span", null, "\u8D2D\u7269\u8F66", -1);
 const _hoisted_5 = /* @__PURE__ */ createBaseVNode("span", null, "\u6211\u7684", -1);
-function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_v_svg_icon = VSvgIcon;
-  const _component_van_tabbar_item = TabbarItem;
-  const _component_van_tabbar = Tabbar;
-  return openBlock(), createBlock(_component_van_tabbar, {
-    class: "v-tabbar",
-    route: "",
-    fixed: false,
-    placeholder: "",
-    "safe-area-inset-bottom": ""
-  }, {
-    default: withCtx(() => [
-      createVNode(_component_van_tabbar_item, {
-        replace: "",
-        to: "/home"
+const _sfc_main$1 = {
+  setup(__props) {
+    return (_ctx, _cache) => {
+      const _component_van_tabbar_item = TabbarItem;
+      const _component_van_tabbar = Tabbar;
+      return openBlock(), createBlock(_component_van_tabbar, {
+        class: "v-tabbar",
+        route: "",
+        fixed: false,
+        placeholder: "",
+        "safe-area-inset-bottom": ""
       }, {
-        icon: withCtx((props) => [
-          createVNode(_component_v_svg_icon, { name: "icon-feed-logo" })
-        ]),
         default: withCtx(() => [
-          _hoisted_1$1
+          createVNode(_component_van_tabbar_item, {
+            replace: "",
+            to: "/home"
+          }, {
+            icon: withCtx((props) => [
+              createVNode(unref(VSvgIcon), { name: "icon-feed-logo" })
+            ]),
+            default: withCtx(() => [
+              _hoisted_1$1
+            ]),
+            _: 1
+          }),
+          createVNode(_component_van_tabbar_item, {
+            replace: "",
+            to: "/circle"
+          }, {
+            icon: withCtx((props) => [
+              createVNode(unref(VSvgIcon), { name: "icon-dongtai" })
+            ]),
+            default: withCtx(() => [
+              _hoisted_2
+            ]),
+            _: 1
+          }),
+          createVNode(_component_van_tabbar_item, {
+            replace: "",
+            to: "/message"
+          }, {
+            icon: withCtx((props) => [
+              createVNode(unref(VSvgIcon), { name: "icon-comments" })
+            ]),
+            default: withCtx(() => [
+              _hoisted_3
+            ]),
+            _: 1
+          }),
+          createVNode(_component_van_tabbar_item, {
+            replace: "",
+            to: "/cart"
+          }, {
+            icon: withCtx((props) => [
+              createVNode(unref(VSvgIcon), { name: "icon-cart-Empty" })
+            ]),
+            default: withCtx(() => [
+              _hoisted_4
+            ]),
+            _: 1
+          }),
+          createVNode(_component_van_tabbar_item, {
+            replace: "",
+            to: "/center"
+          }, {
+            icon: withCtx((props) => [
+              createVNode(unref(VSvgIcon), { name: "icon-bussiness-man" })
+            ]),
+            default: withCtx(() => [
+              _hoisted_5
+            ]),
+            _: 1
+          })
         ]),
         _: 1
-      }),
-      createVNode(_component_van_tabbar_item, {
-        replace: "",
-        to: "/circle"
-      }, {
-        icon: withCtx((props) => [
-          createVNode(_component_v_svg_icon, { name: "icon-dongtai" })
-        ]),
-        default: withCtx(() => [
-          _hoisted_2
-        ]),
-        _: 1
-      }),
-      createVNode(_component_van_tabbar_item, {
-        replace: "",
-        to: "/message"
-      }, {
-        icon: withCtx((props) => [
-          createVNode(_component_v_svg_icon, { name: "icon-comments" })
-        ]),
-        default: withCtx(() => [
-          _hoisted_3
-        ]),
-        _: 1
-      }),
-      createVNode(_component_van_tabbar_item, {
-        replace: "",
-        to: "/cart"
-      }, {
-        icon: withCtx((props) => [
-          createVNode(_component_v_svg_icon, { name: "icon-cart-Empty" })
-        ]),
-        default: withCtx(() => [
-          _hoisted_4
-        ]),
-        _: 1
-      }),
-      createVNode(_component_van_tabbar_item, {
-        replace: "",
-        to: "/center"
-      }, {
-        icon: withCtx((props) => [
-          createVNode(_component_v_svg_icon, { name: "icon-bussiness-man" })
-        ]),
-        default: withCtx(() => [
-          _hoisted_5
-        ]),
-        _: 1
-      })
-    ]),
-    _: 1
-  });
-}
-var AppTabbar = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render$1]]);
-var index_vue_vue_type_style_index_0_lang = "";
-useRoute();
-const _sfc_main = defineComponent({
-  name: "Layout",
-  setup() {
-    const route = useRoute();
-    return {
-      route
+      });
     };
-  },
-  components: {
-    AppMain,
-    AppNavBar,
-    AppTabbar
   }
-});
+};
+var index_vue_vue_type_style_index_0_lang = "";
 const _hoisted_1 = { class: "basic-layout app-wrapper" };
-function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_app_nav_bar = resolveComponent("app-nav-bar");
-  const _component_app_main = resolveComponent("app-main");
-  const _component_app_tabbar = resolveComponent("app-tabbar");
-  return openBlock(), createElementBlock("div", _hoisted_1, [
-    _ctx.route.meta.navbar ? (openBlock(), createBlock(_component_app_nav_bar, { key: 0 })) : createCommentVNode("", true),
-    createVNode(_component_app_main),
-    _ctx.route.meta.tabbar ? (openBlock(), createBlock(_component_app_tabbar, { key: 1 })) : createCommentVNode("", true)
-  ]);
-}
-var Layout = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render]]);
+const _sfc_main = {
+  setup(__props) {
+    const route = useRoute();
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", _hoisted_1, [
+        unref(route).meta.navbar ? (openBlock(), createBlock(unref(_sfc_main$6), { key: 0 })) : createCommentVNode("", true),
+        createVNode(unref(_sfc_main$5)),
+        unref(route).meta.tabbar ? (openBlock(), createBlock(unref(_sfc_main$1), { key: 1 })) : createCommentVNode("", true)
+      ]);
+    };
+  }
+};
 const routes = [
   { path: "/", redirect: "/home" },
   {
     path: "/BasicLayout",
-    component: Layout,
+    component: _sfc_main,
     children: [
       {
         path: "/home",
-        component: () => __vitePreload(() => import("./index.a4acf742.js"), true ? ["assets/index.a4acf742.js","assets/index.d54d9699.css","assets/index.dfe82eeb.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.d5682f64.js"), true ? ["assets/index.d5682f64.js","assets/index.d54d9699.css","assets/index.dfe82eeb.css","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
         meta: {
           title: "\u9996\u9875",
           navbar: {
@@ -558,7 +530,7 @@ const routes = [
       },
       {
         path: "/circle",
-        component: () => __vitePreload(() => import("./index.dbb3a81a.js"), true ? ["assets/index.dbb3a81a.js","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.1ef80494.js"), true ? ["assets/index.1ef80494.js","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
         meta: {
           title: "\u901B\u901B",
           navbar: {
@@ -570,7 +542,7 @@ const routes = [
       },
       {
         path: "/message",
-        component: () => __vitePreload(() => import("./index.ea36e79c.js"), true ? ["assets/index.ea36e79c.js","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.724f20a0.js"), true ? ["assets/index.724f20a0.js","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
         meta: {
           title: "\u6D88\u606F",
           navbar: {
@@ -582,7 +554,7 @@ const routes = [
       },
       {
         path: "/cart",
-        component: () => __vitePreload(() => import("./index.45b9c884.js"), true ? ["assets/index.45b9c884.js","assets/index.d0f35ebc.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.377a1b71.js"), true ? ["assets/index.377a1b71.js","assets/index.d0f35ebc.css","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
         meta: {
           title: "\u8D2D\u7269\u8F66",
           navbar: {
@@ -594,7 +566,7 @@ const routes = [
       },
       {
         path: "/center",
-        component: () => __vitePreload(() => import("./index.e1d14792.js"), true ? ["assets/index.e1d14792.js","assets/index.2f4998b5.css","assets/index.dfe82eeb.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.1e13ff54.js"), true ? ["assets/index.1e13ff54.js","assets/index.2f4998b5.css","assets/index.dfe82eeb.css","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
         meta: {
           title: "\u5173\u4E8E\u6211",
           tabbar: true
@@ -602,7 +574,7 @@ const routes = [
       },
       {
         path: "/mockjs",
-        component: () => __vitePreload(() => import("./mockjs.66194d91.js"), true ? ["assets/mockjs.66194d91.js","assets/index.dfe82eeb.css","assets/vendor.95afa1b9.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./mockjs.f64d358c.js"), true ? ["assets/mockjs.f64d358c.js","assets/index.dfe82eeb.css","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
         name: "Mockjs",
         meta: {
           title: "Mockjs",
@@ -626,7 +598,7 @@ function setupRouter(app) {
 }
 let message = " (-\u3002-)!!! \u670D\u52A1\u5668\u5F00\u5C0F\u5DEE\u4E86\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5\u3002";
 const http = axios.create({
-  baseURL: "/api",
+  baseURL: "/vant-next-tpl/",
   timeout: 50 * 1e3
 });
 http.interceptors.request.use((config) => {

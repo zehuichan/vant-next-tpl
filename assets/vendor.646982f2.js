@@ -3590,6 +3590,13 @@ function resolveComponent(name2, maybeSelfReference) {
   return resolveAsset(COMPONENTS, name2, true, maybeSelfReference) || name2;
 }
 const NULL_DYNAMIC_COMPONENT = Symbol();
+function resolveDynamicComponent(component) {
+  if (isString$2(component)) {
+    return resolveAsset(COMPONENTS, component, false) || component;
+  } else {
+    return component || NULL_DYNAMIC_COMPONENT;
+  }
+}
 function resolveDirective(name2) {
   return resolveAsset(DIRECTIVES, name2);
 }
@@ -15955,4 +15962,4 @@ var enUS = {
     add: "Add new address"
   }
 };
-export { createApp as A, renderList as B, CellGroup as C, Cell as D, ref as E, Fragment as F, createTextVNode as G, Checkbox as H, storeToRefs as I, toDisplayString$1 as J, KeepAlive as K, Lazyload as L, unref as M, NavBar as N, Image$1 as O, Field as P, Button as Q, Badge as R, SubmitBar as S, Tabbar as T, createPinia as a, useRoute as b, createBlock as c, defineComponent as d, computed as e, createElementBlock as f, createCommentVNode as g, createBaseVNode as h, defineStore as i, renderSlot as j, createVNode as k, TabbarItem as l, mergeProps as m, normalizeClass as n, openBlock as o, createRouter as p, createWebHashHistory as q, resolveComponent as r, axios as s, Toast as t, useRouter as u, createI18n as v, withCtx as w, Locale as x, enUS as y, zhCN as z };
+export { zhCN as A, enUS as B, createApp as C, renderList as D, CellGroup as E, Fragment as F, Cell as G, ref as H, createTextVNode as I, Checkbox as J, KeepAlive as K, Lazyload as L, storeToRefs as M, NavBar as N, toDisplayString$1 as O, Image$1 as P, Field as Q, Button as R, SubmitBar as S, TabbarItem as T, Badge as U, createPinia as a, useRoute as b, createBlock as c, computed as d, unref as e, createElementBlock as f, createVNode as g, resolveDynamicComponent as h, defineComponent as i, createBaseVNode as j, defineStore as k, renderSlot as l, mergeProps as m, normalizeClass as n, openBlock as o, Tabbar as p, createCommentVNode as q, resolveComponent as r, createRouter as s, createWebHashHistory as t, useRouter as u, axios as v, withCtx as w, Toast as x, createI18n as y, Locale as z };
