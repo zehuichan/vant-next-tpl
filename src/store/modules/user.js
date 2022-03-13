@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { userInfo } from '@/api/user'
 
 export const useUserStore = defineStore({
   id: 'user',
@@ -13,8 +12,13 @@ export const useUserStore = defineStore({
   actions: {
     async getUserInfo() {
       try {
-        const res = await userInfo()
-        this.userinfo = res.data
+        this.userinfo = {
+          'avatar': 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLYMVgaumib5h42GP4pAlLTQCpzFAmUZTVUg4MmH9eFyb4shrm6Ux2Ocic1ic0ekTWEYVfxibGcMMC3UQ/132',
+          'cellphone': '15800066380',
+          'username': 'chan_',
+          'realname': '陈泽辉',
+          'github': 'https://github.com/zehuichan'
+        }
         return Promise.resolve()
       } catch (error) {
         return Promise.reject(error)
