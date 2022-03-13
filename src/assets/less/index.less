@@ -1,3 +1,4 @@
+@import "./theme.less";
 @import "./var.less";
 @import "./unit.less";
 @import "./tap.less";
@@ -7,10 +8,10 @@
 body {
   line-height: 1.5715;
   font-size: 14px;
-  color: var(--vant-FG-0);
+  color: var(--text-secondary);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  background: var(--vant-BG-0);
+  background-color: var(--bg-color-page);
 }
 
 label {
@@ -22,7 +23,8 @@ html {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
 }

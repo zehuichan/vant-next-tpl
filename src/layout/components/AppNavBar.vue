@@ -1,30 +1,25 @@
 <template>
   <van-nav-bar
     :class="['v-nav-bar', classname]"
-    v-bind="attrs"
-    :fixed="false"
+    v-bind="$attrs"
     @click-left="onClickLeft"
   />
 </template>
 
+<script>
+export default {
+  inheritAttrs: false
+}
+</script>
+
 <script setup>
 import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-// settings
-import defaultSettings from '@/settings'
 
 const router = useRouter()
 const route = useRoute()
 
-const attrs = computed(() => Object.assign(
-  {},
-  { ...defaultSettings.navbar },
-  route.meta.navbar?.showTitle && { title: route.meta.title },
-  !route.meta.navbar?.showTitle && { leftText: route.meta.title },
-  { ...route.meta.navbar }
-))
-
-const classname = computed(() => route.meta.navbar?.classname)
+const classname = computed(() => route?.meta?.navbar?.classname)
 
 const onClickLeft = () => {
   router.back()

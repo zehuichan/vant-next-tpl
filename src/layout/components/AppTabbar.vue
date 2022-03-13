@@ -1,5 +1,5 @@
 <template>
-  <van-tabbar class="v-tabbar" route :fixed="false" placeholder safe-area-inset-bottom>
+  <van-tabbar class="v-tabbar" v-bind="$attrs" route>
     <van-tabbar-item replace to="/home">
       <span>商城</span>
       <template #icon="props">
@@ -32,6 +32,12 @@
     </van-tabbar-item>
   </van-tabbar>
 </template>
+
+<script>
+export default {
+  inheritAttrs: false
+}
+</script>
 
 <script setup>
 // components

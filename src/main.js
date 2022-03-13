@@ -3,7 +3,6 @@ import App from './App.vue'
 
 // global css
 import './assets/less/index.less'
-import './theme/dark.less'
 
 import { setupVant } from './plugins/vant'
 import { setupStore } from './store'

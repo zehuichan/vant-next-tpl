@@ -1,6 +1,6 @@
 {
   "name": "vant-next-tpl",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "start": "npm run dev",
     "dev": "vite",
@@ -12,12 +12,13 @@
     "gh-pages": "npm run build:prod && gh-pages -d dist || gh-pages.sh"
   },
   "dependencies": {
+    "@vueuse/core": "^8.0.0",
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "mitt": "^3.0.0",
     "mockjs": "^1.1.0",
     "pinia": "^2.0.9",
-    "vant": "^3.4.0",
+    "vant": "^4.0.0-alpha.0",
     "vue": "^3.2.26",
     "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.12"

@@ -11,8 +11,6 @@ export function setupRouterGuard(router) {
     // set page title
     document.title = useTitle(to.meta.title)
 
-    appStore.setThemeMode(appStore.theme)
-
     const hasInfo = userStore.userinfo
 
     if (hasInfo) {
