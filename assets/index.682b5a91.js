@@ -1,5 +1,24 @@
-import { M as storeToRefs, H as ref, f as createElementBlock, j as createBaseVNode, O as toDisplayString, e as unref, g as createVNode, w as withCtx, P as Image, E as CellGroup, o as openBlock, Q as Field, G as Cell } from "./vendor.646982f2.js";
-/* empty css                */import { u as useUserStore, M as ModePicker } from "./index.2f3d5ddf.js";
+import { o as openBlock, f as createElementBlock, e as unref, c as createBlock, P as storeToRefs, I as ref, Q as Image, R as Field, F as CellGroup, E as Cell, n as createBaseVNode, U as toDisplayString, g as createVNode, w as withCtx } from "./vendor.a1806f2f.js";
+/* empty css                */import { u as useAppStore, V as VSvgIcon, a as useUserStore } from "./index.1fd23af6.js";
+const _hoisted_1$1 = { class: "mode-picker" };
+const _sfc_main$1 = {
+  setup(__props) {
+    const appStore = useAppStore();
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", _hoisted_1$1, [
+        unref(appStore).isDark ? (openBlock(), createBlock(unref(VSvgIcon), {
+          key: 0,
+          name: "icon-Daytimemode",
+          onClick: _cache[0] || (_cache[0] = ($event) => unref(appStore).changeMode("light"))
+        })) : (openBlock(), createBlock(unref(VSvgIcon), {
+          key: 1,
+          name: "icon-nightmode",
+          onClick: _cache[1] || (_cache[1] = ($event) => unref(appStore).changeMode("dark"))
+        }))
+      ]);
+    };
+  }
+};
 var index$1 = "";
 var index = "";
 var index_vue_vue_type_style_index_0_lang = "";
@@ -15,7 +34,7 @@ const _sfc_main = {
   setup(__props) {
     const userStore = useUserStore();
     const { userinfo } = storeToRefs(userStore);
-    const appInfo = { "name": "vant-next-tpl", "version": "0.0.0", "lastBuildTime": "2022-02-28 10:10:15" };
+    const appInfo = { "name": "vant-next-tpl", "version": "0.0.1", "lastBuildTime": "2022-03-14 14:09:58" };
     ref("");
     return (_ctx, _cache) => {
       const _component_van_image = Image;
@@ -66,7 +85,7 @@ const _sfc_main = {
           default: withCtx(() => [
             createVNode(_component_van_cell, { title: "\u6A21\u5F0F" }, {
               value: withCtx(() => [
-                createVNode(unref(ModePicker))
+                createVNode(unref(_sfc_main$1))
               ]),
               _: 1
             })

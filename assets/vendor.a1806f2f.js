@@ -12,7 +12,7 @@ function includeBooleanAttr(value) {
   return !!value || value === "";
 }
 function normalizeStyle(value) {
-  if (isArray$2(value)) {
+  if (isArray$1(value)) {
     const res = {};
     for (let i = 0; i < value.length; i++) {
       const item = value[i];
@@ -26,7 +26,7 @@ function normalizeStyle(value) {
     return res;
   } else if (isString$2(value)) {
     return value;
-  } else if (isObject$4(value)) {
+  } else if (isObject$3(value)) {
     return value;
   }
 }
@@ -46,14 +46,14 @@ function normalizeClass(value) {
   let res = "";
   if (isString$2(value)) {
     res = value;
-  } else if (isArray$2(value)) {
+  } else if (isArray$1(value)) {
     for (let i = 0; i < value.length; i++) {
       const normalized = normalizeClass(value[i]);
       if (normalized) {
         res += normalized + " ";
       }
     }
-  } else if (isObject$4(value)) {
+  } else if (isObject$3(value)) {
     for (const name2 in value) {
       if (value[name2]) {
         res += name2 + " ";
@@ -62,8 +62,20 @@ function normalizeClass(value) {
   }
   return res.trim();
 }
+function normalizeProps(props) {
+  if (!props)
+    return null;
+  let { class: klass, style } = props;
+  if (klass && !isString$2(klass)) {
+    props.class = normalizeClass(klass);
+  }
+  if (style) {
+    props.style = normalizeStyle(style);
+  }
+  return props;
+}
 const toDisplayString$1 = (val) => {
-  return val == null ? "" : isArray$2(val) || isObject$4(val) && (val.toString === objectToString$1 || !isFunction$3(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
+  return val == null ? "" : isArray$1(val) || isObject$3(val) && (val.toString === objectToString$1 || !isFunction$2(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
 };
 const replacer = (_key, val) => {
   if (val && val.__v_isRef) {
@@ -79,7 +91,7 @@ const replacer = (_key, val) => {
     return {
       [`Set(${val.size})`]: [...val.values()]
     };
-  } else if (isObject$4(val) && !isArray$2(val) && !isPlainObject$3(val)) {
+  } else if (isObject$3(val) && !isArray$1(val) && !isPlainObject$2(val)) {
     return String(val);
   }
   return val;
@@ -92,7 +104,7 @@ const NO = () => false;
 const onRE = /^on[^a-z]/;
 const isOn = (key) => onRE.test(key);
 const isModelListener = (key) => key.startsWith("onUpdate:");
-const extend$2 = Object.assign;
+const extend$1 = Object.assign;
 const remove$1 = (arr, el) => {
   const i = arr.indexOf(el);
   if (i > -1) {
@@ -101,22 +113,22 @@ const remove$1 = (arr, el) => {
 };
 const hasOwnProperty$3 = Object.prototype.hasOwnProperty;
 const hasOwn$2 = (val, key) => hasOwnProperty$3.call(val, key);
-const isArray$2 = Array.isArray;
+const isArray$1 = Array.isArray;
 const isMap = (val) => toTypeString$1(val) === "[object Map]";
 const isSet = (val) => toTypeString$1(val) === "[object Set]";
-const isFunction$3 = (val) => typeof val === "function";
+const isFunction$2 = (val) => typeof val === "function";
 const isString$2 = (val) => typeof val === "string";
 const isSymbol = (val) => typeof val === "symbol";
-const isObject$4 = (val) => val !== null && typeof val === "object";
+const isObject$3 = (val) => val !== null && typeof val === "object";
 const isPromise$1 = (val) => {
-  return isObject$4(val) && isFunction$3(val.then) && isFunction$3(val.catch);
+  return isObject$3(val) && isFunction$2(val.then) && isFunction$2(val.catch);
 };
 const objectToString$1 = Object.prototype.toString;
 const toTypeString$1 = (value) => objectToString$1.call(value);
 const toRawType = (value) => {
   return toTypeString$1(value).slice(8, -1);
 };
-const isPlainObject$3 = (val) => toTypeString$1(val) === "[object Object]";
+const isPlainObject$2 = (val) => toTypeString$1(val) === "[object Object]";
 const isIntegerKey = (key) => isString$2(key) && key !== "NaN" && key[0] !== "-" && "" + parseInt(key, 10) === key;
 const isReservedProp = /* @__PURE__ */ makeMap(",key,ref,ref_for,ref_key,onVnodeBeforeMount,onVnodeMounted,onVnodeBeforeUpdate,onVnodeUpdated,onVnodeBeforeUnmount,onVnodeUnmounted");
 const cacheStringFunction = (fn) => {
@@ -214,6 +226,14 @@ function recordEffectScope(effect, scope) {
   scope = scope || activeEffectScope;
   if (scope && scope.active) {
     scope.effects.push(effect);
+  }
+}
+function getCurrentScope() {
+  return activeEffectScope;
+}
+function onScopeDispose(fn) {
+  if (activeEffectScope) {
+    activeEffectScope.cleanups.push(fn);
   }
 }
 const createDep = (effects) => {
@@ -364,7 +384,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
   let deps = [];
   if (type === "clear") {
     deps = [...depsMap.values()];
-  } else if (key === "length" && isArray$2(target)) {
+  } else if (key === "length" && isArray$1(target)) {
     depsMap.forEach((dep, key2) => {
       if (key2 === "length" || key2 >= newValue) {
         deps.push(dep);
@@ -376,7 +396,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
     }
     switch (type) {
       case "add":
-        if (!isArray$2(target)) {
+        if (!isArray$1(target)) {
           deps.push(depsMap.get(ITERATE_KEY));
           if (isMap(target)) {
             deps.push(depsMap.get(MAP_KEY_ITERATE_KEY));
@@ -386,7 +406,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
         }
         break;
       case "delete":
-        if (!isArray$2(target)) {
+        if (!isArray$1(target)) {
           deps.push(depsMap.get(ITERATE_KEY));
           if (isMap(target)) {
             deps.push(depsMap.get(MAP_KEY_ITERATE_KEY));
@@ -419,7 +439,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
   }
 }
 function triggerEffects(dep, debuggerEventExtraInfo) {
-  for (const effect of isArray$2(dep) ? dep : [...dep]) {
+  for (const effect of isArray$1(dep) ? dep : [...dep]) {
     if (effect !== activeEffect || effect.allowRecurse) {
       if (effect.scheduler) {
         effect.scheduler();
@@ -470,7 +490,7 @@ function createGetter(isReadonly2 = false, shallow = false) {
     } else if (key === "__v_raw" && receiver === (isReadonly2 ? shallow ? shallowReadonlyMap : readonlyMap : shallow ? shallowReactiveMap : reactiveMap).get(target)) {
       return target;
     }
-    const targetIsArray = isArray$2(target);
+    const targetIsArray = isArray$1(target);
     if (!isReadonly2 && targetIsArray && hasOwn$2(arrayInstrumentations, key)) {
       return Reflect.get(arrayInstrumentations, key, receiver);
     }
@@ -488,7 +508,7 @@ function createGetter(isReadonly2 = false, shallow = false) {
       const shouldUnwrap = !targetIsArray || !isIntegerKey(key);
       return shouldUnwrap ? res.value : res;
     }
-    if (isObject$4(res)) {
+    if (isObject$3(res)) {
       return isReadonly2 ? readonly(res) : reactive(res);
     }
     return res;
@@ -502,12 +522,12 @@ function createSetter(shallow = false) {
     if (!shallow && !isReadonly(value)) {
       value = toRaw(value);
       oldValue = toRaw(oldValue);
-      if (!isArray$2(target) && isRef(oldValue) && !isRef(value)) {
+      if (!isArray$1(target) && isRef(oldValue) && !isRef(value)) {
         oldValue.value = value;
         return true;
       }
     }
-    const hadKey = isArray$2(target) && isIntegerKey(key) ? Number(key) < target.length : hasOwn$2(target, key);
+    const hadKey = isArray$1(target) && isIntegerKey(key) ? Number(key) < target.length : hasOwn$2(target, key);
     const result = Reflect.set(target, key, value, receiver);
     if (target === toRaw(receiver)) {
       if (!hadKey) {
@@ -536,7 +556,7 @@ function has(target, key) {
   return result;
 }
 function ownKeys(target) {
-  track(target, "iterate", isArray$2(target) ? "length" : ITERATE_KEY);
+  track(target, "iterate", isArray$1(target) ? "length" : ITERATE_KEY);
   return Reflect.ownKeys(target);
 }
 const mutableHandlers = {
@@ -555,7 +575,7 @@ const readonlyHandlers = {
     return true;
   }
 };
-const shallowReactiveHandlers = /* @__PURE__ */ extend$2({}, mutableHandlers, {
+const shallowReactiveHandlers = /* @__PURE__ */ extend$1({}, mutableHandlers, {
   get: shallowGet,
   set: shallowSet
 });
@@ -648,7 +668,7 @@ function clear() {
   return result;
 }
 function createForEach(isReadonly2, isShallow) {
-  return function forEach3(callback, thisArg) {
+  return function forEach(callback, thisArg) {
     const observed = this;
     const target = observed["__v_raw"];
     const rawTarget = toRaw(target);
@@ -820,7 +840,7 @@ function readonly(target) {
   return createReactiveObject(target, true, readonlyHandlers, readonlyCollectionHandlers, readonlyMap);
 }
 function createReactiveObject(target, isReadonly2, baseHandlers, collectionHandlers, proxyMap) {
-  if (!isObject$4(target)) {
+  if (!isObject$3(target)) {
     return target;
   }
   if (target["__v_raw"] && !(isReadonly2 && target["__v_isReactive"])) {
@@ -858,8 +878,8 @@ function markRaw(value) {
   def(value, "__v_skip", true);
   return value;
 }
-const toReactive = (value) => isObject$4(value) ? reactive(value) : value;
-const toReadonly = (value) => isObject$4(value) ? readonly(value) : value;
+const toReactive = (value) => isObject$3(value) ? reactive(value) : value;
+const toReadonly = (value) => isObject$3(value) ? readonly(value) : value;
 function trackRefValue(ref2) {
   if (isTracking()) {
     ref2 = toRaw(ref2);
@@ -934,7 +954,7 @@ function proxyRefs(objectWithRefs) {
   return isReactive(objectWithRefs) ? objectWithRefs : new Proxy(objectWithRefs, shallowUnwrapHandlers);
 }
 function toRefs(object) {
-  const ret = isArray$2(object) ? new Array(object.length) : {};
+  const ret = isArray$1(object) ? new Array(object.length) : {};
   for (const key in object) {
     ret[key] = toRef(object, key);
   }
@@ -989,7 +1009,7 @@ class ComputedRefImpl {
 function computed(getterOrOptions, debugOptions) {
   let getter;
   let setter;
-  const onlyGetter = isFunction$3(getterOrOptions);
+  const onlyGetter = isFunction$2(getterOrOptions);
   if (onlyGetter) {
     getter = getterOrOptions;
     setter = NOOP;
@@ -1008,8 +1028,8 @@ function emit$1(instance, event, ...rawArgs) {
   const modelArg = isModelListener2 && event.slice(7);
   if (modelArg && modelArg in props) {
     const modifiersKey = `${modelArg === "modelValue" ? "model" : modelArg}Modifiers`;
-    const { number: number2, trim: trim2 } = props[modifiersKey] || EMPTY_OBJ;
-    if (trim2) {
+    const { number: number2, trim } = props[modifiersKey] || EMPTY_OBJ;
+    if (trim) {
       args = rawArgs.map((a) => a.trim());
     } else if (number2) {
       args = rawArgs.map(toNumber);
@@ -1043,12 +1063,12 @@ function normalizeEmitsOptions(comp, appContext, asMixin = false) {
   const raw = comp.emits;
   let normalized = {};
   let hasExtends = false;
-  if (!isFunction$3(comp)) {
+  if (!isFunction$2(comp)) {
     const extendEmits = (raw2) => {
       const normalizedFromExtend = normalizeEmitsOptions(raw2, appContext, true);
       if (normalizedFromExtend) {
         hasExtends = true;
-        extend$2(normalized, normalizedFromExtend);
+        extend$1(normalized, normalizedFromExtend);
       }
     };
     if (!asMixin && appContext.mixins.length) {
@@ -1065,10 +1085,10 @@ function normalizeEmitsOptions(comp, appContext, asMixin = false) {
     cache2.set(comp, null);
     return null;
   }
-  if (isArray$2(raw)) {
+  if (isArray$1(raw)) {
     raw.forEach((key) => normalized[key] = null);
   } else {
-    extend$2(normalized, raw);
+    extend$1(normalized, raw);
   }
   cache2.set(comp, normalized);
   return normalized;
@@ -1114,14 +1134,14 @@ function withCtx(fn, ctx = currentRenderingInstance, isNonScopedSlot) {
 function markAttrsAccessed() {
 }
 function renderComponentRoot(instance) {
-  const { type: Component, vnode, proxy, withProxy, props, propsOptions: [propsOptions], slots, attrs, emit, render, renderCache, data: data2, setupState, ctx, inheritAttrs } = instance;
+  const { type: Component, vnode, proxy, withProxy, props, propsOptions: [propsOptions], slots, attrs, emit, render, renderCache, data, setupState, ctx, inheritAttrs } = instance;
   let result;
   let fallthroughAttrs;
   const prev = setCurrentRenderingInstance(instance);
   try {
     if (vnode.shapeFlag & 4) {
       const proxyToUse = withProxy || proxy;
-      result = normalizeVNode(render.call(proxyToUse, proxyToUse, renderCache, props, setupState, data2, ctx));
+      result = normalizeVNode(render.call(proxyToUse, proxyToUse, renderCache, props, setupState, data, ctx));
       fallthroughAttrs = attrs;
     } else {
       const render2 = Component;
@@ -1251,7 +1271,7 @@ function updateHOCHostEl({ vnode, parent }, el) {
 const isSuspense = (type) => type.__isSuspense;
 function queueEffectWithSuspense(fn, suspense) {
   if (suspense && suspense.pendingBranch) {
-    if (isArray$2(fn)) {
+    if (isArray$1(fn)) {
       suspense.effects.push(...fn);
     } else {
       suspense.effects.push(fn);
@@ -1279,7 +1299,7 @@ function inject(key, defaultValue, treatDefaultAsFactory = false) {
     if (provides && key in provides) {
       return provides[key];
     } else if (arguments.length > 1) {
-      return treatDefaultAsFactory && isFunction$3(defaultValue) ? defaultValue.call(instance.proxy) : defaultValue;
+      return treatDefaultAsFactory && isFunction$2(defaultValue) ? defaultValue.call(instance.proxy) : defaultValue;
     } else
       ;
   }
@@ -1537,7 +1557,7 @@ function getTransitionRawChildren(children, keepComment = false) {
   return ret;
 }
 function defineComponent(options) {
-  return isFunction$3(options) ? { setup: options, name: options.name } : options;
+  return isFunction$2(options) ? { setup: options, name: options.name } : options;
 }
 const isAsyncWrapper = (i) => !!i.type.__asyncLoader;
 const isKeepAlive = (vnode) => vnode.type.__isKeepAlive;
@@ -1691,7 +1711,7 @@ const KeepAliveImpl = {
 };
 const KeepAlive = KeepAliveImpl;
 function matches(pattern, name2) {
-  if (isArray$2(pattern)) {
+  if (isArray$1(pattern)) {
     return pattern.some((p2) => matches(p2, name2));
   } else if (isString$2(pattern)) {
     return pattern.split(",").indexOf(name2) > -1;
@@ -1827,7 +1847,7 @@ function applyOptions(instance) {
   if (methods) {
     for (const key in methods) {
       const methodHandler = methods[key];
-      if (isFunction$3(methodHandler)) {
+      if (isFunction$2(methodHandler)) {
         {
           ctx[key] = methodHandler.bind(publicThis);
         }
@@ -1835,19 +1855,19 @@ function applyOptions(instance) {
     }
   }
   if (dataOptions) {
-    const data2 = dataOptions.call(publicThis, publicThis);
-    if (!isObject$4(data2))
+    const data = dataOptions.call(publicThis, publicThis);
+    if (!isObject$3(data))
       ;
     else {
-      instance.data = reactive(data2);
+      instance.data = reactive(data);
     }
   }
   shouldCacheAccess = true;
   if (computedOptions) {
     for (const key in computedOptions) {
       const opt = computedOptions[key];
-      const get2 = isFunction$3(opt) ? opt.bind(publicThis, publicThis) : isFunction$3(opt.get) ? opt.get.bind(publicThis, publicThis) : NOOP;
-      const set2 = !isFunction$3(opt) && isFunction$3(opt.set) ? opt.set.bind(publicThis) : NOOP;
+      const get2 = isFunction$2(opt) ? opt.bind(publicThis, publicThis) : isFunction$2(opt.get) ? opt.get.bind(publicThis, publicThis) : NOOP;
+      const set2 = !isFunction$2(opt) && isFunction$2(opt.set) ? opt.set.bind(publicThis) : NOOP;
       const c = computed({
         get: get2,
         set: set2
@@ -1866,7 +1886,7 @@ function applyOptions(instance) {
     }
   }
   if (provideOptions) {
-    const provides = isFunction$3(provideOptions) ? provideOptions.call(publicThis) : provideOptions;
+    const provides = isFunction$2(provideOptions) ? provideOptions.call(publicThis) : provideOptions;
     Reflect.ownKeys(provides).forEach((key) => {
       provide(key, provides[key]);
     });
@@ -1875,7 +1895,7 @@ function applyOptions(instance) {
     callHook$1(created, instance, "c");
   }
   function registerLifecycleHook(register, hook) {
-    if (isArray$2(hook)) {
+    if (isArray$1(hook)) {
       hook.forEach((_hook) => register(_hook.bind(publicThis)));
     } else if (hook) {
       register(hook.bind(publicThis));
@@ -1893,7 +1913,7 @@ function applyOptions(instance) {
   registerLifecycleHook(onBeforeUnmount, beforeUnmount);
   registerLifecycleHook(onUnmounted, unmounted);
   registerLifecycleHook(onServerPrefetch, serverPrefetch);
-  if (isArray$2(expose)) {
+  if (isArray$1(expose)) {
     if (expose.length) {
       const exposed = instance.exposed || (instance.exposed = {});
       expose.forEach((key) => {
@@ -1918,13 +1938,13 @@ function applyOptions(instance) {
     instance.directives = directives;
 }
 function resolveInjections(injectOptions, ctx, checkDuplicateProperties = NOOP, unwrapRef = false) {
-  if (isArray$2(injectOptions)) {
+  if (isArray$1(injectOptions)) {
     injectOptions = normalizeInject(injectOptions);
   }
   for (const key in injectOptions) {
     const opt = injectOptions[key];
     let injected;
-    if (isObject$4(opt)) {
+    if (isObject$3(opt)) {
       if ("default" in opt) {
         injected = inject(opt.from || key, opt.default, true);
       } else {
@@ -1950,23 +1970,23 @@ function resolveInjections(injectOptions, ctx, checkDuplicateProperties = NOOP, 
   }
 }
 function callHook$1(hook, instance, type) {
-  callWithAsyncErrorHandling(isArray$2(hook) ? hook.map((h2) => h2.bind(instance.proxy)) : hook.bind(instance.proxy), instance, type);
+  callWithAsyncErrorHandling(isArray$1(hook) ? hook.map((h2) => h2.bind(instance.proxy)) : hook.bind(instance.proxy), instance, type);
 }
 function createWatcher(raw, ctx, publicThis, key) {
   const getter = key.includes(".") ? createPathGetter(publicThis, key) : () => publicThis[key];
   if (isString$2(raw)) {
     const handler = ctx[raw];
-    if (isFunction$3(handler)) {
+    if (isFunction$2(handler)) {
       watch(getter, handler);
     }
-  } else if (isFunction$3(raw)) {
+  } else if (isFunction$2(raw)) {
     watch(getter, raw.bind(publicThis));
-  } else if (isObject$4(raw)) {
-    if (isArray$2(raw)) {
+  } else if (isObject$3(raw)) {
+    if (isArray$1(raw)) {
       raw.forEach((r) => createWatcher(r, ctx, publicThis, key));
     } else {
-      const handler = isFunction$3(raw.handler) ? raw.handler.bind(publicThis) : ctx[raw.handler];
-      if (isFunction$3(handler)) {
+      const handler = isFunction$2(raw.handler) ? raw.handler.bind(publicThis) : ctx[raw.handler];
+      if (isFunction$2(handler)) {
         watch(getter, handler, raw);
       }
     }
@@ -2047,14 +2067,14 @@ function mergeDataFn(to, from) {
     return from;
   }
   return function mergedDataFn() {
-    return extend$2(isFunction$3(to) ? to.call(this, this) : to, isFunction$3(from) ? from.call(this, this) : from);
+    return extend$1(isFunction$2(to) ? to.call(this, this) : to, isFunction$2(from) ? from.call(this, this) : from);
   };
 }
 function mergeInject(to, from) {
   return mergeObjectOptions(normalizeInject(to), normalizeInject(from));
 }
 function normalizeInject(raw) {
-  if (isArray$2(raw)) {
+  if (isArray$1(raw)) {
     const res = {};
     for (let i = 0; i < raw.length; i++) {
       res[raw[i]] = raw[i];
@@ -2067,14 +2087,14 @@ function mergeAsArray(to, from) {
   return to ? [...new Set([].concat(to, from))] : from;
 }
 function mergeObjectOptions(to, from) {
-  return to ? extend$2(extend$2(Object.create(null), to), from) : from;
+  return to ? extend$1(extend$1(Object.create(null), to), from) : from;
 }
 function mergeWatchOptions(to, from) {
   if (!to)
     return from;
   if (!from)
     return to;
-  const merged = extend$2(Object.create(null), to);
+  const merged = extend$1(Object.create(null), to);
   for (const key in from) {
     merged[key] = mergeAsArray(to[key], from[key]);
   }
@@ -2201,7 +2221,7 @@ function resolvePropValue(options, props, key, value, instance, isAbsent) {
     const hasDefault = hasOwn$2(opt, "default");
     if (hasDefault && value === void 0) {
       const defaultValue = opt.default;
-      if (opt.type !== Function && isFunction$3(defaultValue)) {
+      if (opt.type !== Function && isFunction$2(defaultValue)) {
         const { propsDefaults } = instance;
         if (key in propsDefaults) {
           value = propsDefaults[key];
@@ -2234,11 +2254,11 @@ function normalizePropsOptions(comp, appContext, asMixin = false) {
   const normalized = {};
   const needCastKeys = [];
   let hasExtends = false;
-  if (!isFunction$3(comp)) {
+  if (!isFunction$2(comp)) {
     const extendProps = (raw2) => {
       hasExtends = true;
       const [props, keys] = normalizePropsOptions(raw2, appContext, true);
-      extend$2(normalized, props);
+      extend$1(normalized, props);
       if (keys)
         needCastKeys.push(...keys);
     };
@@ -2256,7 +2276,7 @@ function normalizePropsOptions(comp, appContext, asMixin = false) {
     cache2.set(comp, EMPTY_ARR);
     return EMPTY_ARR;
   }
-  if (isArray$2(raw)) {
+  if (isArray$1(raw)) {
     for (let i = 0; i < raw.length; i++) {
       const normalizedKey = camelize$1(raw[i]);
       if (validatePropName(normalizedKey)) {
@@ -2268,7 +2288,7 @@ function normalizePropsOptions(comp, appContext, asMixin = false) {
       const normalizedKey = camelize$1(key);
       if (validatePropName(normalizedKey)) {
         const opt = raw[key];
-        const prop = normalized[normalizedKey] = isArray$2(opt) || isFunction$3(opt) ? { type: opt } : opt;
+        const prop = normalized[normalizedKey] = isArray$1(opt) || isFunction$2(opt) ? { type: opt } : opt;
         if (prop) {
           const booleanIndex = getTypeIndex(Boolean, prop.type);
           const stringIndex = getTypeIndex(String, prop.type);
@@ -2299,15 +2319,15 @@ function isSameType(a, b) {
   return getType(a) === getType(b);
 }
 function getTypeIndex(type, expectedTypes) {
-  if (isArray$2(expectedTypes)) {
+  if (isArray$1(expectedTypes)) {
     return expectedTypes.findIndex((t2) => isSameType(t2, type));
-  } else if (isFunction$3(expectedTypes)) {
+  } else if (isFunction$2(expectedTypes)) {
     return isSameType(expectedTypes, type) ? 0 : -1;
   }
   return -1;
 }
 const isInternalKey = (key) => key[0] === "_" || key === "$stable";
-const normalizeSlotValue = (value) => isArray$2(value) ? value.map(normalizeVNode) : [normalizeVNode(value)];
+const normalizeSlotValue = (value) => isArray$1(value) ? value.map(normalizeVNode) : [normalizeVNode(value)];
 const normalizeSlot$1 = (key, rawSlot, ctx) => {
   const normalized = withCtx((...args) => {
     return normalizeSlotValue(rawSlot(...args));
@@ -2321,7 +2341,7 @@ const normalizeObjectSlots = (rawSlots, slots, instance) => {
     if (isInternalKey(key))
       continue;
     const value = rawSlots[key];
-    if (isFunction$3(value)) {
+    if (isFunction$2(value)) {
       slots[key] = normalizeSlot$1(key, value, ctx);
     } else if (value != null) {
       const normalized = normalizeSlotValue(value);
@@ -2360,7 +2380,7 @@ const updateSlots = (instance, children, optimized) => {
       if (optimized && type === 1) {
         needDeletionCheck = false;
       } else {
-        extend$2(slots, children);
+        extend$1(slots, children);
         if (!optimized && type === 1) {
           delete slots._;
         }
@@ -2391,7 +2411,7 @@ function withDirectives(vnode, directives) {
   const bindings = vnode.dirs || (vnode.dirs = []);
   for (let i = 0; i < directives.length; i++) {
     let [dir, value, arg, modifiers = EMPTY_OBJ] = directives[i];
-    if (isFunction$3(dir)) {
+    if (isFunction$2(dir)) {
       dir = {
         mounted: dir,
         updated: dir
@@ -2456,7 +2476,7 @@ function createAppContext() {
 let uid = 0;
 function createAppAPI(render, hydrate) {
   return function createApp2(rootComponent, rootProps = null) {
-    if (rootProps != null && !isObject$4(rootProps)) {
+    if (rootProps != null && !isObject$3(rootProps)) {
       rootProps = null;
     }
     const context = createAppContext();
@@ -2478,10 +2498,10 @@ function createAppAPI(render, hydrate) {
       use(plugin, ...options) {
         if (installedPlugins.has(plugin))
           ;
-        else if (plugin && isFunction$3(plugin.install)) {
+        else if (plugin && isFunction$2(plugin.install)) {
           installedPlugins.add(plugin);
           plugin.install(app, ...options);
-        } else if (isFunction$3(plugin)) {
+        } else if (isFunction$2(plugin)) {
           installedPlugins.add(plugin);
           plugin(app, ...options);
         } else
@@ -2540,8 +2560,8 @@ function createAppAPI(render, hydrate) {
   };
 }
 function setRef(rawRef, oldRawRef, parentSuspense, vnode, isUnmount = false) {
-  if (isArray$2(rawRef)) {
-    rawRef.forEach((r, i) => setRef(r, oldRawRef && (isArray$2(oldRawRef) ? oldRawRef[i] : oldRawRef), parentSuspense, vnode, isUnmount));
+  if (isArray$1(rawRef)) {
+    rawRef.forEach((r, i) => setRef(r, oldRawRef && (isArray$1(oldRawRef) ? oldRawRef[i] : oldRawRef), parentSuspense, vnode, isUnmount));
     return;
   }
   if (isAsyncWrapper(vnode) && !isUnmount) {
@@ -2563,7 +2583,7 @@ function setRef(rawRef, oldRawRef, parentSuspense, vnode, isUnmount = false) {
       oldRef.value = null;
     }
   }
-  if (isFunction$3(ref2)) {
+  if (isFunction$2(ref2)) {
     callWithErrorHandling(ref2, owner, 12, [value, refs]);
   } else {
     const _isString = isString$2(ref2);
@@ -2573,9 +2593,9 @@ function setRef(rawRef, oldRawRef, parentSuspense, vnode, isUnmount = false) {
         if (rawRef.f) {
           const existing = _isString ? refs[ref2] : ref2.value;
           if (isUnmount) {
-            isArray$2(existing) && remove$1(existing, refValue);
+            isArray$1(existing) && remove$1(existing, refValue);
           } else {
-            if (!isArray$2(existing)) {
+            if (!isArray$1(existing)) {
               if (_isString) {
                 refs[ref2] = [refValue];
               } else {
@@ -3399,7 +3419,7 @@ function toggleRecurse({ effect, update }, allowed) {
 function traverseStaticChildren(n1, n2, shallow = false) {
   const ch1 = n1.children;
   const ch2 = n2.children;
-  if (isArray$2(ch1) && isArray$2(ch2)) {
+  if (isArray$1(ch1) && isArray$1(ch2)) {
     for (let i = 0; i < ch1.length; i++) {
       const c1 = ch1[i];
       let c2 = ch2[i];
@@ -3660,7 +3680,7 @@ function isSameVNodeType(n1, n2) {
 const InternalObjectKey = `__vInternal`;
 const normalizeKey = ({ key }) => key != null ? key : null;
 const normalizeRef = ({ ref: ref2, ref_key, ref_for }) => {
-  return ref2 != null ? isString$2(ref2) || isRef(ref2) || isFunction$3(ref2) ? { i: currentRenderingInstance, r: ref2, k: ref_key, f: !!ref_for } : ref2 : null;
+  return ref2 != null ? isString$2(ref2) || isRef(ref2) || isFunction$2(ref2) ? { i: currentRenderingInstance, r: ref2, k: ref_key, f: !!ref_for } : ref2 : null;
 };
 function createBaseVNode(type, props = null, children = null, patchFlag = 0, dynamicProps = null, shapeFlag = type === Fragment ? 0 : 1, isBlockNode = false, needFullChildrenNormalization = false) {
   const vnode = {
@@ -3724,20 +3744,20 @@ function _createVNode(type, props = null, children = null, patchFlag = 0, dynami
     if (klass && !isString$2(klass)) {
       props.class = normalizeClass(klass);
     }
-    if (isObject$4(style)) {
-      if (isProxy(style) && !isArray$2(style)) {
-        style = extend$2({}, style);
+    if (isObject$3(style)) {
+      if (isProxy(style) && !isArray$1(style)) {
+        style = extend$1({}, style);
       }
       props.style = normalizeStyle(style);
     }
   }
-  const shapeFlag = isString$2(type) ? 1 : isSuspense(type) ? 128 : isTeleport(type) ? 64 : isObject$4(type) ? 4 : isFunction$3(type) ? 2 : 0;
+  const shapeFlag = isString$2(type) ? 1 : isSuspense(type) ? 128 : isTeleport(type) ? 64 : isObject$3(type) ? 4 : isFunction$2(type) ? 2 : 0;
   return createBaseVNode(type, props, children, patchFlag, dynamicProps, shapeFlag, isBlockNode, true);
 }
 function guardReactiveProps(props) {
   if (!props)
     return null;
-  return isProxy(props) || InternalObjectKey in props ? extend$2({}, props) : props;
+  return isProxy(props) || InternalObjectKey in props ? extend$1({}, props) : props;
 }
 function cloneVNode(vnode, extraProps, mergeRef = false) {
   const { props, ref: ref2, patchFlag, children } = vnode;
@@ -3748,7 +3768,7 @@ function cloneVNode(vnode, extraProps, mergeRef = false) {
     type: vnode.type,
     props: mergedProps,
     key: mergedProps && normalizeKey(mergedProps),
-    ref: extraProps && extraProps.ref ? mergeRef && ref2 ? isArray$2(ref2) ? ref2.concat(normalizeRef(extraProps)) : [ref2, normalizeRef(extraProps)] : normalizeRef(extraProps) : ref2,
+    ref: extraProps && extraProps.ref ? mergeRef && ref2 ? isArray$1(ref2) ? ref2.concat(normalizeRef(extraProps)) : [ref2, normalizeRef(extraProps)] : normalizeRef(extraProps) : ref2,
     scopeId: vnode.scopeId,
     slotScopeIds: vnode.slotScopeIds,
     children,
@@ -3780,7 +3800,7 @@ function createCommentVNode(text = "", asBlock = false) {
 function normalizeVNode(child) {
   if (child == null || typeof child === "boolean") {
     return createVNode(Comment);
-  } else if (isArray$2(child)) {
+  } else if (isArray$1(child)) {
     return createVNode(Fragment, null, child.slice());
   } else if (typeof child === "object") {
     return cloneIfMounted(child);
@@ -3796,7 +3816,7 @@ function normalizeChildren(vnode, children) {
   const { shapeFlag } = vnode;
   if (children == null) {
     children = null;
-  } else if (isArray$2(children)) {
+  } else if (isArray$1(children)) {
     type = 16;
   } else if (typeof children === "object") {
     if (shapeFlag & (1 | 64)) {
@@ -3821,7 +3841,7 @@ function normalizeChildren(vnode, children) {
         }
       }
     }
-  } else if (isFunction$3(children)) {
+  } else if (isFunction$2(children)) {
     children = { default: children, _ctx: currentRenderingInstance };
     type = 32;
   } else {
@@ -3850,7 +3870,7 @@ function mergeProps(...args) {
       } else if (isOn(key)) {
         const existing = ret[key];
         const incoming = toMerge[key];
-        if (existing !== incoming && !(isArray$2(existing) && existing.includes(incoming))) {
+        if (existing !== incoming && !(isArray$1(existing) && existing.includes(incoming))) {
           ret[key] = existing ? [].concat(existing, incoming) : incoming;
         }
       } else if (key !== "") {
@@ -3866,28 +3886,28 @@ function invokeVNodeHook(hook, instance, vnode, prevVNode = null) {
     prevVNode
   ]);
 }
-function renderList(source2, renderItem, cache2, index2) {
+function renderList(source, renderItem, cache2, index2) {
   let ret;
   const cached = cache2 && cache2[index2];
-  if (isArray$2(source2) || isString$2(source2)) {
-    ret = new Array(source2.length);
-    for (let i = 0, l = source2.length; i < l; i++) {
-      ret[i] = renderItem(source2[i], i, void 0, cached && cached[i]);
+  if (isArray$1(source) || isString$2(source)) {
+    ret = new Array(source.length);
+    for (let i = 0, l = source.length; i < l; i++) {
+      ret[i] = renderItem(source[i], i, void 0, cached && cached[i]);
     }
-  } else if (typeof source2 === "number") {
-    ret = new Array(source2);
-    for (let i = 0; i < source2; i++) {
+  } else if (typeof source === "number") {
+    ret = new Array(source);
+    for (let i = 0; i < source; i++) {
       ret[i] = renderItem(i + 1, i, void 0, cached && cached[i]);
     }
-  } else if (isObject$4(source2)) {
-    if (source2[Symbol.iterator]) {
-      ret = Array.from(source2, (item, i) => renderItem(item, i, void 0, cached && cached[i]));
+  } else if (isObject$3(source)) {
+    if (source[Symbol.iterator]) {
+      ret = Array.from(source, (item, i) => renderItem(item, i, void 0, cached && cached[i]));
     } else {
-      const keys = Object.keys(source2);
+      const keys = Object.keys(source);
       ret = new Array(keys.length);
       for (let i = 0, l = keys.length; i < l; i++) {
         const key = keys[i];
-        ret[i] = renderItem(source2[key], key, i, cached && cached[i]);
+        ret[i] = renderItem(source[key], key, i, cached && cached[i]);
       }
     }
   } else {
@@ -3935,7 +3955,7 @@ const getPublicInstance = (i) => {
     return getExposeProxy(i) || i.proxy;
   return getPublicInstance(i.parent);
 };
-const publicPropertiesMap = extend$2(Object.create(null), {
+const publicPropertiesMap = extend$1(Object.create(null), {
   $: (i) => i,
   $el: (i) => i.vnode.el,
   $data: (i) => i.data,
@@ -3953,7 +3973,7 @@ const publicPropertiesMap = extend$2(Object.create(null), {
 });
 const PublicInstanceProxyHandlers = {
   get({ _: instance }, key) {
-    const { ctx, setupState, data: data2, props, accessCache, type, appContext } = instance;
+    const { ctx, setupState, data, props, accessCache, type, appContext } = instance;
     let normalizedProps;
     if (key[0] !== "$") {
       const n = accessCache[key];
@@ -3962,7 +3982,7 @@ const PublicInstanceProxyHandlers = {
           case 1:
             return setupState[key];
           case 2:
-            return data2[key];
+            return data[key];
           case 4:
             return ctx[key];
           case 3:
@@ -3971,9 +3991,9 @@ const PublicInstanceProxyHandlers = {
       } else if (setupState !== EMPTY_OBJ && hasOwn$2(setupState, key)) {
         accessCache[key] = 1;
         return setupState[key];
-      } else if (data2 !== EMPTY_OBJ && hasOwn$2(data2, key)) {
+      } else if (data !== EMPTY_OBJ && hasOwn$2(data, key)) {
         accessCache[key] = 2;
-        return data2[key];
+        return data[key];
       } else if ((normalizedProps = instance.propsOptions[0]) && hasOwn$2(normalizedProps, key)) {
         accessCache[key] = 3;
         return props[key];
@@ -4004,11 +4024,11 @@ const PublicInstanceProxyHandlers = {
       ;
   },
   set({ _: instance }, key, value) {
-    const { data: data2, setupState, ctx } = instance;
+    const { data, setupState, ctx } = instance;
     if (setupState !== EMPTY_OBJ && hasOwn$2(setupState, key)) {
       setupState[key] = value;
-    } else if (data2 !== EMPTY_OBJ && hasOwn$2(data2, key)) {
-      data2[key] = value;
+    } else if (data !== EMPTY_OBJ && hasOwn$2(data, key)) {
+      data[key] = value;
     } else if (hasOwn$2(instance.props, key)) {
       return false;
     }
@@ -4021,9 +4041,9 @@ const PublicInstanceProxyHandlers = {
     }
     return true;
   },
-  has({ _: { data: data2, setupState, accessCache, ctx, appContext, propsOptions } }, key) {
+  has({ _: { data, setupState, accessCache, ctx, appContext, propsOptions } }, key) {
     let normalizedProps;
-    return !!accessCache[key] || data2 !== EMPTY_OBJ && hasOwn$2(data2, key) || setupState !== EMPTY_OBJ && hasOwn$2(setupState, key) || (normalizedProps = propsOptions[0]) && hasOwn$2(normalizedProps, key) || hasOwn$2(ctx, key) || hasOwn$2(publicPropertiesMap, key) || hasOwn$2(appContext.config.globalProperties, key);
+    return !!accessCache[key] || data !== EMPTY_OBJ && hasOwn$2(data, key) || setupState !== EMPTY_OBJ && hasOwn$2(setupState, key) || (normalizedProps = propsOptions[0]) && hasOwn$2(normalizedProps, key) || hasOwn$2(ctx, key) || hasOwn$2(publicPropertiesMap, key) || hasOwn$2(appContext.config.globalProperties, key);
   }
 };
 const emptyAppContext = createAppContext();
@@ -4154,13 +4174,13 @@ function setupStatefulComponent(instance, isSSR) {
   }
 }
 function handleSetupResult(instance, setupResult, isSSR) {
-  if (isFunction$3(setupResult)) {
+  if (isFunction$2(setupResult)) {
     if (instance.type.__ssrInlineRender) {
       instance.ssrRender = setupResult;
     } else {
       instance.render = setupResult;
     }
-  } else if (isObject$4(setupResult)) {
+  } else if (isObject$3(setupResult)) {
     instance.setupState = proxyRefs(setupResult);
   } else
     ;
@@ -4175,7 +4195,7 @@ function finishComponentSetup(instance, isSSR, skipOptions) {
       if (template) {
         const { isCustomElement, compilerOptions } = instance.appContext.config;
         const { delimiters, compilerOptions: componentCompilerOptions } = Component;
-        const finalCompilerOptions = extend$2(extend$2({
+        const finalCompilerOptions = extend$1(extend$1({
           isCustomElement,
           delimiters
         }, compilerOptions), componentCompilerOptions);
@@ -4230,10 +4250,10 @@ function getExposeProxy(instance) {
   }
 }
 function getComponentName(Component) {
-  return isFunction$3(Component) ? Component.displayName || Component.name : Component.name;
+  return isFunction$2(Component) ? Component.displayName || Component.name : Component.name;
 }
 function isClassComponent(value) {
-  return isFunction$3(value) && "__vccOpts" in value;
+  return isFunction$2(value) && "__vccOpts" in value;
 }
 function callWithErrorHandling(fn, instance, type, args) {
   let res;
@@ -4245,7 +4265,7 @@ function callWithErrorHandling(fn, instance, type, args) {
   return res;
 }
 function callWithAsyncErrorHandling(fn, instance, type, args) {
-  if (isFunction$3(fn)) {
+  if (isFunction$2(fn)) {
     const res = callWithErrorHandling(fn, instance, type, args);
     if (res && isPromise$1(res)) {
       res.catch((err) => {
@@ -4340,7 +4360,7 @@ function invalidateJob(job) {
   }
 }
 function queueCb(cb, activeQueue, pendingQueue, index2) {
-  if (!isArray$2(cb)) {
+  if (!isArray$1(cb)) {
     if (!activeQueue || !activeQueue.includes(cb, cb.allowRecurse ? index2 + 1 : index2)) {
       pendingQueue.push(cb);
     }
@@ -4414,36 +4434,36 @@ function flushJobs(seen) {
   }
 }
 const INITIAL_WATCHER_VALUE = {};
-function watch(source2, cb, options) {
-  return doWatch(source2, cb, options);
+function watch(source, cb, options) {
+  return doWatch(source, cb, options);
 }
-function doWatch(source2, cb, { immediate, deep, flush, onTrack, onTrigger } = EMPTY_OBJ) {
+function doWatch(source, cb, { immediate, deep, flush, onTrack, onTrigger } = EMPTY_OBJ) {
   const instance = currentInstance;
   let getter;
   let forceTrigger = false;
   let isMultiSource = false;
-  if (isRef(source2)) {
-    getter = () => source2.value;
-    forceTrigger = !!source2._shallow;
-  } else if (isReactive(source2)) {
-    getter = () => source2;
+  if (isRef(source)) {
+    getter = () => source.value;
+    forceTrigger = !!source._shallow;
+  } else if (isReactive(source)) {
+    getter = () => source;
     deep = true;
-  } else if (isArray$2(source2)) {
+  } else if (isArray$1(source)) {
     isMultiSource = true;
-    forceTrigger = source2.some(isReactive);
-    getter = () => source2.map((s) => {
+    forceTrigger = source.some(isReactive);
+    getter = () => source.map((s) => {
       if (isRef(s)) {
         return s.value;
       } else if (isReactive(s)) {
         return traverse(s);
-      } else if (isFunction$3(s)) {
+      } else if (isFunction$2(s)) {
         return callWithErrorHandling(s, instance, 2);
       } else
         ;
     });
-  } else if (isFunction$3(source2)) {
+  } else if (isFunction$2(source)) {
     if (cb) {
-      getter = () => callWithErrorHandling(source2, instance, 2);
+      getter = () => callWithErrorHandling(source, instance, 2);
     } else {
       getter = () => {
         if (instance && instance.isUnmounted) {
@@ -4452,7 +4472,7 @@ function doWatch(source2, cb, { immediate, deep, flush, onTrack, onTrigger } = E
         if (cleanup) {
           cleanup();
         }
-        return callWithAsyncErrorHandling(source2, instance, 3, [onInvalidate]);
+        return callWithAsyncErrorHandling(source, instance, 3, [onInvalidate]);
       };
     }
   } else {
@@ -4537,11 +4557,11 @@ function doWatch(source2, cb, { immediate, deep, flush, onTrack, onTrigger } = E
     }
   };
 }
-function instanceWatch(source2, value, options) {
+function instanceWatch(source, value, options) {
   const publicThis = this.proxy;
-  const getter = isString$2(source2) ? source2.includes(".") ? createPathGetter(publicThis, source2) : () => publicThis[source2] : source2.bind(publicThis, publicThis);
+  const getter = isString$2(source) ? source.includes(".") ? createPathGetter(publicThis, source) : () => publicThis[source] : source.bind(publicThis, publicThis);
   let cb;
-  if (isFunction$3(value)) {
+  if (isFunction$2(value)) {
     cb = value;
   } else {
     cb = value.handler;
@@ -4568,7 +4588,7 @@ function createPathGetter(ctx, path) {
   };
 }
 function traverse(value, seen) {
-  if (!isObject$4(value) || value["__v_skip"]) {
+  if (!isObject$3(value) || value["__v_skip"]) {
     return value;
   }
   seen = seen || new Set();
@@ -4578,7 +4598,7 @@ function traverse(value, seen) {
   seen.add(value);
   if (isRef(value)) {
     traverse(value.value, seen);
-  } else if (isArray$2(value)) {
+  } else if (isArray$1(value)) {
     for (let i = 0; i < value.length; i++) {
       traverse(value[i], seen);
     }
@@ -4586,7 +4606,7 @@ function traverse(value, seen) {
     value.forEach((v) => {
       traverse(v, seen);
     });
-  } else if (isPlainObject$3(value)) {
+  } else if (isPlainObject$2(value)) {
     for (const key in value) {
       traverse(value[key], seen);
     }
@@ -4596,7 +4616,7 @@ function traverse(value, seen) {
 function h(type, propsOrChildren, children) {
   const l = arguments.length;
   if (l === 2) {
-    if (isObject$4(propsOrChildren) && !isArray$2(propsOrChildren)) {
+    if (isObject$3(propsOrChildren) && !isArray$1(propsOrChildren)) {
       if (isVNode(propsOrChildren)) {
         return createVNode(type, null, [propsOrChildren]);
       }
@@ -4721,7 +4741,7 @@ function patchStyle(el, prev, next) {
 }
 const importantRE = /\s*!important$/;
 function setStyle(style, name2, val) {
-  if (isArray$2(val)) {
+  if (isArray$1(val)) {
     val.forEach((v) => setStyle(style, name2, v));
   } else {
     if (name2.startsWith("--")) {
@@ -4804,7 +4824,7 @@ function patchDOMProp(el, key, value, prevChildren, parentComponent, parentSuspe
     } else if (type === "number") {
       try {
         el[key] = 0;
-      } catch (_a) {
+      } catch (_a2) {
       }
       el.removeAttribute(key);
       return;
@@ -4877,7 +4897,7 @@ function createInvoker(initialValue, instance) {
   return invoker;
 }
 function patchStopImmediatePropagation(e, value) {
-  if (isArray$2(value)) {
+  if (isArray$1(value)) {
     const originalStop = e.stopImmediatePropagation;
     e.stopImmediatePropagation = () => {
       originalStop.call(e);
@@ -4914,7 +4934,7 @@ function shouldSetAsProp(el, key, value, isSVG) {
     if (key === "innerHTML" || key === "textContent") {
       return true;
     }
-    if (key in el && nativeOnRE.test(key) && isFunction$3(value)) {
+    if (key in el && nativeOnRE.test(key) && isFunction$2(value)) {
       return true;
     }
     return false;
@@ -4958,16 +4978,16 @@ const DOMTransitionPropsValidators = {
   leaveActiveClass: String,
   leaveToClass: String
 };
-Transition.props = /* @__PURE__ */ extend$2({}, BaseTransition.props, DOMTransitionPropsValidators);
+Transition.props = /* @__PURE__ */ extend$1({}, BaseTransition.props, DOMTransitionPropsValidators);
 const callHook = (hook, args = []) => {
-  if (isArray$2(hook)) {
+  if (isArray$1(hook)) {
     hook.forEach((h2) => h2(...args));
   } else if (hook) {
     hook(...args);
   }
 };
 const hasExplicitCallback = (hook) => {
-  return hook ? isArray$2(hook) ? hook.some((h2) => h2.length > 1) : hook.length > 1 : false;
+  return hook ? isArray$1(hook) ? hook.some((h2) => h2.length > 1) : hook.length > 1 : false;
 };
 function resolveTransitionProps(rawProps) {
   const baseProps = {};
@@ -5008,7 +5028,7 @@ function resolveTransitionProps(rawProps) {
       });
     };
   };
-  return extend$2(baseProps, {
+  return extend$1(baseProps, {
     onBeforeEnter(el) {
       callHook(onBeforeEnter, [el]);
       addTransitionClass(el, enterFromClass);
@@ -5052,7 +5072,7 @@ function resolveTransitionProps(rawProps) {
 function normalizeDuration(duration) {
   if (duration == null) {
     return null;
-  } else if (isObject$4(duration)) {
+  } else if (isObject$3(duration)) {
     return [NumberOf(duration.enter), NumberOf(duration.leave)];
   } else {
     const n = NumberOf(duration);
@@ -5202,7 +5222,7 @@ const vShow = {
 function setDisplay(el, value) {
   el.style.display = value ? el._vod : "none";
 }
-const rendererOptions = extend$2({ patchProp }, nodeOps);
+const rendererOptions = extend$1({ patchProp }, nodeOps);
 let renderer;
 function ensureRenderer() {
   return renderer || (renderer = createRenderer(rendererOptions));
@@ -5215,7 +5235,7 @@ const createApp = (...args) => {
     if (!container)
       return;
     const component = app._component;
-    if (!isFunction$3(component) && !component.render && !component.template) {
+    if (!isFunction$2(component) && !component.render && !component.template) {
       component.template = container.innerHTML;
     }
     container.innerHTML = "";
@@ -5235,16 +5255,16 @@ function normalizeContainer(container) {
   }
   return container;
 }
-function noop$2() {
+function noop$3() {
 }
-var extend$1 = Object.assign;
-var inBrowser$1 = typeof window !== "undefined";
+const extend = Object.assign;
+const inBrowser$1 = typeof window !== "undefined";
 function get(object, path) {
-  var keys = path.split(".");
-  var result = object;
+  const keys = path.split(".");
+  let result = object;
   keys.forEach((key) => {
-    var _result$key;
-    result = (_result$key = result[key]) != null ? _result$key : "";
+    var _a2;
+    result = (_a2 = result[key]) != null ? _a2 : "";
   });
   return result;
 }
@@ -5256,35 +5276,35 @@ function pick(obj, keys, ignoreUndefined) {
     return ret;
   }, {});
 }
-var unknownProp = null;
-var numericProp = [Number, String];
-var truthProp = {
+const unknownProp = null;
+const numericProp = [Number, String];
+const truthProp = {
   type: Boolean,
   default: true
 };
-var makeRequiredProp = (type) => ({
+const makeRequiredProp = (type) => ({
   type,
   required: true
 });
-var makeArrayProp = () => ({
+const makeArrayProp = () => ({
   type: Array,
   default: () => []
 });
-var makeNumberProp = (defaultVal) => ({
+const makeNumberProp = (defaultVal) => ({
   type: Number,
   default: defaultVal
 });
-var makeNumericProp = (defaultVal) => ({
+const makeNumericProp = (defaultVal) => ({
   type: numericProp,
   default: defaultVal
 });
-var makeStringProp = (defaultVal) => ({
+const makeStringProp = (defaultVal) => ({
   type: String,
   default: defaultVal
 });
-const inBrowser = typeof window !== "undefined";
-const isWindow = (val) => val === window;
-const makeDOMRect = (width2, height2) => ({
+var inBrowser = typeof window !== "undefined";
+var isWindow = (val) => val === window;
+var makeDOMRect = (width2, height2) => ({
   top: 0,
   left: 0,
   right: width2,
@@ -5292,7 +5312,7 @@ const makeDOMRect = (width2, height2) => ({
   width: width2,
   height: height2
 });
-const useRect = (elementOrRef) => {
+var useRect = (elementOrRef) => {
   const element = unref(elementOrRef);
   if (isWindow(element)) {
     const width2 = element.innerWidth;
@@ -5327,10 +5347,11 @@ function flattenVNodes(children) {
   const traverse2 = (children2) => {
     if (Array.isArray(children2)) {
       children2.forEach((child) => {
-        var _a;
+        var _a2;
         if (isVNode(child)) {
           result.push(child);
-          if ((_a = child.component) == null ? void 0 : _a.subTree) {
+          if ((_a2 = child.component) == null ? void 0 : _a2.subTree) {
+            result.push(child.component.subTree);
             traverse2(child.component.subTree.children);
           }
           if (child.children) {
@@ -5396,7 +5417,7 @@ function onMountedOrActivated(hook) {
     }
   });
 }
-function useEventListener(type, listener, options = {}) {
+function useEventListener$1(type, listener, options = {}) {
   if (!inBrowser) {
     return;
   }
@@ -5426,8 +5447,8 @@ function useEventListener(type, listener, options = {}) {
     });
   }
 }
-let width;
-let height;
+var width;
+var height;
 function useWindowSize() {
   if (!width) {
     width = ref(0);
@@ -5444,8 +5465,8 @@ function useWindowSize() {
   }
   return { width, height };
 }
-const overflowScrollReg = /scroll|auto/i;
-const defaultRoot = inBrowser ? window : void 0;
+var overflowScrollReg = /scroll|auto/i;
+var defaultRoot = inBrowser ? window : void 0;
 function isElement(node) {
   const ELEMENT_NODE_TYPE = 1;
   return node.tagName !== "HTML" && node.tagName !== "BODY" && node.nodeType === ELEMENT_NODE_TYPE;
@@ -5461,7 +5482,7 @@ function getScrollParent(el, root = defaultRoot) {
   }
   return root;
 }
-const CUSTOM_FIELD_INJECTION_KEY = Symbol("van-field");
+var CUSTOM_FIELD_INJECTION_KEY = Symbol("van-field");
 function useCustomFieldValue(customValue) {
   const field = inject(CUSTOM_FIELD_INJECTION_KEY, null);
   if (field && !field.customValue.value) {
@@ -5472,12 +5493,12 @@ function useCustomFieldValue(customValue) {
     });
   }
 }
-var isDef = (val) => val !== void 0 && val !== null;
-var isFunction$2 = (val) => typeof val === "function";
-var isObject$3 = (val) => val !== null && typeof val === "object";
-var isPromise = (val) => isObject$3(val) && isFunction$2(val.then) && isFunction$2(val.catch);
-var isNumeric = (val) => typeof val === "number" || /^\d+(\.\d+)?$/.test(val);
-var isIOS$1 = () => inBrowser$1 ? /ios|iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase()) : false;
+const isDef = (val) => val !== void 0 && val !== null;
+const isFunction$1 = (val) => typeof val === "function";
+const isObject$2 = (val) => val !== null && typeof val === "object";
+const isPromise = (val) => isObject$2(val) && isFunction$1(val.then) && isFunction$1(val.catch);
+const isNumeric = (val) => typeof val === "number" || /^\d+(\.\d+)?$/.test(val);
+const isIOS$1 = () => inBrowser$1 ? /ios|iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase()) : false;
 function setScrollTop(el, value) {
   if ("scrollTop" in el) {
     el.scrollTop = value;
@@ -5492,13 +5513,13 @@ function setRootScrollTop(value) {
   setScrollTop(window, value);
   setScrollTop(document.body, value);
 }
-var isIOS = isIOS$1();
+const isIOS = isIOS$1();
 function resetScroll() {
   if (isIOS) {
     setRootScrollTop(getRootScrollTop());
   }
 }
-var stopPropagation = (event) => event.stopPropagation();
+const stopPropagation = (event) => event.stopPropagation();
 function preventDefault(event, isStopPropagation) {
   if (typeof event.cancelable !== "boolean" || event.cancelable) {
     event.preventDefault();
@@ -5510,13 +5531,13 @@ function preventDefault(event, isStopPropagation) {
 useWindowSize();
 function addUnit(value) {
   if (isDef(value)) {
-    return isNumeric(value) ? value + "px" : String(value);
+    return isNumeric(value) ? `${value}px` : String(value);
   }
   return void 0;
 }
 function getSizeStyle(originSize) {
   if (isDef(originSize)) {
-    var size2 = addUnit(originSize);
+    const size2 = addUnit(originSize);
     return {
       width: size2,
       height: size2
@@ -5524,17 +5545,17 @@ function getSizeStyle(originSize) {
   }
 }
 function getZIndexStyle(zIndex) {
-  var style = {};
+  const style = {};
   if (zIndex !== void 0) {
     style.zIndex = +zIndex;
   }
   return style;
 }
-var camelizeRE = /-(\w)/g;
-var camelize = (str) => str.replace(camelizeRE, (_, c) => c.toUpperCase());
-var kebabCase = (str) => str.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, "");
+const camelizeRE = /-(\w)/g;
+const camelize = (str) => str.replace(camelizeRE, (_, c) => c.toUpperCase());
+const kebabCase = (str) => str.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, "");
 function trimExtraChar(value, char, regExp) {
-  var index2 = value.indexOf(char);
+  const index2 = value.indexOf(char);
   if (index2 === -1) {
     return value;
   }
@@ -5543,13 +5564,7 @@ function trimExtraChar(value, char, regExp) {
   }
   return value.slice(0, index2 + 1) + value.slice(index2).replace(regExp, "");
 }
-function formatNumber(value, allowDot, allowMinus) {
-  if (allowDot === void 0) {
-    allowDot = true;
-  }
-  if (allowMinus === void 0) {
-    allowMinus = true;
-  }
+function formatNumber(value, allowDot = true, allowMinus = true) {
   if (allowDot) {
     value = trimExtraChar(value, ".", /\./g);
   } else {
@@ -5560,18 +5575,16 @@ function formatNumber(value, allowDot, allowMinus) {
   } else {
     value = value.replace(/-/, "");
   }
-  var regExp = allowDot ? /[^-0-9.]/g : /[^-0-9]/g;
+  const regExp = allowDot ? /[^-0-9.]/g : /[^-0-9]/g;
   return value.replace(regExp, "");
 }
-var {
-  hasOwnProperty: hasOwnProperty$2
-} = Object.prototype;
+const { hasOwnProperty: hasOwnProperty$2 } = Object.prototype;
 function assignKey(to, from, key) {
-  var val = from[key];
+  const val = from[key];
   if (!isDef(val)) {
     return;
   }
-  if (!hasOwnProperty$2.call(to, key) || !isObject$3(val)) {
+  if (!hasOwnProperty$2.call(to, key) || !isObject$2(val)) {
     to[key] = val;
   } else {
     to[key] = deepAssign(Object(to[key]), val);
@@ -5583,7 +5596,7 @@ function deepAssign(to, from) {
   });
   return to;
 }
-var zhCN = {
+var stdin_default$m = {
   name: "\u59D3\u540D",
   tel: "\u7535\u8BDD",
   save: "\u4FDD\u5B58",
@@ -5593,25 +5606,18 @@ var zhCN = {
   loading: "\u52A0\u8F7D\u4E2D...",
   noCoupon: "\u6682\u65E0\u4F18\u60E0\u5238",
   nameEmpty: "\u8BF7\u586B\u5199\u59D3\u540D",
+  addContact: "\u6DFB\u52A0\u8054\u7CFB\u4EBA",
   telInvalid: "\u8BF7\u586B\u5199\u6B63\u786E\u7684\u7535\u8BDD",
   vanCalendar: {
     end: "\u7ED3\u675F",
     start: "\u5F00\u59CB",
     title: "\u65E5\u671F\u9009\u62E9",
-    confirm: "\u786E\u5B9A",
-    startEnd: "\u5F00\u59CB/\u7ED3\u675F",
     weekdays: ["\u65E5", "\u4E00", "\u4E8C", "\u4E09", "\u56DB", "\u4E94", "\u516D"],
-    monthTitle: (year, month) => year + "\u5E74" + month + "\u6708",
-    rangePrompt: (maxRange) => "\u6700\u591A\u9009\u62E9 " + maxRange + " \u5929"
+    monthTitle: (year, month) => `${year}\u5E74${month}\u6708`,
+    rangePrompt: (maxRange) => `\u6700\u591A\u9009\u62E9 ${maxRange} \u5929`
   },
   vanCascader: {
     select: "\u8BF7\u9009\u62E9"
-  },
-  vanContactCard: {
-    addText: "\u6DFB\u52A0\u8054\u7CFB\u4EBA"
-  },
-  vanContactList: {
-    addText: "\u65B0\u5EFA\u8054\u7CFB\u4EBA"
   },
   vanPagination: {
     prev: "\u4E0A\u4E00\u9875",
@@ -5622,23 +5628,23 @@ var zhCN = {
     loosing: "\u91CA\u653E\u5373\u53EF\u5237\u65B0..."
   },
   vanSubmitBar: {
-    label: "\u5408\u8BA1\uFF1A"
+    label: "\u5408\u8BA1:"
   },
   vanCoupon: {
-    unlimited: "\u65E0\u4F7F\u7528\u95E8\u69DB",
-    discount: (discount) => discount + "\u6298",
-    condition: (condition) => "\u6EE1" + condition + "\u5143\u53EF\u7528"
+    unlimited: "\u65E0\u95E8\u69DB",
+    discount: (discount) => `${discount}\u6298`,
+    condition: (condition) => `\u6EE1${condition}\u5143\u53EF\u7528`
   },
   vanCouponCell: {
     title: "\u4F18\u60E0\u5238",
-    count: (count) => count + "\u5F20\u53EF\u7528"
+    count: (count) => `${count}\u5F20\u53EF\u7528`
   },
   vanCouponList: {
     exchange: "\u5151\u6362",
-    close: "\u4E0D\u4F7F\u7528\u4F18\u60E0\u5238",
+    close: "\u4E0D\u4F7F\u7528",
     enable: "\u53EF\u7528",
     disabled: "\u4E0D\u53EF\u7528",
-    placeholder: "\u8BF7\u8F93\u5165\u4F18\u60E0\u7801"
+    placeholder: "\u8F93\u5165\u4F18\u60E0\u7801"
   },
   vanAddressEdit: {
     area: "\u5730\u533A",
@@ -5646,46 +5652,36 @@ var zhCN = {
     areaEmpty: "\u8BF7\u9009\u62E9\u5730\u533A",
     addressEmpty: "\u8BF7\u586B\u5199\u8BE6\u7EC6\u5730\u5740",
     postalEmpty: "\u90AE\u653F\u7F16\u7801\u4E0D\u6B63\u786E",
+    addressDetail: "\u8BE6\u7EC6\u5730\u5740",
     defaultAddress: "\u8BBE\u4E3A\u9ED8\u8BA4\u6536\u8D27\u5730\u5740"
-  },
-  vanAddressEditDetail: {
-    label: "\u8BE6\u7EC6\u5730\u5740",
-    placeholder: "\u8857\u9053\u95E8\u724C\u4FE1\u606F"
   },
   vanAddressList: {
     add: "\u65B0\u589E\u5730\u5740"
   }
 };
-var lang = ref("zh-CN");
-var messages = reactive({
-  "zh-CN": zhCN
+const lang = ref("zh-CN");
+const messages = reactive({
+  "zh-CN": stdin_default$m
 });
-var Locale = {
+const Locale = {
   messages() {
     return messages[lang.value];
   },
   use(newLang, newMessages) {
     lang.value = newLang;
-    this.add({
-      [newLang]: newMessages
-    });
+    this.add({ [newLang]: newMessages });
   },
-  add(newMessages) {
-    if (newMessages === void 0) {
-      newMessages = {};
-    }
+  add(newMessages = {}) {
     deepAssign(messages, newMessages);
   }
 };
+var stdin_default$l = Locale;
 function createTranslate(name2) {
-  var prefix = camelize(name2) + ".";
-  return function(path) {
-    var messages2 = Locale.messages();
-    var message = get(messages2, prefix + path) || get(messages2, path);
-    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
-    return isFunction$2(message) ? message(...args) : message;
+  const prefix = camelize(name2) + ".";
+  return (path, ...args) => {
+    const messages2 = stdin_default$l.messages();
+    const message = get(messages2, prefix + path) || get(messages2, path);
+    return isFunction$1(message) ? message(...args) : message;
   };
 }
 function genBem(name2, mods) {
@@ -5693,7 +5689,7 @@ function genBem(name2, mods) {
     return "";
   }
   if (typeof mods === "string") {
-    return " " + name2 + "--" + mods;
+    return ` ${name2}--${mods}`;
   }
   if (Array.isArray(mods)) {
     return mods.reduce((ret, item) => ret + genBem(name2, item), "");
@@ -5706,28 +5702,31 @@ function createBEM(name2) {
       mods = el;
       el = "";
     }
-    el = el ? name2 + "__" + el : name2;
-    return "" + el + genBem(el, mods);
+    el = el ? `${name2}__${el}` : name2;
+    return `${el}${genBem(el, mods)}`;
   };
 }
 function createNamespace(name2) {
-  var prefixedName = "van-" + name2;
-  return [prefixedName, createBEM(prefixedName), createTranslate(prefixedName)];
+  const prefixedName = `van-${name2}`;
+  return [
+    prefixedName,
+    createBEM(prefixedName),
+    createTranslate(prefixedName)
+  ];
 }
-var BORDER = "van-hairline";
-var BORDER_BOTTOM = BORDER + "--bottom";
-var BORDER_SURROUND = BORDER + "--surround";
-var BORDER_TOP_BOTTOM = BORDER + "--top-bottom";
-var HAPTICS_FEEDBACK = "van-haptics-feedback";
-var FORM_KEY = Symbol("van-form");
-function callInterceptor(interceptor, _ref) {
-  var {
-    args = [],
-    done,
-    canceled
-  } = _ref;
+const BORDER = "van-hairline";
+const BORDER_BOTTOM = `${BORDER}--bottom`;
+const BORDER_SURROUND = `${BORDER}--surround`;
+const BORDER_TOP_BOTTOM = `${BORDER}--top-bottom`;
+const HAPTICS_FEEDBACK = "van-haptics-feedback";
+const FORM_KEY = Symbol("van-form");
+function callInterceptor(interceptor, {
+  args = [],
+  done,
+  canceled
+}) {
   if (interceptor) {
-    var returnVal = interceptor.apply(null, args);
+    const returnVal = interceptor.apply(null, args);
     if (isPromise(returnVal)) {
       returnVal.then((value) => {
         if (value) {
@@ -5735,7 +5734,7 @@ function callInterceptor(interceptor, _ref) {
         } else if (canceled) {
           canceled();
         }
-      }).catch(noop$2);
+      }).catch(noop$3);
     } else if (returnVal) {
       done();
     } else if (canceled) {
@@ -5747,32 +5746,29 @@ function callInterceptor(interceptor, _ref) {
 }
 function withInstall(options) {
   options.install = (app) => {
-    var {
-      name: name2
-    } = options;
+    const { name: name2 } = options;
     app.component(name2, options);
-    app.component(camelize("-" + name2), options);
+    app.component(camelize(`-${name2}`), options);
   };
   return options;
 }
 function useExpose(apis) {
-  var instance = getCurrentInstance();
+  const instance = getCurrentInstance();
   if (instance) {
-    extend$1(instance.proxy, apis);
+    extend(instance.proxy, apis);
   }
 }
-var routeProps = {
+const routeProps = {
   to: [String, Object],
   url: String,
   replace: Boolean
 };
-function route(_ref) {
-  var {
-    to,
-    url,
-    replace,
-    $router: router
-  } = _ref;
+function route({
+  to,
+  url,
+  replace,
+  $router: router
+}) {
   if (to && router) {
     router[replace ? "replace" : "push"](to);
   } else if (url) {
@@ -5780,11 +5776,11 @@ function route(_ref) {
   }
 }
 function useRoute$1() {
-  var vm = getCurrentInstance().proxy;
+  const vm = getCurrentInstance().proxy;
   return () => route(vm);
 }
-var [name$h, bem$h] = createNamespace("badge");
-var badgeProps = {
+const [name$h, bem$h] = createNamespace("badge");
+const badgeProps = {
   dot: Boolean,
   max: numericProp,
   tag: makeStringProp("div"),
@@ -5794,25 +5790,24 @@ var badgeProps = {
   showZero: truthProp,
   position: makeStringProp("top-right")
 };
-var _Badge = defineComponent({
+var stdin_default$k = defineComponent({
   name: name$h,
   props: badgeProps,
-  setup(props, _ref) {
-    var {
-      slots
-    } = _ref;
-    var hasContent = () => {
+  setup(props, {
+    slots
+  }) {
+    const hasContent = () => {
       if (slots.content) {
         return true;
       }
-      var {
+      const {
         content,
         showZero
       } = props;
       return isDef(content) && content !== "" && (showZero || content !== 0);
     };
-    var renderContent = () => {
-      var {
+    const renderContent = () => {
+      const {
         dot,
         max,
         content
@@ -5822,23 +5817,23 @@ var _Badge = defineComponent({
           return slots.content();
         }
         if (isDef(max) && isNumeric(content) && +content > max) {
-          return max + "+";
+          return `${max}+`;
         }
         return content;
       }
     };
-    var style = computed(() => {
-      var style2 = {
+    const style = computed(() => {
+      const style2 = {
         background: props.color
       };
       if (props.offset) {
-        var [x, y] = props.offset;
+        const [x, y] = props.offset;
         if (slots.default) {
           style2.top = addUnit(y);
           if (typeof x === "number") {
             style2.right = addUnit(-x);
           } else {
-            style2.right = x.startsWith("-") ? x.replace("-", "") : "-" + x;
+            style2.right = x.startsWith("-") ? x.replace("-", "") : `-${x}`;
           }
         } else {
           style2.marginTop = addUnit(y);
@@ -5847,7 +5842,7 @@ var _Badge = defineComponent({
       }
       return style2;
     });
-    var renderBadge = () => {
+    const renderBadge = () => {
       if (hasContent() || props.dot) {
         return createVNode("div", {
           "class": bem$h([props.position, {
@@ -5860,7 +5855,7 @@ var _Badge = defineComponent({
     };
     return () => {
       if (slots.default) {
-        var {
+        const {
           tag
         } = props;
         return createVNode(tag, {
@@ -5873,45 +5868,54 @@ var _Badge = defineComponent({
     };
   }
 });
-var Badge = withInstall(_Badge);
-var [name$g, bem$g] = createNamespace("config-provider");
-var CONFIG_PROVIDER_KEY = Symbol(name$g);
-var configProviderProps = {
+const Badge = withInstall(stdin_default$k);
+const [name$g, bem$g] = createNamespace("config-provider");
+const CONFIG_PROVIDER_KEY = Symbol(name$g);
+const configProviderProps = {
   tag: makeStringProp("div"),
+  theme: makeStringProp("light"),
   themeVars: Object,
   iconPrefix: String
 };
 function mapThemeVarsToCSSVars(themeVars) {
-  var cssVars = {};
+  const cssVars = {};
   Object.keys(themeVars).forEach((key) => {
-    cssVars["--van-" + kebabCase(key)] = themeVars[key];
+    cssVars[`--van-${kebabCase(key)}`] = themeVars[key];
   });
   return cssVars;
 }
 defineComponent({
   name: name$g,
   props: configProviderProps,
-  setup(props, _ref) {
-    var {
-      slots
-    } = _ref;
-    var style = computed(() => {
+  setup(props, {
+    slots
+  }) {
+    const style = computed(() => {
       if (props.themeVars) {
         return mapThemeVarsToCSSVars(props.themeVars);
       }
     });
+    if (inBrowser$1) {
+      watch(() => props.theme, (newVal, oldVal) => {
+        document.body.classList.remove(`van-theme-${oldVal}`);
+        document.body.classList.add(`van-theme-${newVal}`);
+      });
+    }
     provide(CONFIG_PROVIDER_KEY, props);
     return () => createVNode(props.tag, {
       "class": bem$g(),
       "style": style.value
     }, {
-      default: () => [slots.default == null ? void 0 : slots.default()]
+      default: () => {
+        var _a2;
+        return [(_a2 = slots.default) == null ? void 0 : _a2.call(slots)];
+      }
     });
   }
 });
-var [name$f, bem$f] = createNamespace("icon");
-var isImage = (name2) => name2 == null ? void 0 : name2.includes("/");
-var iconProps = {
+const [name$f, bem$f] = createNamespace("icon");
+const isImage = (name2) => name2 == null ? void 0 : name2.includes("/");
+const iconProps = {
   dot: Boolean,
   tag: makeStringProp("i"),
   name: String,
@@ -5921,17 +5925,16 @@ var iconProps = {
   badgeProps: Object,
   classPrefix: String
 };
-var _Icon = defineComponent({
+var stdin_default$j = defineComponent({
   name: name$f,
   props: iconProps,
-  setup(props, _ref) {
-    var {
-      slots
-    } = _ref;
-    var config = inject(CONFIG_PROVIDER_KEY, null);
-    var classPrefix = computed(() => props.classPrefix || (config == null ? void 0 : config.iconPrefix) || bem$f());
+  setup(props, {
+    slots
+  }) {
+    const config = inject(CONFIG_PROVIDER_KEY, null);
+    const classPrefix = computed(() => props.classPrefix || (config == null ? void 0 : config.iconPrefix) || bem$f());
     return () => {
-      var {
+      const {
         tag,
         dot,
         name: name2,
@@ -5939,31 +5942,34 @@ var _Icon = defineComponent({
         badge,
         color
       } = props;
-      var isImageIcon = isImage(name2);
+      const isImageIcon = isImage(name2);
       return createVNode(Badge, mergeProps({
         "dot": dot,
         "tag": tag,
-        "class": [classPrefix.value, isImageIcon ? "" : classPrefix.value + "-" + name2],
+        "class": [classPrefix.value, isImageIcon ? "" : `${classPrefix.value}-${name2}`],
         "style": {
           color,
           fontSize: addUnit(size2)
         },
         "content": badge
       }, props.badgeProps), {
-        default: () => [slots.default == null ? void 0 : slots.default(), isImageIcon && createVNode("img", {
-          "class": bem$f("image"),
-          "src": name2
-        }, null)]
+        default: () => {
+          var _a2;
+          return [(_a2 = slots.default) == null ? void 0 : _a2.call(slots), isImageIcon && createVNode("img", {
+            "class": bem$f("image"),
+            "src": name2
+          }, null)];
+        }
       });
     };
   }
 });
-var Icon = withInstall(_Icon);
-var [name$e, bem$e] = createNamespace("loading");
-var SpinIcon = Array(12).fill(null).map((_, index2) => createVNode("i", {
+const Icon = withInstall(stdin_default$j);
+const [name$e, bem$e] = createNamespace("loading");
+const SpinIcon = Array(12).fill(null).map((_, index2) => createVNode("i", {
   "class": bem$e("line", String(index2 + 1))
 }, null));
-var CircularIcon = createVNode("svg", {
+const CircularIcon = createVNode("svg", {
   "class": bem$e("circular"),
   "viewBox": "25 25 50 50"
 }, [createVNode("circle", {
@@ -5972,7 +5978,7 @@ var CircularIcon = createVNode("svg", {
   "r": "20",
   "fill": "none"
 }, null)]);
-var loadingProps = {
+const loadingProps = {
   size: numericProp,
   type: makeStringProp("circular"),
   color: String,
@@ -5980,30 +5986,29 @@ var loadingProps = {
   textSize: numericProp,
   textColor: String
 };
-var _Loading = defineComponent({
+var stdin_default$i = defineComponent({
   name: name$e,
   props: loadingProps,
-  setup(props, _ref) {
-    var {
-      slots
-    } = _ref;
-    var spinnerStyle = computed(() => extend$1({
+  setup(props, {
+    slots
+  }) {
+    const spinnerStyle = computed(() => extend({
       color: props.color
     }, getSizeStyle(props.size)));
-    var renderText = () => {
+    const renderText = () => {
+      var _a2;
       if (slots.default) {
-        var _props$textColor;
         return createVNode("span", {
           "class": bem$e("text"),
           "style": {
             fontSize: addUnit(props.textSize),
-            color: (_props$textColor = props.textColor) != null ? _props$textColor : props.color
+            color: (_a2 = props.textColor) != null ? _a2 : props.color
           }
         }, [slots.default()]);
       }
     };
     return () => {
-      var {
+      const {
         type,
         vertical
       } = props;
@@ -6018,9 +6023,9 @@ var _Loading = defineComponent({
     };
   }
 });
-var Loading = withInstall(_Loading);
-var [name$d, bem$d] = createNamespace("button");
-var buttonProps = extend$1({}, routeProps, {
+const Loading = withInstall(stdin_default$i);
+const [name$d, bem$d] = createNamespace("button");
+const buttonProps = extend({}, routeProps, {
   tag: makeStringProp("button"),
   text: String,
   icon: String,
@@ -6041,17 +6046,16 @@ var buttonProps = extend$1({}, routeProps, {
   loadingType: String,
   iconPosition: makeStringProp("left")
 });
-var _Button = defineComponent({
+var stdin_default$h = defineComponent({
   name: name$d,
   props: buttonProps,
   emits: ["click"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var route2 = useRoute$1();
-    var renderLoadingIcon = () => {
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const route2 = useRoute$1();
+    const renderLoadingIcon = () => {
       if (slots.loading) {
         return slots.loading();
       }
@@ -6061,7 +6065,7 @@ var _Button = defineComponent({
         "class": bem$d("loading")
       }, null);
     };
-    var renderIcon = () => {
+    const renderIcon = () => {
       if (props.loading) {
         return renderLoadingIcon();
       }
@@ -6078,8 +6082,8 @@ var _Button = defineComponent({
         }, null);
       }
     };
-    var renderText = () => {
-      var text;
+    const renderText = () => {
+      let text;
       if (props.loading) {
         text = props.loadingText;
       } else {
@@ -6091,13 +6095,13 @@ var _Button = defineComponent({
         }, [text]);
       }
     };
-    var getStyle = () => {
-      var {
+    const getStyle = () => {
+      const {
         color,
         plain
       } = props;
       if (color) {
-        var style = {
+        const style = {
           color: plain ? color : "white"
         };
         if (!plain) {
@@ -6111,7 +6115,7 @@ var _Button = defineComponent({
         return style;
       }
     };
-    var onClick = (event) => {
+    const onClick = (event) => {
       if (props.loading) {
         preventDefault(event);
       } else if (!props.disabled) {
@@ -6120,7 +6124,7 @@ var _Button = defineComponent({
       }
     };
     return () => {
-      var {
+      const {
         tag,
         type,
         size: size2,
@@ -6134,7 +6138,7 @@ var _Button = defineComponent({
         nativeType,
         iconPosition
       } = props;
-      var classes = [bem$d([type, size2, {
+      const classes = [bem$d([type, size2, {
         plain,
         block,
         round,
@@ -6159,8 +6163,8 @@ var _Button = defineComponent({
     };
   }
 });
-var Button = withInstall(_Button);
-var popupSharedProps = {
+const Button = withInstall(stdin_default$h);
+const popupSharedProps = {
   show: Boolean,
   zIndex: numericProp,
   overlay: truthProp,
@@ -6184,34 +6188,34 @@ function getDirection(x, y) {
   return "";
 }
 function useTouch() {
-  var startX = ref(0);
-  var startY = ref(0);
-  var deltaX = ref(0);
-  var deltaY = ref(0);
-  var offsetX = ref(0);
-  var offsetY = ref(0);
-  var direction = ref("");
-  var isVertical = () => direction.value === "vertical";
-  var isHorizontal = () => direction.value === "horizontal";
-  var reset2 = () => {
+  const startX = ref(0);
+  const startY = ref(0);
+  const deltaX = ref(0);
+  const deltaY = ref(0);
+  const offsetX = ref(0);
+  const offsetY = ref(0);
+  const direction = ref("");
+  const isVertical = () => direction.value === "vertical";
+  const isHorizontal = () => direction.value === "horizontal";
+  const reset2 = () => {
     deltaX.value = 0;
     deltaY.value = 0;
     offsetX.value = 0;
     offsetY.value = 0;
     direction.value = "";
   };
-  var start = (event) => {
+  const start = (event) => {
     reset2();
     startX.value = event.touches[0].clientX;
     startY.value = event.touches[0].clientY;
   };
-  var move = (event) => {
-    var touch = event.touches[0];
+  const move = (event) => {
+    const touch = event.touches[0];
     deltaX.value = touch.clientX < 0 ? 0 : touch.clientX - startX.value;
     deltaY.value = touch.clientY - startY.value;
     offsetX.value = Math.abs(deltaX.value);
     offsetY.value = Math.abs(deltaY.value);
-    var LOCK_DIRECTION_DISTANCE = 10;
+    const LOCK_DIRECTION_DISTANCE = 10;
     if (!direction.value || offsetX.value < LOCK_DIRECTION_DISTANCE && offsetY.value < LOCK_DIRECTION_DISTANCE) {
       direction.value = getDirection(offsetX.value, offsetY.value);
     }
@@ -6231,20 +6235,16 @@ function useTouch() {
     isHorizontal
   };
 }
-var totalLockCount = 0;
-var BODY_LOCK_CLASS = "van-overflow-hidden";
+let totalLockCount = 0;
+const BODY_LOCK_CLASS = "van-overflow-hidden";
 function useLockScroll(rootRef, shouldLock) {
-  var touch = useTouch();
-  var onTouchMove = (event) => {
+  const touch = useTouch();
+  const onTouchMove = (event) => {
     touch.move(event);
-    var direction = touch.deltaY.value > 0 ? "10" : "01";
-    var el = getScrollParent(event.target, rootRef.value);
-    var {
-      scrollHeight,
-      offsetHeight,
-      scrollTop
-    } = el;
-    var status = "11";
+    const direction = touch.deltaY.value > 0 ? "10" : "01";
+    const el = getScrollParent(event.target, rootRef.value);
+    const { scrollHeight, offsetHeight, scrollTop } = el;
+    let status = "11";
     if (scrollTop === 0) {
       status = offsetHeight >= scrollHeight ? "00" : "01";
     } else if (scrollTop + offsetHeight >= scrollHeight) {
@@ -6254,17 +6254,15 @@ function useLockScroll(rootRef, shouldLock) {
       preventDefault(event, true);
     }
   };
-  var lock = () => {
+  const lock = () => {
     document.addEventListener("touchstart", touch.start);
-    document.addEventListener("touchmove", onTouchMove, {
-      passive: false
-    });
+    document.addEventListener("touchmove", onTouchMove, { passive: false });
     if (!totalLockCount) {
       document.body.classList.add(BODY_LOCK_CLASS);
     }
     totalLockCount++;
   };
-  var unlock = () => {
+  const unlock = () => {
     if (totalLockCount) {
       document.removeEventListener("touchstart", touch.start);
       document.removeEventListener("touchmove", onTouchMove);
@@ -6274,8 +6272,8 @@ function useLockScroll(rootRef, shouldLock) {
       }
     }
   };
-  var init = () => shouldLock() && lock();
-  var destroy = () => shouldLock() && unlock();
+  const init = () => shouldLock() && lock();
+  const destroy = () => shouldLock() && unlock();
   onMountedOrActivated(init);
   onDeactivated(destroy);
   onBeforeUnmount(destroy);
@@ -6284,47 +6282,46 @@ function useLockScroll(rootRef, shouldLock) {
   });
 }
 function useLazyRender(show) {
-  var inited = ref(false);
+  const inited = ref(false);
   watch(show, (value) => {
     if (value) {
       inited.value = value;
     }
-  }, {
-    immediate: true
-  });
+  }, { immediate: true });
   return (render) => () => inited.value ? render() : null;
 }
-var POPUP_TOGGLE_KEY = Symbol();
-var [name$c, bem$c] = createNamespace("overlay");
-var overlayProps = {
+const POPUP_TOGGLE_KEY = Symbol();
+const [name$c, bem$c] = createNamespace("overlay");
+const overlayProps = {
   show: Boolean,
   zIndex: numericProp,
   duration: numericProp,
   className: unknownProp,
   lockScroll: truthProp,
+  lazyRender: truthProp,
   customStyle: Object
 };
-var _Overlay = defineComponent({
+var stdin_default$g = defineComponent({
   name: name$c,
   props: overlayProps,
-  setup(props, _ref) {
-    var {
-      slots
-    } = _ref;
-    var lazyRender = useLazyRender(() => props.show);
-    var preventTouchMove = (event) => {
+  setup(props, {
+    slots
+  }) {
+    const lazyRender = useLazyRender(() => props.show || !props.lazyRender);
+    const preventTouchMove = (event) => {
       preventDefault(event, true);
     };
-    var renderOverlay = lazyRender(() => {
-      var style = extend$1(getZIndexStyle(props.zIndex), props.customStyle);
+    const renderOverlay = lazyRender(() => {
+      var _a2;
+      const style = extend(getZIndexStyle(props.zIndex), props.customStyle);
       if (isDef(props.duration)) {
-        style.animationDuration = props.duration + "s";
+        style.animationDuration = `${props.duration}s`;
       }
       return withDirectives(createVNode("div", {
         "style": style,
         "class": [bem$c(), props.className],
-        "onTouchmove": props.lockScroll ? preventTouchMove : noop$2
-      }, [slots.default == null ? void 0 : slots.default()]), [[vShow, props.show]]);
+        "onTouchmove": props.lockScroll ? preventTouchMove : noop$3
+      }, [(_a2 = slots.default) == null ? void 0 : _a2.call(slots)]), [[vShow, props.show]]);
     });
     return () => createVNode(Transition, {
       "name": "van-fade",
@@ -6334,8 +6331,8 @@ var _Overlay = defineComponent({
     });
   }
 });
-var Overlay = withInstall(_Overlay);
-var popupProps = extend$1({}, popupSharedProps, {
+const Overlay = withInstall(stdin_default$g);
+const popupProps = extend({}, popupSharedProps, {
   round: Boolean,
   position: makeStringProp("center"),
   closeIcon: makeStringProp("cross"),
@@ -6346,35 +6343,34 @@ var popupProps = extend$1({}, popupSharedProps, {
   closeIconPosition: makeStringProp("top-right"),
   safeAreaInsetBottom: Boolean
 });
-var [name$b, bem$b] = createNamespace("popup");
-var globalZIndex = 2e3;
-var _Popup = defineComponent({
+const [name$b, bem$b] = createNamespace("popup");
+let globalZIndex = 2e3;
+var stdin_default$f = defineComponent({
   name: name$b,
   inheritAttrs: false,
   props: popupProps,
-  emits: ["open", "close", "opened", "closed", "update:show", "click-overlay", "click-close-icon"],
-  setup(props, _ref) {
-    var {
-      emit,
-      attrs,
-      slots
-    } = _ref;
-    var opened;
-    var shouldReopen;
-    var zIndex = ref();
-    var popupRef = ref();
-    var lazyRender = useLazyRender(() => props.show || !props.lazyRender);
-    var style = computed(() => {
-      var style2 = {
+  emits: ["open", "close", "opened", "closed", "keydown", "update:show", "clickOverlay", "clickCloseIcon"],
+  setup(props, {
+    emit,
+    attrs,
+    slots
+  }) {
+    let opened;
+    let shouldReopen;
+    const zIndex = ref();
+    const popupRef = ref();
+    const lazyRender = useLazyRender(() => props.show || !props.lazyRender);
+    const style = computed(() => {
+      const style2 = {
         zIndex: zIndex.value
       };
       if (isDef(props.duration)) {
-        var key = props.position === "center" ? "animationDuration" : "transitionDuration";
-        style2[key] = props.duration + "s";
+        const key = props.position === "center" ? "animationDuration" : "transitionDuration";
+        style2[key] = `${props.duration}s`;
       }
       return style2;
     });
-    var open = () => {
+    const open = () => {
       if (!opened) {
         if (props.zIndex !== void 0) {
           globalZIndex = +props.zIndex;
@@ -6384,7 +6380,7 @@ var _Popup = defineComponent({
         emit("open");
       }
     };
-    var close = () => {
+    const close = () => {
       if (opened) {
         callInterceptor(props.beforeClose, {
           done() {
@@ -6395,13 +6391,13 @@ var _Popup = defineComponent({
         });
       }
     };
-    var onClickOverlay = (event) => {
-      emit("click-overlay", event);
+    const onClickOverlay = (event) => {
+      emit("clickOverlay", event);
       if (props.closeOnClickOverlay) {
         close();
       }
     };
-    var renderOverlay = () => {
+    const renderOverlay = () => {
       if (props.overlay) {
         return createVNode(Overlay, {
           "show": props.show,
@@ -6415,11 +6411,11 @@ var _Popup = defineComponent({
         });
       }
     };
-    var onClickCloseIcon = (event) => {
-      emit("click-close-icon", event);
+    const onClickCloseIcon = (event) => {
+      emit("clickCloseIcon", event);
       close();
     };
-    var renderCloseIcon = () => {
+    const renderCloseIcon = () => {
       if (props.closeable) {
         return createVNode(Icon, {
           "role": "button",
@@ -6431,10 +6427,12 @@ var _Popup = defineComponent({
         }, null);
       }
     };
-    var onOpened = () => emit("opened");
-    var onClosed = () => emit("closed");
-    var renderPopup = lazyRender(() => {
-      var {
+    const onOpened = () => emit("opened");
+    const onClosed = () => emit("closed");
+    const onKeydown = (event) => emit("keydown", event);
+    const renderPopup = lazyRender(() => {
+      var _a2;
+      const {
         round,
         position,
         safeAreaInsetBottom
@@ -6447,16 +6445,17 @@ var _Popup = defineComponent({
           [position]: position
         }), {
           "van-safe-area-bottom": safeAreaInsetBottom
-        }]
-      }, attrs), [slots.default == null ? void 0 : slots.default(), renderCloseIcon()]), [[vShow, props.show]]);
+        }],
+        "onKeydown": onKeydown
+      }, attrs), [(_a2 = slots.default) == null ? void 0 : _a2.call(slots), renderCloseIcon()]), [[vShow, props.show]]);
     });
-    var renderTransition = () => {
-      var {
+    const renderTransition = () => {
+      const {
         position,
         transition,
         transitionAppear
       } = props;
-      var name2 = position === "center" ? "van-fade" : "van-popup-slide-" + position;
+      const name2 = position === "center" ? "van-fade" : `van-popup-slide-${position}`;
       return createVNode(Transition, {
         "name": transition || name2,
         "appear": transitionAppear,
@@ -6469,6 +6468,12 @@ var _Popup = defineComponent({
     watch(() => props.show, (show) => {
       if (show && !opened) {
         open();
+        if (attrs.tabindex === 0) {
+          nextTick(() => {
+            var _a2;
+            (_a2 = popupRef.value) == null ? void 0 : _a2.focus();
+          });
+        }
       }
       if (!show && opened) {
         opened = false;
@@ -6479,7 +6484,7 @@ var _Popup = defineComponent({
       popupRef
     });
     useLockScroll(popupRef, () => props.show && props.lockScroll);
-    useEventListener("popstate", () => {
+    useEventListener$1("popstate", () => {
       if (props.closeOnPopstate) {
         close();
         shouldReopen = false;
@@ -6515,9 +6520,9 @@ var _Popup = defineComponent({
     };
   }
 });
-var Popup = withInstall(_Popup);
-var [name$a, bem$a] = createNamespace("cell");
-var cellSharedProps = {
+const Popup = withInstall(stdin_default$f);
+const [name$a, bem$a] = createNamespace("cell");
+const cellSharedProps = {
   icon: String,
   size: String,
   title: numericProp,
@@ -6538,24 +6543,23 @@ var cellSharedProps = {
     default: null
   }
 };
-var cellProps = extend$1({}, cellSharedProps, routeProps);
-var _Cell = defineComponent({
+const cellProps = extend({}, cellSharedProps, routeProps);
+var stdin_default$e = defineComponent({
   name: name$a,
   props: cellProps,
-  setup(props, _ref) {
-    var {
-      slots
-    } = _ref;
-    var route2 = useRoute$1();
-    var renderLabel = () => {
-      var showLabel = slots.label || isDef(props.label);
+  setup(props, {
+    slots
+  }) {
+    const route2 = useRoute$1();
+    const renderLabel = () => {
+      const showLabel = slots.label || isDef(props.label);
       if (showLabel) {
         return createVNode("div", {
           "class": [bem$a("label"), props.labelClass]
         }, [slots.label ? slots.label() : props.label]);
       }
     };
-    var renderTitle = () => {
+    const renderTitle = () => {
       if (slots.title || isDef(props.title)) {
         return createVNode("div", {
           "class": [bem$a("title"), props.titleClass],
@@ -6563,19 +6567,16 @@ var _Cell = defineComponent({
         }, [slots.title ? slots.title() : createVNode("span", null, [props.title]), renderLabel()]);
       }
     };
-    var renderValue = () => {
-      var slot = slots.value || slots.default;
-      var hasValue = slot || isDef(props.value);
+    const renderValue = () => {
+      const slot = slots.value || slots.default;
+      const hasValue = slot || isDef(props.value);
       if (hasValue) {
-        var hasTitle = slots.title || isDef(props.title);
         return createVNode("div", {
-          "class": [bem$a("value", {
-            alone: !hasTitle
-          }), props.valueClass]
+          "class": [bem$a("value"), props.valueClass]
         }, [slot ? slot() : createVNode("span", null, [props.value])]);
       }
     };
-    var renderLeftIcon = () => {
+    const renderLeftIcon = () => {
       if (slots.icon) {
         return slots.icon();
       }
@@ -6587,29 +6588,29 @@ var _Cell = defineComponent({
         }, null);
       }
     };
-    var renderRightIcon = () => {
+    const renderRightIcon = () => {
       if (slots["right-icon"]) {
         return slots["right-icon"]();
       }
       if (props.isLink) {
-        var _name = props.arrowDirection ? "arrow-" + props.arrowDirection : "arrow";
+        const name2 = props.arrowDirection ? `arrow-${props.arrowDirection}` : "arrow";
         return createVNode(Icon, {
-          "name": _name,
+          "name": name2,
           "class": bem$a("right-icon")
         }, null);
       }
     };
     return () => {
-      var _props$clickable;
-      var {
+      var _a2, _b2;
+      const {
         size: size2,
         center,
         border,
         isLink,
         required
       } = props;
-      var clickable = (_props$clickable = props.clickable) != null ? _props$clickable : isLink;
-      var classes = {
+      const clickable = (_a2 = props.clickable) != null ? _a2 : isLink;
+      const classes = {
         center,
         required,
         clickable,
@@ -6623,11 +6624,11 @@ var _Cell = defineComponent({
         "role": clickable ? "button" : void 0,
         "tabindex": clickable ? 0 : void 0,
         "onClick": route2
-      }, [renderLeftIcon(), renderTitle(), renderValue(), renderRightIcon(), slots.extra == null ? void 0 : slots.extra()]);
+      }, [renderLeftIcon(), renderTitle(), renderValue(), renderRightIcon(), (_b2 = slots.extra) == null ? void 0 : _b2.call(slots)]);
     };
   }
 });
-var Cell = withInstall(_Cell);
+const Cell = withInstall(stdin_default$e);
 function isEmptyValue(value) {
   if (Array.isArray(value)) {
     return !value.length;
@@ -6648,46 +6649,36 @@ function runSyncRule(value, rule) {
 }
 function runRuleValidator(value, rule) {
   return new Promise((resolve2) => {
-    var returnVal = rule.validator(value, rule);
+    const returnVal = rule.validator(value, rule);
     if (isPromise(returnVal)) {
-      return returnVal.then(resolve2);
+      returnVal.then(resolve2);
+      return;
     }
     resolve2(returnVal);
   });
 }
 function getRuleMessage(value, rule) {
-  var {
-    message
-  } = rule;
-  if (isFunction$2(message)) {
+  const { message } = rule;
+  if (isFunction$1(message)) {
     return message(value, rule);
   }
   return message || "";
 }
-function startComposing(_ref) {
-  var {
-    target
-  } = _ref;
+function startComposing({ target }) {
   target.composing = true;
 }
-function endComposing(_ref2) {
-  var {
-    target
-  } = _ref2;
+function endComposing({ target }) {
   if (target.composing) {
     target.composing = false;
     target.dispatchEvent(new Event("input"));
   }
 }
 function resizeTextarea(input, autosize) {
-  var scrollTop = getRootScrollTop();
+  const scrollTop = getRootScrollTop();
   input.style.height = "auto";
-  var height2 = input.scrollHeight;
-  if (isObject$3(autosize)) {
-    var {
-      maxHeight,
-      minHeight
-    } = autosize;
+  let height2 = input.scrollHeight;
+  if (isObject$2(autosize)) {
+    const { maxHeight, minHeight } = autosize;
     if (maxHeight !== void 0) {
       height2 = Math.min(height2, maxHeight);
     }
@@ -6696,7 +6687,7 @@ function resizeTextarea(input, autosize) {
     }
   }
   if (height2) {
-    input.style.height = height2 + "px";
+    input.style.height = `${height2}px`;
     setRootScrollTop(scrollTop);
   }
 }
@@ -6713,9 +6704,7 @@ function mapInputType(type) {
       inputmode: "numeric"
     };
   }
-  return {
-    type
-  };
+  return { type };
 }
 function getStringLength(str) {
   return [...str].length;
@@ -6723,16 +6712,14 @@ function getStringLength(str) {
 function cutString(str, maxlength) {
   return [...str].slice(0, maxlength).join("");
 }
-var current = 0;
+let current = 0;
 function useId() {
-  var vm = getCurrentInstance();
-  var {
-    name: name2 = "unknown"
-  } = (vm == null ? void 0 : vm.type) || {};
-  return name2 + "-" + ++current;
+  const vm = getCurrentInstance();
+  const { name: name2 = "unknown" } = (vm == null ? void 0 : vm.type) || {};
+  return `${name2}-${++current}`;
 }
-var [name$9, bem$9] = createNamespace("field");
-var fieldSharedProps = {
+const [name$9, bem$9] = createNamespace("field");
+const fieldSharedProps = {
   id: String,
   name: String,
   leftIcon: String,
@@ -6762,7 +6749,7 @@ var fieldSharedProps = {
     default: null
   }
 };
-var fieldProps = extend$1({}, cellSharedProps, fieldSharedProps, {
+const fieldProps = extend({}, cellSharedProps, fieldSharedProps, {
   rows: numericProp,
   type: makeStringProp("text"),
   rules: Array,
@@ -6777,31 +6764,30 @@ var fieldProps = extend$1({}, cellSharedProps, fieldSharedProps, {
     default: null
   }
 });
-var _Field = defineComponent({
+var stdin_default$d = defineComponent({
   name: name$9,
   props: fieldProps,
-  emits: ["blur", "focus", "clear", "keypress", "click-input", "click-left-icon", "click-right-icon", "update:modelValue"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var id = useId();
-    var state = reactive({
+  emits: ["blur", "focus", "clear", "keypress", "clickInput", "clickLeftIcon", "clickRightIcon", "update:modelValue"],
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const id = useId();
+    const state = reactive({
       focused: false,
       validateFailed: false,
       validateMessage: ""
     });
-    var inputRef = ref();
-    var customValue = ref();
-    var {
+    const inputRef = ref();
+    const customValue = ref();
+    const {
       parent: form
     } = useParent(FORM_KEY);
-    var getModelValue = () => {
-      var _props$modelValue;
-      return String((_props$modelValue = props.modelValue) != null ? _props$modelValue : "");
+    const getModelValue = () => {
+      var _a2;
+      return String((_a2 = props.modelValue) != null ? _a2 : "");
     };
-    var getProp = (key) => {
+    const getProp = (key) => {
       if (isDef(props[key])) {
         return props[key];
       }
@@ -6809,26 +6795,26 @@ var _Field = defineComponent({
         return form.props[key];
       }
     };
-    var showClear = computed(() => {
-      var readonly2 = getProp("readonly");
+    const showClear = computed(() => {
+      const readonly2 = getProp("readonly");
       if (props.clearable && !readonly2) {
-        var hasValue = getModelValue() !== "";
-        var trigger2 = props.clearTrigger === "always" || props.clearTrigger === "focus" && state.focused;
+        const hasValue = getModelValue() !== "";
+        const trigger2 = props.clearTrigger === "always" || props.clearTrigger === "focus" && state.focused;
         return hasValue && trigger2;
       }
       return false;
     });
-    var formValue = computed(() => {
+    const formValue = computed(() => {
       if (customValue.value && slots.input) {
         return customValue.value();
       }
       return props.modelValue;
     });
-    var runRules = (rules) => rules.reduce((promise, rule) => promise.then(() => {
+    const runRules = (rules) => rules.reduce((promise, rule) => promise.then(() => {
       if (state.validateFailed) {
         return;
       }
-      var {
+      let {
         value
       } = formValue;
       if (rule.formatter) {
@@ -6851,38 +6837,33 @@ var _Field = defineComponent({
         });
       }
     }), Promise.resolve());
-    var resetValidation = () => {
+    const resetValidation = () => {
       if (state.validateFailed) {
         state.validateFailed = false;
         state.validateMessage = "";
       }
     };
-    var validate = function(rules) {
-      if (rules === void 0) {
-        rules = props.rules;
+    const validate = (rules = props.rules) => new Promise((resolve2) => {
+      resetValidation();
+      if (rules) {
+        runRules(rules).then(() => {
+          if (state.validateFailed) {
+            resolve2({
+              name: props.name,
+              message: state.validateMessage
+            });
+          } else {
+            resolve2();
+          }
+        });
+      } else {
+        resolve2();
       }
-      return new Promise((resolve2) => {
-        resetValidation();
-        if (rules) {
-          runRules(rules).then(() => {
-            if (state.validateFailed) {
-              resolve2({
-                name: props.name,
-                message: state.validateMessage
-              });
-            } else {
-              resolve2();
-            }
-          });
-        } else {
-          resolve2();
-        }
-      });
-    };
-    var validateWithTrigger = (trigger2) => {
+    });
+    const validateWithTrigger = (trigger2) => {
       if (form && props.rules) {
-        var defaultTrigger = form.props.validateTrigger === trigger2;
-        var rules = props.rules.filter((rule) => {
+        const defaultTrigger = form.props.validateTrigger === trigger2;
+        const rules = props.rules.filter((rule) => {
           if (rule.trigger) {
             return rule.trigger === trigger2;
           }
@@ -6893,12 +6874,12 @@ var _Field = defineComponent({
         }
       }
     };
-    var limitValueLength = (value) => {
-      var {
+    const limitValueLength = (value) => {
+      const {
         maxlength
       } = props;
       if (isDef(maxlength) && getStringLength(value) > maxlength) {
-        var modelValue = getModelValue();
+        const modelValue = getModelValue();
         if (modelValue && getStringLength(modelValue) === +maxlength) {
           return modelValue;
         }
@@ -6906,13 +6887,10 @@ var _Field = defineComponent({
       }
       return value;
     };
-    var updateValue = function(value, trigger2) {
-      if (trigger2 === void 0) {
-        trigger2 = "onChange";
-      }
+    const updateValue = (value, trigger2 = "onChange") => {
       value = limitValueLength(value);
       if (props.type === "number" || props.type === "digit") {
-        var isNumber2 = props.type === "number";
+        const isNumber2 = props.type === "number";
         value = formatNumber(value, isNumber2, isNumber2);
       }
       if (props.formatter && trigger2 === props.formatTrigger) {
@@ -6925,26 +6903,26 @@ var _Field = defineComponent({
         emit("update:modelValue", value);
       }
     };
-    var onInput = (event) => {
+    const onInput = (event) => {
       if (!event.target.composing) {
         updateValue(event.target.value);
       }
     };
-    var blur = () => {
-      var _inputRef$value;
-      return (_inputRef$value = inputRef.value) == null ? void 0 : _inputRef$value.blur();
+    const blur = () => {
+      var _a2;
+      return (_a2 = inputRef.value) == null ? void 0 : _a2.blur();
     };
-    var focus = () => {
-      var _inputRef$value2;
-      return (_inputRef$value2 = inputRef.value) == null ? void 0 : _inputRef$value2.focus();
+    const focus = () => {
+      var _a2;
+      return (_a2 = inputRef.value) == null ? void 0 : _a2.focus();
     };
-    var adjustTextareaSize = () => {
-      var input = inputRef.value;
+    const adjustTextareaSize = () => {
+      const input = inputRef.value;
       if (props.type === "textarea" && props.autosize && input) {
         resizeTextarea(input, props.autosize);
       }
     };
-    var onFocus = (event) => {
+    const onFocus = (event) => {
       state.focused = true;
       emit("focus", event);
       nextTick(adjustTextareaSize);
@@ -6952,7 +6930,7 @@ var _Field = defineComponent({
         blur();
       }
     };
-    var onBlur = (event) => {
+    const onBlur = (event) => {
       if (getProp("readonly")) {
         return;
       }
@@ -6963,15 +6941,15 @@ var _Field = defineComponent({
       nextTick(adjustTextareaSize);
       resetScroll();
     };
-    var onClickInput = (event) => emit("click-input", event);
-    var onClickLeftIcon = (event) => emit("click-left-icon", event);
-    var onClickRightIcon = (event) => emit("click-right-icon", event);
-    var onClear = (event) => {
+    const onClickInput = (event) => emit("clickInput", event);
+    const onClickLeftIcon = (event) => emit("clickLeftIcon", event);
+    const onClickRightIcon = (event) => emit("clickRightIcon", event);
+    const onClear = (event) => {
       preventDefault(event);
       emit("update:modelValue", "");
       emit("clear", event);
     };
-    var showError = computed(() => {
+    const showError = computed(() => {
       if (typeof props.error === "boolean") {
         return props.error;
       }
@@ -6979,18 +6957,18 @@ var _Field = defineComponent({
         return true;
       }
     });
-    var labelStyle = computed(() => {
-      var labelWidth = getProp("labelWidth");
+    const labelStyle = computed(() => {
+      const labelWidth = getProp("labelWidth");
       if (labelWidth) {
         return {
           width: addUnit(labelWidth)
         };
       }
     });
-    var onKeypress = (event) => {
-      var ENTER_CODE = 13;
+    const onKeypress = (event) => {
+      const ENTER_CODE = 13;
       if (event.keyCode === ENTER_CODE) {
-        var submitOnEnter = form && form.props.submitOnEnter;
+        const submitOnEnter = form && form.props.submitOnEnter;
         if (!submitOnEnter && props.type !== "textarea") {
           preventDefault(event);
         }
@@ -7000,9 +6978,9 @@ var _Field = defineComponent({
       }
       emit("keypress", event);
     };
-    var getInputId = () => props.id || id + "-input";
-    var renderInput = () => {
-      var controlClass = bem$9("control", [getProp("inputAlign"), {
+    const getInputId = () => props.id || `${id}-input`;
+    const renderInput = () => {
+      const controlClass = bem$9("control", [getProp("inputAlign"), {
         error: showError.value,
         custom: !!slots.input,
         "min-height": props.type === "textarea" && !props.autosize
@@ -7013,7 +6991,7 @@ var _Field = defineComponent({
           "onClick": onClickInput
         }, [slots.input()]);
       }
-      var inputAttrs = {
+      const inputAttrs = {
         id: getInputId(),
         ref: inputRef,
         name: props.name,
@@ -7025,7 +7003,7 @@ var _Field = defineComponent({
         autofocus: props.autofocus,
         placeholder: props.placeholder,
         autocomplete: props.autocomplete,
-        "aria-labelledby": props.label ? id + "-label" : void 0,
+        "aria-labelledby": props.label ? `${id}-label` : void 0,
         onBlur,
         onFocus,
         onInput,
@@ -7040,8 +7018,8 @@ var _Field = defineComponent({
       }
       return createVNode("input", mergeProps(mapInputType(props.type), inputAttrs), null);
     };
-    var renderLeftIcon = () => {
-      var leftIconSlot = slots["left-icon"];
+    const renderLeftIcon = () => {
+      const leftIconSlot = slots["left-icon"];
       if (props.leftIcon || leftIconSlot) {
         return createVNode("div", {
           "class": bem$9("left-icon"),
@@ -7052,8 +7030,8 @@ var _Field = defineComponent({
         }, null)]);
       }
     };
-    var renderRightIcon = () => {
-      var rightIconSlot = slots["right-icon"];
+    const renderRightIcon = () => {
+      const rightIconSlot = slots["right-icon"];
       if (props.rightIcon || rightIconSlot) {
         return createVNode("div", {
           "class": bem$9("right-icon"),
@@ -7064,9 +7042,9 @@ var _Field = defineComponent({
         }, null)]);
       }
     };
-    var renderWordLimit = () => {
+    const renderWordLimit = () => {
       if (props.showWordLimit && props.maxlength) {
-        var count = getStringLength(getModelValue());
+        const count = getStringLength(getModelValue());
         return createVNode("div", {
           "class": bem$9("word-limit")
         }, [createVNode("span", {
@@ -7074,14 +7052,14 @@ var _Field = defineComponent({
         }, [count]), createTextVNode("/"), props.maxlength]);
       }
     };
-    var renderMessage = () => {
+    const renderMessage = () => {
       if (form && form.props.showErrorMessage === false) {
         return;
       }
-      var message = props.errorMessage || state.validateMessage;
+      const message = props.errorMessage || state.validateMessage;
       if (message) {
-        var slot = slots["error-message"];
-        var errorMessageAlign = getProp("errorMessageAlign");
+        const slot = slots["error-message"];
+        const errorMessageAlign = getProp("errorMessageAlign");
         return createVNode("div", {
           "class": bem$9("error-message", errorMessageAlign)
         }, [slot ? slot({
@@ -7089,19 +7067,19 @@ var _Field = defineComponent({
         }) : message]);
       }
     };
-    var renderLabel = () => {
-      var colon = getProp("colon") ? ":" : "";
+    const renderLabel = () => {
+      const colon = getProp("colon") ? ":" : "";
       if (slots.label) {
         return [slots.label(), colon];
       }
       if (props.label) {
         return createVNode("label", {
-          "id": id + "-label",
+          "id": `${id}-label`,
           "for": getInputId()
         }, [props.label + colon]);
       }
     };
-    var renderFieldBody = () => [createVNode("div", {
+    const renderFieldBody = () => [createVNode("div", {
       "class": bem$9("body")
     }, [renderInput(), showClear.value && createVNode(Icon, {
       "name": props.clearIcon,
@@ -7133,17 +7111,17 @@ var _Field = defineComponent({
       nextTick(adjustTextareaSize);
     });
     return () => {
-      var disabled = getProp("disabled");
-      var labelAlign = getProp("labelAlign");
-      var Label = renderLabel();
-      var LeftIcon = renderLeftIcon();
+      const disabled = getProp("disabled");
+      const labelAlign = getProp("labelAlign");
+      const Label = renderLabel();
+      const LeftIcon = renderLeftIcon();
       return createVNode(Cell, {
         "size": props.size,
         "icon": props.leftIcon,
         "class": bem$9({
           error: showError.value,
           disabled,
-          ["label-" + labelAlign]: labelAlign
+          [`label-${labelAlign}`]: labelAlign
         }),
         "center": props.center,
         "border": props.border,
@@ -7164,26 +7142,20 @@ var _Field = defineComponent({
     };
   }
 });
-var Field = withInstall(_Field);
+const Field = withInstall(stdin_default$d);
 function usePopupState() {
-  var state = reactive({
+  const state = reactive({
     show: false
   });
-  var toggle = (show) => {
+  const toggle = (show) => {
     state.show = show;
   };
-  var open = (props) => {
-    extend$1(state, props, {
-      transitionAppear: true
-    });
+  const open = (props) => {
+    extend(state, props, { transitionAppear: true });
     toggle(true);
   };
-  var close = () => toggle(false);
-  useExpose({
-    open,
-    close,
-    toggle
-  });
+  const close = () => toggle(false);
+  useExpose({ open, close, toggle });
   return {
     open,
     close,
@@ -7192,8 +7164,8 @@ function usePopupState() {
   };
 }
 function mountComponent(RootComponent) {
-  var app = createApp(RootComponent);
-  var root = document.createElement("div");
+  const app = createApp(RootComponent);
+  const root = document.createElement("div");
   document.body.appendChild(root);
   return {
     instance: app.mount(root),
@@ -7203,7 +7175,7 @@ function mountComponent(RootComponent) {
     }
   };
 }
-var lockCount = 0;
+let lockCount = 0;
 function lockClick(lock) {
   if (lock) {
     if (!lockCount) {
@@ -7217,9 +7189,9 @@ function lockClick(lock) {
     }
   }
 }
-var [name$8, bem$8] = createNamespace("toast");
-var popupInheritProps = ["show", "overlay", "transition", "overlayClass", "overlayStyle", "closeOnClickOverlay"];
-var toastProps = {
+const [name$8, bem$8] = createNamespace("toast");
+const popupInheritProps = ["show", "overlay", "teleport", "transition", "overlayClass", "overlayStyle", "closeOnClickOverlay"];
+const toastProps = {
   icon: String,
   show: Boolean,
   type: makeStringProp("text"),
@@ -7228,6 +7200,7 @@ var toastProps = {
   iconSize: numericProp,
   duration: makeNumberProp(2e3),
   position: makeStringProp("middle"),
+  teleport: [String, Object],
   className: unknownProp,
   iconPrefix: String,
   transition: makeStringProp("van-fade"),
@@ -7238,39 +7211,38 @@ var toastProps = {
   closeOnClick: Boolean,
   closeOnClickOverlay: Boolean
 };
-var VanToast = defineComponent({
+var stdin_default$c = defineComponent({
   name: name$8,
   props: toastProps,
   emits: ["update:show"],
-  setup(props, _ref) {
-    var {
-      emit
-    } = _ref;
-    var timer;
-    var clickable = false;
-    var toggleClickable = () => {
-      var newValue = props.show && props.forbidClick;
+  setup(props, {
+    emit
+  }) {
+    let timer;
+    let clickable = false;
+    const toggleClickable = () => {
+      const newValue = props.show && props.forbidClick;
       if (clickable !== newValue) {
         clickable = newValue;
         lockClick(clickable);
       }
     };
-    var updateShow = (show) => emit("update:show", show);
-    var onClick = () => {
+    const updateShow = (show) => emit("update:show", show);
+    const onClick = () => {
       if (props.closeOnClick) {
         updateShow(false);
       }
     };
-    var clearTimer = () => clearTimeout(timer);
-    var renderIcon = () => {
-      var {
+    const clearTimer = () => clearTimeout(timer);
+    const renderIcon = () => {
+      const {
         icon,
         type,
         iconSize,
         iconPrefix,
         loadingType
       } = props;
-      var hasIcon = icon || type === "success" || type === "fail";
+      const hasIcon = icon || type === "success" || type === "fail";
       if (hasIcon) {
         return createVNode(Icon, {
           "name": icon || type,
@@ -7287,8 +7259,8 @@ var VanToast = defineComponent({
         }, null);
       }
     };
-    var renderMessage = () => {
-      var {
+    const renderMessage = () => {
+      const {
         type,
         message
       } = props;
@@ -7325,7 +7297,7 @@ var VanToast = defineComponent({
     });
   }
 });
-var defaultOptions$1 = {
+const defaultOptions$1 = {
   icon: "",
   type: "text",
   message: "",
@@ -7346,43 +7318,43 @@ var defaultOptions$1 = {
   closeOnClick: false,
   closeOnClickOverlay: false
 };
-var queue = [];
-var allowMultiple = false;
-var currentOptions = extend$1({}, defaultOptions$1);
-var defaultOptionsMap = new Map();
+let queue = [];
+let allowMultiple = false;
+let currentOptions = extend({}, defaultOptions$1);
+const defaultOptionsMap = /* @__PURE__ */ new Map();
 function parseOptions(message) {
-  if (isObject$3(message)) {
+  if (isObject$2(message)) {
     return message;
   }
   return {
     message
   };
 }
-function createInstance$1() {
-  var {
+function createInstance() {
+  const {
     instance,
     unmount
   } = mountComponent({
     setup() {
-      var message = ref("");
-      var {
+      const message = ref("");
+      const {
         open,
         state,
         close,
         toggle
       } = usePopupState();
-      var onClosed = () => {
+      const onClosed = () => {
         if (allowMultiple) {
           queue = queue.filter((item) => item !== instance);
           unmount();
         }
       };
-      var render = () => {
-        var attrs = {
+      const render = () => {
+        const attrs = {
           onClosed,
           "onUpdate:show": toggle
         };
-        return createVNode(VanToast, mergeProps(state, attrs), null);
+        return createVNode(stdin_default$c, mergeProps(state, attrs), null);
       };
       watch(message, (val) => {
         state.message = val;
@@ -7399,32 +7371,30 @@ function createInstance$1() {
 }
 function getInstance() {
   if (!queue.length || allowMultiple) {
-    var instance = createInstance$1();
+    const instance = createInstance();
     queue.push(instance);
   }
   return queue[queue.length - 1];
 }
-function Toast(options) {
-  if (options === void 0) {
-    options = {};
-  }
+function Toast(options = {}) {
   if (!inBrowser$1) {
     return {};
   }
-  var toast = getInstance();
-  var parsedOptions = parseOptions(options);
-  toast.open(extend$1({}, currentOptions, defaultOptionsMap.get(parsedOptions.type || currentOptions.type), parsedOptions));
+  const toast = getInstance();
+  const parsedOptions = parseOptions(options);
+  toast.open(extend({}, currentOptions, defaultOptionsMap.get(parsedOptions.type || currentOptions.type), parsedOptions));
   return toast;
 }
-var createMethod = (type) => (options) => Toast(extend$1({
+const createMethod = (type) => (options) => Toast(extend({
   type
 }, parseOptions(options)));
 Toast.loading = createMethod("loading");
 Toast.success = createMethod("success");
 Toast.fail = createMethod("fail");
-Toast.clear = (all2) => {
+Toast.clear = (all) => {
+  var _a2;
   if (queue.length) {
-    if (all2) {
+    if (all) {
       queue.forEach((toast) => {
         toast.clear();
       });
@@ -7432,8 +7402,7 @@ Toast.clear = (all2) => {
     } else if (!allowMultiple) {
       queue[0].clear();
     } else {
-      var _queue$shift;
-      (_queue$shift = queue.shift()) == null ? void 0 : _queue$shift.clear();
+      (_a2 = queue.shift()) == null ? void 0 : _a2.clear();
     }
   }
 };
@@ -7441,7 +7410,7 @@ function setDefaultOptions(type, options) {
   if (typeof type === "string") {
     defaultOptionsMap.set(type, options);
   } else {
-    extend$1(currentOptions, type);
+    extend(currentOptions, type);
   }
 }
 Toast.setDefaultOptions = setDefaultOptions;
@@ -7449,21 +7418,18 @@ Toast.resetDefaultOptions = (type) => {
   if (typeof type === "string") {
     defaultOptionsMap.delete(type);
   } else {
-    currentOptions = extend$1({}, defaultOptions$1);
+    currentOptions = extend({}, defaultOptions$1);
     defaultOptionsMap.clear();
   }
 };
-Toast.allowMultiple = function(value) {
-  if (value === void 0) {
-    value = true;
-  }
+Toast.allowMultiple = (value = true) => {
   allowMultiple = value;
 };
 Toast.install = (app) => {
-  app.use(withInstall(VanToast));
+  app.use(withInstall(stdin_default$c));
   app.config.globalProperties.$toast = Toast;
 };
-var checkerProps = {
+const checkerProps = {
   name: unknownProp,
   shape: makeStringProp("round"),
   disabled: Boolean,
@@ -7473,8 +7439,8 @@ var checkerProps = {
   labelPosition: String,
   labelDisabled: Boolean
 };
-var Checker = defineComponent({
-  props: extend$1({}, checkerProps, {
+var stdin_default$b = defineComponent({
+  props: extend({}, checkerProps, {
     bem: makeRequiredProp(Function),
     role: String,
     parent: Object,
@@ -7482,21 +7448,20 @@ var Checker = defineComponent({
     bindGroup: truthProp
   }),
   emits: ["click", "toggle"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var iconRef = ref();
-    var getParentProp = (name2) => {
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const iconRef = ref();
+    const getParentProp = (name2) => {
       if (props.parent && props.bindGroup) {
         return props.parent.props[name2];
       }
     };
-    var disabled = computed(() => getParentProp("disabled") || props.disabled);
-    var direction = computed(() => getParentProp("direction"));
-    var iconStyle = computed(() => {
-      var checkedColor = props.checkedColor || getParentProp("checkedColor");
+    const disabled = computed(() => getParentProp("disabled") || props.disabled);
+    const direction = computed(() => getParentProp("direction"));
+    const iconStyle = computed(() => {
+      const checkedColor = props.checkedColor || getParentProp("checkedColor");
       if (checkedColor && props.checked && !disabled.value) {
         return {
           borderColor: checkedColor,
@@ -7504,24 +7469,24 @@ var Checker = defineComponent({
         };
       }
     });
-    var onClick = (event) => {
-      var {
+    const onClick = (event) => {
+      const {
         target
       } = event;
-      var icon = iconRef.value;
-      var iconClicked = icon === target || (icon == null ? void 0 : icon.contains(target));
+      const icon = iconRef.value;
+      const iconClicked = icon === target || (icon == null ? void 0 : icon.contains(target));
       if (!disabled.value && (iconClicked || !props.labelDisabled)) {
         emit("toggle");
       }
       emit("click", event);
     };
-    var renderIcon = () => {
-      var {
+    const renderIcon = () => {
+      const {
         bem: bem2,
         shape,
         checked
       } = props;
-      var iconSize = props.iconSize || getParentProp("iconSize");
+      const iconSize = props.iconSize || getParentProp("iconSize");
       return createVNode("div", {
         "ref": iconRef,
         "class": bem2("icon", [shape, {
@@ -7539,7 +7504,7 @@ var Checker = defineComponent({
         "style": iconStyle.value
       }, null)]);
     };
-    var renderLabel = () => {
+    const renderLabel = () => {
       if (slots.default) {
         return createVNode("span", {
           "class": props.bem("label", [props.labelPosition, {
@@ -7549,7 +7514,7 @@ var Checker = defineComponent({
       }
     };
     return () => {
-      var nodes = props.labelPosition === "left" ? [renderLabel(), renderIcon()] : [renderIcon(), renderLabel()];
+      const nodes = props.labelPosition === "left" ? [renderLabel(), renderIcon()] : [renderIcon(), renderLabel()];
       return createVNode("div", {
         "role": props.role,
         "class": props.bem([{
@@ -7563,18 +7528,23 @@ var Checker = defineComponent({
     };
   }
 });
-var useHeight = (element) => {
-  var height2 = ref();
-  onMounted(() => nextTick(() => {
+const useHeight = (element) => {
+  const height2 = ref();
+  const setHeight = () => {
     height2.value = useRect(element).height;
-  }));
+  };
+  onMounted(() => {
+    nextTick(setHeight);
+    setTimeout(setHeight, 100);
+  });
   return height2;
 };
-var [name$7, bem$7] = createNamespace("image");
-var imageProps = {
+const [name$7, bem$7] = createNamespace("image");
+const imageProps = {
   src: String,
   alt: String,
   fit: String,
+  position: String,
   round: Boolean,
   width: numericProp,
   height: numericProp,
@@ -7587,23 +7557,22 @@ var imageProps = {
   showLoading: truthProp,
   loadingIcon: makeStringProp("photo")
 };
-var _Image = defineComponent({
+var stdin_default$a = defineComponent({
   name: name$7,
   props: imageProps,
   emits: ["load", "error"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var error = ref(false);
-    var loading = ref(true);
-    var imageRef = ref();
-    var {
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const error = ref(false);
+    const loading = ref(true);
+    const imageRef = ref();
+    const {
       $Lazyload
     } = getCurrentInstance().proxy;
-    var style = computed(() => {
-      var style2 = {
+    const style = computed(() => {
+      const style2 = {
         width: addUnit(props.width),
         height: addUnit(props.height)
       };
@@ -7617,16 +7586,16 @@ var _Image = defineComponent({
       error.value = false;
       loading.value = true;
     });
-    var onLoad = (event) => {
+    const onLoad = (event) => {
       loading.value = false;
       emit("load", event);
     };
-    var onError = (event) => {
+    const onError = (event) => {
       error.value = true;
       loading.value = false;
       emit("error", event);
     };
-    var renderIcon = (name2, className, slot) => {
+    const renderIcon = (name2, className, slot) => {
       if (slot) {
         return slot();
       }
@@ -7637,7 +7606,7 @@ var _Image = defineComponent({
         "classPrefix": props.iconPrefix
       }, null);
     };
-    var renderPlaceholder = () => {
+    const renderPlaceholder = () => {
       if (loading.value && props.showLoading) {
         return createVNode("div", {
           "class": bem$7("loading")
@@ -7649,15 +7618,16 @@ var _Image = defineComponent({
         }, [renderIcon(props.errorIcon, bem$7("error-icon"), slots.error)]);
       }
     };
-    var renderImage = () => {
+    const renderImage = () => {
       if (error.value || !props.src) {
         return;
       }
-      var attrs = {
+      const attrs = {
         alt: props.alt,
         class: bem$7("img"),
         style: {
-          objectFit: props.fit
+          objectFit: props.fit,
+          objectPosition: props.position
         }
       };
       if (props.lazyLoad) {
@@ -7671,18 +7641,23 @@ var _Image = defineComponent({
         "onError": onError
       }, attrs), null);
     };
-    var onLazyLoaded = (_ref2) => {
-      var {
-        el
-      } = _ref2;
-      if (el === imageRef.value && loading.value) {
-        onLoad();
+    const onLazyLoaded = ({
+      el
+    }) => {
+      const check = () => {
+        if (el === imageRef.value && loading.value) {
+          onLoad();
+        }
+      };
+      if (imageRef.value) {
+        check();
+      } else {
+        nextTick(check);
       }
     };
-    var onLazyLoadError = (_ref3) => {
-      var {
-        el
-      } = _ref3;
+    const onLazyLoadError = ({
+      el
+    }) => {
       if (el === imageRef.value && !error.value) {
         onError();
       }
@@ -7695,38 +7670,43 @@ var _Image = defineComponent({
         $Lazyload.$off("error", onLazyLoadError);
       });
     }
-    return () => createVNode("div", {
-      "class": bem$7({
-        round: props.round
-      }),
-      "style": style.value
-    }, [renderImage(), renderPlaceholder(), slots.default == null ? void 0 : slots.default()]);
+    return () => {
+      var _a2;
+      return createVNode("div", {
+        "class": bem$7({
+          round: props.round
+        }),
+        "style": style.value
+      }, [renderImage(), renderPlaceholder(), (_a2 = slots.default) == null ? void 0 : _a2.call(slots)]);
+    };
   }
 });
-var Image$1 = withInstall(_Image);
-var [name$6, bem$6] = createNamespace("cell-group");
-var cellGroupProps = {
+const Image$1 = withInstall(stdin_default$a);
+const [name$6, bem$6] = createNamespace("cell-group");
+const cellGroupProps = {
   title: String,
   inset: Boolean,
   border: truthProp
 };
-var _CellGroup = defineComponent({
+var stdin_default$9 = defineComponent({
   name: name$6,
   inheritAttrs: false,
   props: cellGroupProps,
-  setup(props, _ref) {
-    var {
-      slots,
-      attrs
-    } = _ref;
-    var renderGroup = () => createVNode("div", mergeProps({
-      "class": [bem$6({
-        inset: props.inset
-      }), {
-        [BORDER_TOP_BOTTOM]: props.border && !props.inset
-      }]
-    }, attrs), [slots.default == null ? void 0 : slots.default()]);
-    var renderTitle = () => createVNode("div", {
+  setup(props, {
+    slots,
+    attrs
+  }) {
+    const renderGroup = () => {
+      var _a2;
+      return createVNode("div", mergeProps({
+        "class": [bem$6({
+          inset: props.inset
+        }), {
+          [BORDER_TOP_BOTTOM]: props.border && !props.inset
+        }]
+      }, attrs), [(_a2 = slots.default) == null ? void 0 : _a2.call(slots)]);
+    };
+    const renderTitle = () => createVNode("div", {
       "class": bem$6("title", {
         inset: props.inset
       })
@@ -7739,9 +7719,9 @@ var _CellGroup = defineComponent({
     };
   }
 });
-var CellGroup = withInstall(_CellGroup);
-var [name$5, bem$5] = createNamespace("checkbox-group");
-var checkboxGroupProps = {
+const CellGroup = withInstall(stdin_default$9);
+const [name$5, bem$5] = createNamespace("checkbox-group");
+const checkboxGroupProps = {
   max: numericProp,
   disabled: Boolean,
   iconSize: numericProp,
@@ -7749,35 +7729,31 @@ var checkboxGroupProps = {
   modelValue: makeArrayProp(),
   checkedColor: String
 };
-var CHECKBOX_GROUP_KEY = Symbol(name$5);
+const CHECKBOX_GROUP_KEY = Symbol(name$5);
 defineComponent({
   name: name$5,
   props: checkboxGroupProps,
   emits: ["change", "update:modelValue"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var {
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const {
       children,
       linkChildren
     } = useChildren(CHECKBOX_GROUP_KEY);
-    var updateValue = (value) => emit("update:modelValue", value);
-    var toggleAll = function(options) {
-      if (options === void 0) {
-        options = {};
-      }
+    const updateValue = (value) => emit("update:modelValue", value);
+    const toggleAll = (options = {}) => {
       if (typeof options === "boolean") {
         options = {
           checked: options
         };
       }
-      var {
+      const {
         checked,
         skipDisabled
       } = options;
-      var checkedChildren = children.filter((item) => {
+      const checkedChildren = children.filter((item) => {
         if (!item.props.bindGroup) {
           return false;
         }
@@ -7786,7 +7762,7 @@ defineComponent({
         }
         return checked != null ? checked : !item.checked.value;
       });
-      var names = checkedChildren.map((item) => item.name);
+      const names = checkedChildren.map((item) => item.name);
       updateValue(names);
     };
     watch(() => props.modelValue, (value) => emit("change", value));
@@ -7798,38 +7774,40 @@ defineComponent({
       props,
       updateValue
     });
-    return () => createVNode("div", {
-      "class": bem$5([props.direction])
-    }, [slots.default == null ? void 0 : slots.default()]);
+    return () => {
+      var _a2;
+      return createVNode("div", {
+        "class": bem$5([props.direction])
+      }, [(_a2 = slots.default) == null ? void 0 : _a2.call(slots)]);
+    };
   }
 });
-var [name$4, bem$4] = createNamespace("checkbox");
-var checkboxProps = extend$1({}, checkerProps, {
+const [name$4, bem$4] = createNamespace("checkbox");
+const checkboxProps = extend({}, checkerProps, {
   bindGroup: truthProp
 });
-var _Checkbox = defineComponent({
+var stdin_default$8 = defineComponent({
   name: name$4,
   props: checkboxProps,
   emits: ["change", "update:modelValue"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var {
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const {
       parent
     } = useParent(CHECKBOX_GROUP_KEY);
-    var setParentValue = (checked2) => {
-      var {
+    const setParentValue = (checked2) => {
+      const {
         name: name2
       } = props;
-      var {
+      const {
         max,
         modelValue
       } = parent.props;
-      var value = modelValue.slice();
+      const value = modelValue.slice();
       if (checked2) {
-        var overlimit = max && value.length >= max;
+        const overlimit = max && value.length >= max;
         if (!overlimit && !value.includes(name2)) {
           value.push(name2);
           if (props.bindGroup) {
@@ -7837,7 +7815,7 @@ var _Checkbox = defineComponent({
           }
         }
       } else {
-        var index2 = value.indexOf(name2);
+        const index2 = value.indexOf(name2);
         if (index2 !== -1) {
           value.splice(index2, 1);
           if (props.bindGroup) {
@@ -7846,16 +7824,13 @@ var _Checkbox = defineComponent({
         }
       }
     };
-    var checked = computed(() => {
+    const checked = computed(() => {
       if (parent && props.bindGroup) {
         return parent.props.modelValue.indexOf(props.name) !== -1;
       }
       return !!props.modelValue;
     });
-    var toggle = function(newValue) {
-      if (newValue === void 0) {
-        newValue = !checked.value;
-      }
+    const toggle = (newValue = !checked.value) => {
       if (parent && props.bindGroup) {
         setParentValue(newValue);
       } else {
@@ -7869,7 +7844,7 @@ var _Checkbox = defineComponent({
       checked
     });
     useCustomFieldValue(() => props.modelValue);
-    return () => createVNode(Checker, mergeProps({
+    return () => createVNode(stdin_default$b, mergeProps({
       "bem": bem$4,
       "role": "checkbox",
       "parent": parent,
@@ -7878,30 +7853,402 @@ var _Checkbox = defineComponent({
     }, props), pick(slots, ["default", "icon"]));
   }
 });
-var Checkbox = withInstall(_Checkbox);
-var hasIntersectionObserver = inBrowser && "IntersectionObserver" in window && "IntersectionObserverEntry" in window && "intersectionRatio" in window.IntersectionObserverEntry.prototype;
-var modeType = {
+const Checkbox = withInstall(stdin_default$8);
+function usePlaceholder(contentRef, bem2) {
+  const height2 = useHeight(contentRef);
+  return (renderContent) => createVNode("div", {
+    "class": bem2("placeholder"),
+    "style": {
+      height: height2.value ? `${height2.value}px` : void 0
+    }
+  }, [renderContent()]);
+}
+const [name$3, bem$3] = createNamespace("nav-bar");
+const navBarProps = {
+  title: String,
+  fixed: Boolean,
+  zIndex: numericProp,
+  border: truthProp,
+  leftText: String,
+  rightText: String,
+  leftArrow: Boolean,
+  placeholder: Boolean,
+  safeAreaInsetTop: Boolean
+};
+var stdin_default$7 = defineComponent({
+  name: name$3,
+  props: navBarProps,
+  emits: ["clickLeft", "clickRight"],
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const navBarRef = ref();
+    const renderPlaceholder = usePlaceholder(navBarRef, bem$3);
+    const onClickLeft = (event) => emit("clickLeft", event);
+    const onClickRight = (event) => emit("clickRight", event);
+    const renderLeft = () => {
+      if (slots.left) {
+        return slots.left();
+      }
+      return [props.leftArrow && createVNode(Icon, {
+        "class": bem$3("arrow"),
+        "name": "arrow-left"
+      }, null), props.leftText && createVNode("span", {
+        "class": bem$3("text")
+      }, [props.leftText])];
+    };
+    const renderRight = () => {
+      if (slots.right) {
+        return slots.right();
+      }
+      return createVNode("span", {
+        "class": bem$3("text")
+      }, [props.rightText]);
+    };
+    const renderNavBar = () => {
+      const {
+        title,
+        fixed,
+        border,
+        zIndex
+      } = props;
+      const style = getZIndexStyle(zIndex);
+      const hasLeft = props.leftArrow || props.leftText || slots.left;
+      const hasRight = props.rightText || slots.right;
+      return createVNode("div", {
+        "ref": navBarRef,
+        "style": style,
+        "class": [bem$3({
+          fixed,
+          "safe-area-inset-top": props.safeAreaInsetTop
+        }), {
+          [BORDER_BOTTOM]: border
+        }]
+      }, [createVNode("div", {
+        "class": bem$3("content")
+      }, [hasLeft && createVNode("div", {
+        "class": [bem$3("left"), HAPTICS_FEEDBACK],
+        "onClick": onClickLeft
+      }, [renderLeft()]), createVNode("div", {
+        "class": [bem$3("title"), "van-ellipsis"]
+      }, [slots.title ? slots.title() : title]), hasRight && createVNode("div", {
+        "class": [bem$3("right"), HAPTICS_FEEDBACK],
+        "onClick": onClickRight
+      }, [renderRight()])])]);
+    };
+    return () => {
+      if (props.fixed && props.placeholder) {
+        return renderPlaceholder(renderNavBar);
+      }
+      return renderNavBar();
+    };
+  }
+});
+const NavBar = withInstall(stdin_default$7);
+const [name$2, bem$2, t] = createNamespace("submit-bar");
+const submitBarProps = {
+  tip: String,
+  label: String,
+  price: Number,
+  tipIcon: String,
+  loading: Boolean,
+  currency: makeStringProp("\xA5"),
+  disabled: Boolean,
+  textAlign: String,
+  buttonText: String,
+  buttonType: makeStringProp("danger"),
+  buttonColor: String,
+  suffixLabel: String,
+  decimalLength: makeNumericProp(2),
+  safeAreaInsetBottom: truthProp
+};
+var stdin_default$6 = defineComponent({
+  name: name$2,
+  props: submitBarProps,
+  emits: ["submit"],
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const renderText = () => {
+      const {
+        price,
+        label,
+        currency,
+        textAlign,
+        suffixLabel,
+        decimalLength
+      } = props;
+      if (typeof price === "number") {
+        const pricePair = (price / 100).toFixed(+decimalLength).split(".");
+        const decimal = decimalLength ? `.${pricePair[1]}` : "";
+        return createVNode("div", {
+          "class": bem$2("text"),
+          "style": {
+            textAlign
+          }
+        }, [createVNode("span", null, [label || t("label")]), createVNode("span", {
+          "class": bem$2("price")
+        }, [currency, createVNode("span", {
+          "class": bem$2("price-integer")
+        }, [pricePair[0]]), decimal]), suffixLabel && createVNode("span", {
+          "class": bem$2("suffix-label")
+        }, [suffixLabel])]);
+      }
+    };
+    const renderTip = () => {
+      var _a2;
+      const {
+        tip,
+        tipIcon
+      } = props;
+      if (slots.tip || tip) {
+        return createVNode("div", {
+          "class": bem$2("tip")
+        }, [tipIcon && createVNode(Icon, {
+          "class": bem$2("tip-icon"),
+          "name": tipIcon
+        }, null), tip && createVNode("span", {
+          "class": bem$2("tip-text")
+        }, [tip]), (_a2 = slots.tip) == null ? void 0 : _a2.call(slots)]);
+      }
+    };
+    const onClickButton = () => emit("submit");
+    const renderButton = () => {
+      if (slots.button) {
+        return slots.button();
+      }
+      return createVNode(Button, {
+        "round": true,
+        "type": props.buttonType,
+        "text": props.buttonText,
+        "class": bem$2("button", props.buttonType),
+        "color": props.buttonColor,
+        "loading": props.loading,
+        "disabled": props.disabled,
+        "onClick": onClickButton
+      }, null);
+    };
+    return () => {
+      var _a2, _b2;
+      return createVNode("div", {
+        "class": [bem$2(), {
+          "van-safe-area-bottom": props.safeAreaInsetBottom
+        }]
+      }, [(_a2 = slots.top) == null ? void 0 : _a2.call(slots), renderTip(), createVNode("div", {
+        "class": bem$2("bar")
+      }, [(_b2 = slots.default) == null ? void 0 : _b2.call(slots), renderText(), renderButton()])]);
+    };
+  }
+});
+const SubmitBar = withInstall(stdin_default$6);
+const [name$1, bem$1] = createNamespace("tabbar");
+const tabbarProps = {
+  route: Boolean,
+  fixed: truthProp,
+  border: truthProp,
+  zIndex: numericProp,
+  placeholder: Boolean,
+  activeColor: String,
+  beforeChange: Function,
+  inactiveColor: String,
+  modelValue: makeNumericProp(0),
+  safeAreaInsetBottom: {
+    type: Boolean,
+    default: null
+  }
+};
+const TABBAR_KEY = Symbol(name$1);
+var stdin_default$5 = defineComponent({
+  name: name$1,
+  props: tabbarProps,
+  emits: ["change", "update:modelValue"],
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const root = ref();
+    const {
+      linkChildren
+    } = useChildren(TABBAR_KEY);
+    const renderPlaceholder = usePlaceholder(root, bem$1);
+    const enableSafeArea = () => {
+      var _a2;
+      return (_a2 = props.safeAreaInsetBottom) != null ? _a2 : props.fixed;
+    };
+    const renderTabbar = () => {
+      var _a2;
+      const {
+        fixed,
+        zIndex,
+        border
+      } = props;
+      return createVNode("div", {
+        "ref": root,
+        "role": "tablist",
+        "style": getZIndexStyle(zIndex),
+        "class": [bem$1({
+          fixed
+        }), {
+          [BORDER_TOP_BOTTOM]: border,
+          "van-safe-area-bottom": enableSafeArea()
+        }]
+      }, [(_a2 = slots.default) == null ? void 0 : _a2.call(slots)]);
+    };
+    const setActive = (active, afterChange) => {
+      callInterceptor(props.beforeChange, {
+        args: [active],
+        done() {
+          emit("update:modelValue", active);
+          emit("change", active);
+          afterChange();
+        }
+      });
+    };
+    linkChildren({
+      props,
+      setActive
+    });
+    return () => {
+      if (props.fixed && props.placeholder) {
+        return renderPlaceholder(renderTabbar);
+      }
+      return renderTabbar();
+    };
+  }
+});
+const Tabbar = withInstall(stdin_default$5);
+const [name, bem] = createNamespace("tabbar-item");
+const tabbarItemProps = extend({}, routeProps, {
+  dot: Boolean,
+  icon: String,
+  name: numericProp,
+  badge: numericProp,
+  badgeProps: Object,
+  iconPrefix: String
+});
+var stdin_default$4 = defineComponent({
+  name,
+  props: tabbarItemProps,
+  emits: ["click"],
+  setup(props, {
+    emit,
+    slots
+  }) {
+    const route2 = useRoute$1();
+    const vm = getCurrentInstance().proxy;
+    const {
+      parent,
+      index: index2
+    } = useParent(TABBAR_KEY);
+    if (!parent) {
+      return;
+    }
+    const active = computed(() => {
+      var _a2;
+      const {
+        route: route22,
+        modelValue
+      } = parent.props;
+      if (route22 && "$route" in vm) {
+        const {
+          $route
+        } = vm;
+        const {
+          to
+        } = props;
+        const config = isObject$2(to) ? to : {
+          path: to
+        };
+        return !!$route.matched.find((val) => {
+          const pathMatched = "path" in config && config.path === val.path;
+          const nameMatched = "name" in config && config.name === val.name;
+          return pathMatched || nameMatched;
+        });
+      }
+      return ((_a2 = props.name) != null ? _a2 : index2.value) === modelValue;
+    });
+    const onClick = (event) => {
+      var _a2;
+      if (!active.value) {
+        parent.setActive((_a2 = props.name) != null ? _a2 : index2.value, route2);
+      }
+      emit("click", event);
+    };
+    const renderIcon = () => {
+      if (slots.icon) {
+        return slots.icon({
+          active: active.value
+        });
+      }
+      if (props.icon) {
+        return createVNode(Icon, {
+          "name": props.icon,
+          "classPrefix": props.iconPrefix
+        }, null);
+      }
+    };
+    return () => {
+      var _a2;
+      const {
+        dot,
+        badge
+      } = props;
+      const {
+        activeColor,
+        inactiveColor
+      } = parent.props;
+      const color = active.value ? activeColor : inactiveColor;
+      return createVNode("div", {
+        "role": "tab",
+        "class": bem({
+          active: active.value
+        }),
+        "style": {
+          color
+        },
+        "tabindex": 0,
+        "aria-selected": active.value,
+        "onClick": onClick
+      }, [createVNode(Badge, mergeProps({
+        "dot": dot,
+        "class": bem("icon"),
+        "content": badge
+      }, props.badgeProps), {
+        default: renderIcon
+      }), createVNode("div", {
+        "class": bem("text")
+      }, [(_a2 = slots.default) == null ? void 0 : _a2.call(slots, {
+        active: active.value
+      })])]);
+    };
+  }
+});
+const TabbarItem = withInstall(stdin_default$4);
+const hasIntersectionObserver = inBrowser && "IntersectionObserver" in window && "IntersectionObserverEntry" in window && "intersectionRatio" in window.IntersectionObserverEntry.prototype;
+const modeType = {
   event: "event",
   observer: "observer"
 };
 function remove(arr, item) {
   if (!arr.length)
     return;
-  var index2 = arr.indexOf(item);
+  const index2 = arr.indexOf(item);
   if (index2 > -1)
     return arr.splice(index2, 1);
 }
 function getBestSelectionFromSrcset(el, scale) {
   if (el.tagName !== "IMG" || !el.getAttribute("data-srcset"))
     return;
-  var options = el.getAttribute("data-srcset");
-  var container = el.parentNode;
-  var containerWidth = container.offsetWidth * scale;
-  var spaceIndex;
-  var tmpSrc;
-  var tmpWidth;
+  let options = el.getAttribute("data-srcset");
+  const container = el.parentNode;
+  const containerWidth = container.offsetWidth * scale;
+  let spaceIndex;
+  let tmpSrc;
+  let tmpWidth;
   options = options.trim().split(",");
-  var result = options.map((item) => {
+  const result = options.map((item) => {
     item = item.trim();
     spaceIndex = item.lastIndexOf(" ");
     if (spaceIndex === -1) {
@@ -7930,12 +8277,12 @@ function getBestSelectionFromSrcset(el, scale) {
     }
     return 0;
   });
-  var bestSelectedSrc = "";
-  var tmpOption;
-  for (var i = 0; i < result.length; i++) {
+  let bestSelectedSrc = "";
+  let tmpOption;
+  for (let i = 0; i < result.length; i++) {
     tmpOption = result[i];
     bestSelectedSrc = tmpOption[1];
-    var next = result[i + 1];
+    const next = result[i + 1];
     if (next && next[0] < containerWidth) {
       bestSelectedSrc = tmpOption[1];
       break;
@@ -7946,18 +8293,13 @@ function getBestSelectionFromSrcset(el, scale) {
   }
   return bestSelectedSrc;
 }
-var getDPR = function(scale) {
-  if (scale === void 0) {
-    scale = 1;
-  }
-  return inBrowser ? window.devicePixelRatio || scale : scale;
-};
+const getDPR = (scale = 1) => inBrowser ? window.devicePixelRatio || scale : scale;
 function supportWebp() {
   if (!inBrowser)
     return false;
-  var support = true;
+  let support = true;
   try {
-    var elem = document.createElement("canvas");
+    const elem = document.createElement("canvas");
     if (elem.getContext && elem.getContext("2d")) {
       support = elem.toDataURL("image/webp").indexOf("data:image/webp") === 0;
     }
@@ -7967,17 +8309,14 @@ function supportWebp() {
   return support;
 }
 function throttle(action, delay) {
-  var timeout = null;
-  var lastRun = 0;
-  return function() {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
+  let timeout = null;
+  let lastRun = 0;
+  return function(...args) {
     if (timeout) {
       return;
     }
-    var elapsed = Date.now() - lastRun;
-    var runCallback = () => {
+    const elapsed = Date.now() - lastRun;
+    const runCallback = () => {
       lastRun = Date.now();
       timeout = false;
       action.apply(this, args);
@@ -7998,8 +8337,8 @@ function on(el, type, func) {
 function off(el, type, func) {
   el.removeEventListener(type, func, false);
 }
-var loadImageAsync = (item, resolve2, reject) => {
-  var image = new Image();
+const loadImageAsync = (item, resolve2, reject) => {
+  const image = new Image();
   if (!item || !item.src) {
     return reject(new Error("image src is required"));
   }
@@ -8015,10 +8354,7 @@ var loadImageAsync = (item, resolve2, reject) => {
   image.onerror = (e) => reject(e);
 };
 class ImageCache {
-  constructor(_ref) {
-    var {
-      max
-    } = _ref;
+  constructor({ max }) {
     this.options = {
       max: max || 100
     };
@@ -8040,19 +8376,18 @@ class ImageCache {
   }
 }
 class ReactiveListener {
-  constructor(_ref) {
-    var {
-      el,
-      src,
-      error,
-      loading,
-      bindType,
-      $parent,
-      options,
-      cors,
-      elRenderer,
-      imageCache
-    } = _ref;
+  constructor({
+    el,
+    src,
+    error,
+    loading,
+    bindType,
+    $parent,
+    options,
+    cors,
+    elRenderer,
+    imageCache
+  }) {
     this.el = el;
     this.src = src;
     this.error = error;
@@ -8090,13 +8425,8 @@ class ReactiveListener {
   record(event) {
     this.performanceData[event] = Date.now();
   }
-  update(_ref2) {
-    var {
-      src,
-      loading,
-      error
-    } = _ref2;
-    var oldSrc = this.src;
+  update({ src, loading, error }) {
+    const oldSrc = this.src;
     this.src = src;
     this.loading = loading;
     this.error = error;
@@ -8107,7 +8437,7 @@ class ReactiveListener {
     }
   }
   checkInView() {
-    var rect = useRect(this.el);
+    const rect = useRect(this.el);
     return rect.top < window.innerHeight * this.options.preLoad && rect.bottom > this.options.preLoadTop && rect.left < window.innerWidth * this.options.preLoad && rect.right > 0;
   }
   filter() {
@@ -8129,10 +8459,7 @@ class ReactiveListener {
       this.state.loading = false;
     });
   }
-  load(onFinish) {
-    if (onFinish === void 0) {
-      onFinish = noop$2;
-    }
+  load(onFinish = noop$3) {
     if (this.attempt > this.options.attempt - 1 && this.state.error) {
       onFinish();
       return;
@@ -8146,16 +8473,16 @@ class ReactiveListener {
       return onFinish();
     }
     this.renderLoading(() => {
-      var _this$options$adapter, _this$options$adapter2;
+      var _a2, _b2;
       this.attempt++;
-      (_this$options$adapter = (_this$options$adapter2 = this.options.adapter).beforeLoad) == null ? void 0 : _this$options$adapter.call(_this$options$adapter2, this, this.options);
+      (_b2 = (_a2 = this.options.adapter).beforeLoad) == null ? void 0 : _b2.call(_a2, this, this.options);
       this.record("loadStart");
       loadImageAsync({
         src: this.src,
         cors: this.cors
-      }, (data2) => {
-        this.naturalHeight = data2.naturalHeight;
-        this.naturalWidth = data2.naturalWidth;
+      }, (data) => {
+        this.naturalHeight = data.naturalHeight;
+        this.naturalWidth = data.naturalWidth;
         this.state.loaded = true;
         this.state.error = false;
         this.record("loadEnd");
@@ -8175,8 +8502,8 @@ class ReactiveListener {
     this.elRenderer(this, state, cache2);
   }
   performance() {
-    var state = "loading";
-    var time = 0;
+    let state = "loading";
+    let time = 0;
     if (this.state.loaded) {
       state = "loaded";
       time = (this.performanceData.loadEnd - this.performanceData.loadStart) / 1e3;
@@ -8198,31 +8525,38 @@ class ReactiveListener {
     this.attempt = 0;
   }
 }
-var DEFAULT_URL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-var DEFAULT_EVENTS = ["scroll", "wheel", "mousewheel", "resize", "animationend", "transitionend", "touchmove"];
-var DEFAULT_OBSERVER_OPTIONS = {
+const DEFAULT_URL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+const DEFAULT_EVENTS = [
+  "scroll",
+  "wheel",
+  "mousewheel",
+  "resize",
+  "animationend",
+  "transitionend",
+  "touchmove"
+];
+const DEFAULT_OBSERVER_OPTIONS = {
   rootMargin: "0px",
   threshold: 0
 };
-function Lazy() {
+function stdin_default$3() {
   return class Lazy {
-    constructor(_ref) {
-      var {
-        preLoad,
-        error,
-        throttleWait,
-        preLoadTop,
-        dispatchEvent,
-        loading,
-        attempt,
-        silent = true,
-        scale,
-        listenEvents,
-        filter,
-        adapter,
-        observer,
-        observerOptions
-      } = _ref;
+    constructor({
+      preLoad,
+      error,
+      throttleWait,
+      preLoadTop,
+      dispatchEvent,
+      loading,
+      attempt,
+      silent = true,
+      scale,
+      listenEvents,
+      filter,
+      adapter,
+      observer,
+      observerOptions
+    }) {
       this.mode = modeType.event;
       this.listeners = [];
       this.targetIndex = 0;
@@ -8245,16 +8579,11 @@ function Lazy() {
         observerOptions: observerOptions || DEFAULT_OBSERVER_OPTIONS
       };
       this.initEvent();
-      this.imageCache = new ImageCache({
-        max: 200
-      });
+      this.imageCache = new ImageCache({ max: 200 });
       this.lazyLoadHandler = throttle(this.lazyLoadHandler.bind(this), this.options.throttleWait);
       this.setMode(this.options.observer ? modeType.observer : modeType.event);
     }
-    config(options) {
-      if (options === void 0) {
-        options = {};
-      }
+    config(options = {}) {
       Object.assign(this.options, options);
     }
     performance() {
@@ -8275,15 +8604,13 @@ function Lazy() {
         this.update(el, binding);
         return nextTick(this.lazyLoadHandler);
       }
-      var value = this.valueFormatter(binding.value);
-      var {
-        src
-      } = value;
+      const value = this.valueFormatter(binding.value);
+      let { src } = value;
       nextTick(() => {
         src = getBestSelectionFromSrcset(el, this.options.scale) || src;
         this.observer && this.observer.observe(el);
-        var container = Object.keys(binding.modifiers)[0];
-        var $parent;
+        const container = Object.keys(binding.modifiers)[0];
+        let $parent;
         if (container) {
           $parent = vnode.context.$refs[container];
           $parent = $parent ? $parent.$el || $parent : document.getElementById(container);
@@ -8291,7 +8618,7 @@ function Lazy() {
         if (!$parent) {
           $parent = getScrollParent(el);
         }
-        var newListener = new ReactiveListener({
+        const newListener = new ReactiveListener({
           bindType: binding.arg,
           $parent,
           el,
@@ -8313,12 +8640,10 @@ function Lazy() {
       });
     }
     update(el, binding, vnode) {
-      var value = this.valueFormatter(binding.value);
-      var {
-        src
-      } = value;
+      const value = this.valueFormatter(binding.value);
+      let { src } = value;
       src = getBestSelectionFromSrcset(el, this.options.scale) || src;
-      var exist = this.listeners.find((item) => item.el === el);
+      const exist = this.listeners.find((item) => item.el === el);
       if (!exist) {
         this.add(el, binding, vnode);
       } else {
@@ -8339,7 +8664,7 @@ function Lazy() {
       if (!el)
         return;
       this.observer && this.observer.unobserve(el);
-      var existItem = this.listeners.find((item) => item.el === el);
+      const existItem = this.listeners.find((item) => item.el === el);
       if (existItem) {
         this.removeListenerTarget(existItem.$parent);
         this.removeListenerTarget(window);
@@ -8382,7 +8707,7 @@ function Lazy() {
     addListenerTarget(el) {
       if (!el)
         return;
-      var target = this.targets.find((target2) => target2.el === el);
+      let target = this.targets.find((target2) => target2.el === el);
       if (!target) {
         target = {
           el,
@@ -8413,7 +8738,6 @@ function Lazy() {
       this.options.ListenEvents.forEach((evt) => (start ? on : off)(el, evt, this.lazyLoadHandler));
     }
     initEvent() {
-      var _this = this;
       this.Event = {
         listeners: {
           loading: [],
@@ -8427,12 +8751,9 @@ function Lazy() {
         this.Event.listeners[event].push(func);
       };
       this.$once = (event, func) => {
-        var on2 = function() {
-          _this.$off(event, on2);
-          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-          }
-          func.apply(_this, args);
+        const on2 = (...args) => {
+          this.$off(event, on2);
+          func.apply(this, args);
         };
         this.$on(event, on2);
       };
@@ -8452,12 +8773,12 @@ function Lazy() {
       };
     }
     lazyLoadHandler() {
-      var freeList = [];
+      const freeList = [];
       this.listeners.forEach((listener) => {
         if (!listener.el || !listener.el.parentNode) {
           freeList.push(listener);
         }
-        var catIn = listener.checkInView();
+        const catIn = listener.checkInView();
         if (!catIn)
           return;
         listener.load();
@@ -8494,11 +8815,8 @@ function Lazy() {
     elRenderer(listener, state, cache2) {
       if (!listener.el)
         return;
-      var {
-        el,
-        bindType
-      } = listener;
-      var src;
+      const { el, bindType } = listener;
+      let src;
       switch (state) {
         case "loading":
           src = listener.loading;
@@ -8507,9 +8825,7 @@ function Lazy() {
           src = listener.error;
           break;
         default:
-          ({
-            src
-          } = listener);
+          ({ src } = listener);
           break;
       }
       if (bindType) {
@@ -8521,22 +8837,17 @@ function Lazy() {
       this.$emit(state, listener, cache2);
       this.options.adapter[state] && this.options.adapter[state](listener, this.options);
       if (this.options.dispatchEvent) {
-        var event = new CustomEvent(state, {
+        const event = new CustomEvent(state, {
           detail: listener
         });
         el.dispatchEvent(event);
       }
     }
     valueFormatter(value) {
-      var src = value;
-      var {
-        loading,
-        error
-      } = this.options;
-      if (isObject$3(value)) {
-        ({
-          src
-        } = value);
+      let src = value;
+      let { loading, error } = this.options;
+      if (isObject$2(value)) {
+        ({ src } = value);
         loading = value.loading || this.options.loading;
         error = value.error || this.options.error;
       }
@@ -8548,7 +8859,7 @@ function Lazy() {
     }
   };
 }
-var LazyComponent = (lazy) => ({
+var stdin_default$2 = (lazy) => ({
   props: {
     tag: {
       type: String,
@@ -8578,7 +8889,7 @@ var LazyComponent = (lazy) => ({
   },
   methods: {
     checkInView() {
-      var rect = useRect(this.$el);
+      const rect = useRect(this.$el);
       return inBrowser && rect.top < window.innerHeight * lazy.options.preLoad && rect.bottom > 0 && rect.left < window.innerWidth * lazy.options.preLoad && rect.right > 0;
     },
     load() {
@@ -8591,36 +8902,23 @@ var LazyComponent = (lazy) => ({
     }
   }
 });
-var defaultOptions = {
+const defaultOptions = {
   selector: "img"
 };
 class LazyContainer {
-  constructor(_ref) {
-    var {
-      el,
-      binding,
-      vnode,
-      lazy
-    } = _ref;
+  constructor({ el, binding, vnode, lazy }) {
     this.el = null;
     this.vnode = vnode;
     this.binding = binding;
     this.options = {};
     this.lazy = lazy;
     this.queue = [];
-    this.update({
-      el,
-      binding
-    });
+    this.update({ el, binding });
   }
-  update(_ref2) {
-    var {
-      el,
-      binding
-    } = _ref2;
+  update({ el, binding }) {
     this.el = el;
     this.options = Object.assign({}, defaultOptions, binding.value);
-    var imgs = this.getImgs();
+    const imgs = this.getImgs();
     imgs.forEach((el2) => {
       this.lazy.add(el2, Object.assign({}, this.binding, {
         value: {
@@ -8635,7 +8933,7 @@ class LazyContainer {
     return Array.from(this.el.querySelectorAll(this.options.selector));
   }
   clear() {
-    var imgs = this.getImgs();
+    const imgs = this.getImgs();
     imgs.forEach((el) => this.lazy.remove(el));
     this.vnode = null;
     this.binding = null;
@@ -8643,15 +8941,12 @@ class LazyContainer {
   }
 }
 class LazyContainerManager {
-  constructor(_ref3) {
-    var {
-      lazy
-    } = _ref3;
+  constructor({ lazy }) {
     this.lazy = lazy;
     this.queue = [];
   }
   bind(el, binding, vnode) {
-    var container = new LazyContainer({
+    const container = new LazyContainer({
       el,
       binding,
       vnode,
@@ -8660,24 +8955,20 @@ class LazyContainerManager {
     this.queue.push(container);
   }
   update(el, binding, vnode) {
-    var container = this.queue.find((item) => item.el === el);
+    const container = this.queue.find((item) => item.el === el);
     if (!container)
       return;
-    container.update({
-      el,
-      binding,
-      vnode
-    });
+    container.update({ el, binding, vnode });
   }
   unbind(el) {
-    var container = this.queue.find((item) => item.el === el);
+    const container = this.queue.find((item) => item.el === el);
     if (!container)
       return;
     container.clear();
     remove(this.queue, container);
   }
 }
-var LazyImage = (lazyManager) => ({
+var stdin_default$1 = (lazyManager) => ({
   props: {
     src: [String, Object],
     tag: {
@@ -8730,11 +9021,7 @@ var LazyImage = (lazyManager) => ({
   },
   methods: {
     init() {
-      var {
-        src,
-        loading,
-        error
-      } = lazyManager.valueFormatter(this.src);
+      const { src, loading, error } = lazyManager.valueFormatter(this.src);
       this.state.loaded = false;
       this.options.src = src;
       this.options.error = error;
@@ -8742,26 +9029,16 @@ var LazyImage = (lazyManager) => ({
       this.renderSrc = this.options.loading;
     },
     checkInView() {
-      var rect = useRect(this.$el);
+      const rect = useRect(this.$el);
       return rect.top < window.innerHeight * lazyManager.options.preLoad && rect.bottom > 0 && rect.left < window.innerWidth * lazyManager.options.preLoad && rect.right > 0;
     },
-    load(onFinish) {
-      if (onFinish === void 0) {
-        onFinish = noop$2;
-      }
+    load(onFinish = noop$3) {
       if (this.state.attempt > this.options.attempt - 1 && this.state.error) {
         onFinish();
         return;
       }
-      var {
-        src
-      } = this.options;
-      loadImageAsync({
-        src
-      }, (_ref) => {
-        var {
-          src: src2
-        } = _ref;
+      const { src } = this.options;
+      loadImageAsync({ src }, ({ src: src2 }) => {
         this.renderSrc = src2;
         this.state.loaded = true;
       }, () => {
@@ -8772,22 +9049,17 @@ var LazyImage = (lazyManager) => ({
     }
   }
 });
-var Lazyload = {
-  install(app, options) {
-    if (options === void 0) {
-      options = {};
-    }
-    var LazyClass = Lazy();
-    var lazy = new LazyClass(options);
-    var lazyContainer = new LazyContainerManager({
-      lazy
-    });
+const Lazyload = {
+  install(app, options = {}) {
+    const LazyClass = stdin_default$3();
+    const lazy = new LazyClass(options);
+    const lazyContainer = new LazyContainerManager({ lazy });
     app.config.globalProperties.$Lazyload = lazy;
     if (options.lazyComponent) {
-      app.component("LazyComponent", LazyComponent(lazy));
+      app.component("LazyComponent", stdin_default$2(lazy));
     }
     if (options.lazyImage) {
-      app.component("LazyImage", LazyImage(lazy));
+      app.component("LazyImage", stdin_default$1(lazy));
     }
     app.directive("lazy", {
       beforeMount: lazy.add.bind(lazy),
@@ -8801,376 +9073,6 @@ var Lazyload = {
     });
   }
 };
-function usePlaceholder(contentRef, bem2) {
-  var height2 = useHeight(contentRef);
-  return (renderContent) => createVNode("div", {
-    "class": bem2("placeholder"),
-    "style": {
-      height: height2.value ? height2.value + "px" : void 0
-    }
-  }, [renderContent()]);
-}
-var [name$3, bem$3] = createNamespace("nav-bar");
-var navBarProps = {
-  title: String,
-  fixed: Boolean,
-  zIndex: numericProp,
-  border: truthProp,
-  leftText: String,
-  rightText: String,
-  leftArrow: Boolean,
-  placeholder: Boolean,
-  safeAreaInsetTop: Boolean
-};
-var _NavBar = defineComponent({
-  name: name$3,
-  props: navBarProps,
-  emits: ["click-left", "click-right"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var navBarRef = ref();
-    var renderPlaceholder = usePlaceholder(navBarRef, bem$3);
-    var onClickLeft = (event) => emit("click-left", event);
-    var onClickRight = (event) => emit("click-right", event);
-    var renderLeft = () => {
-      if (slots.left) {
-        return slots.left();
-      }
-      return [props.leftArrow && createVNode(Icon, {
-        "class": bem$3("arrow"),
-        "name": "arrow-left"
-      }, null), props.leftText && createVNode("span", {
-        "class": bem$3("text")
-      }, [props.leftText])];
-    };
-    var renderRight = () => {
-      if (slots.right) {
-        return slots.right();
-      }
-      return createVNode("span", {
-        "class": bem$3("text")
-      }, [props.rightText]);
-    };
-    var renderNavBar = () => {
-      var {
-        title,
-        fixed,
-        border,
-        zIndex
-      } = props;
-      var style = getZIndexStyle(zIndex);
-      var hasLeft = props.leftArrow || props.leftText || slots.left;
-      var hasRight = props.rightText || slots.right;
-      return createVNode("div", {
-        "ref": navBarRef,
-        "style": style,
-        "class": [bem$3({
-          fixed,
-          "safe-area-inset-top": props.safeAreaInsetTop
-        }), {
-          [BORDER_BOTTOM]: border
-        }]
-      }, [createVNode("div", {
-        "class": bem$3("content")
-      }, [hasLeft && createVNode("div", {
-        "class": [bem$3("left"), HAPTICS_FEEDBACK],
-        "onClick": onClickLeft
-      }, [renderLeft()]), createVNode("div", {
-        "class": [bem$3("title"), "van-ellipsis"]
-      }, [slots.title ? slots.title() : title]), hasRight && createVNode("div", {
-        "class": [bem$3("right"), HAPTICS_FEEDBACK],
-        "onClick": onClickRight
-      }, [renderRight()])])]);
-    };
-    return () => {
-      if (props.fixed && props.placeholder) {
-        return renderPlaceholder(renderNavBar);
-      }
-      return renderNavBar();
-    };
-  }
-});
-var NavBar = withInstall(_NavBar);
-var [name$2, bem$2, t] = createNamespace("submit-bar");
-var submitBarProps = {
-  tip: String,
-  label: String,
-  price: Number,
-  tipIcon: String,
-  loading: Boolean,
-  currency: makeStringProp("\xA5"),
-  disabled: Boolean,
-  textAlign: String,
-  buttonText: String,
-  buttonType: makeStringProp("danger"),
-  buttonColor: String,
-  suffixLabel: String,
-  decimalLength: makeNumericProp(2),
-  safeAreaInsetBottom: truthProp
-};
-var _SubmitBar = defineComponent({
-  name: name$2,
-  props: submitBarProps,
-  emits: ["submit"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var renderText = () => {
-      var {
-        price,
-        label,
-        currency,
-        textAlign,
-        suffixLabel,
-        decimalLength
-      } = props;
-      if (typeof price === "number") {
-        var pricePair = (price / 100).toFixed(+decimalLength).split(".");
-        var decimal = decimalLength ? "." + pricePair[1] : "";
-        return createVNode("div", {
-          "class": bem$2("text"),
-          "style": {
-            textAlign
-          }
-        }, [createVNode("span", null, [label || t("label")]), createVNode("span", {
-          "class": bem$2("price")
-        }, [currency, createVNode("span", {
-          "class": bem$2("price-integer")
-        }, [pricePair[0]]), decimal]), suffixLabel && createVNode("span", {
-          "class": bem$2("suffix-label")
-        }, [suffixLabel])]);
-      }
-    };
-    var renderTip = () => {
-      var {
-        tip,
-        tipIcon
-      } = props;
-      if (slots.tip || tip) {
-        return createVNode("div", {
-          "class": bem$2("tip")
-        }, [tipIcon && createVNode(Icon, {
-          "class": bem$2("tip-icon"),
-          "name": tipIcon
-        }, null), tip && createVNode("span", {
-          "class": bem$2("tip-text")
-        }, [tip]), slots.tip == null ? void 0 : slots.tip()]);
-      }
-    };
-    var onClickButton = () => emit("submit");
-    var renderButton = () => {
-      if (slots.button) {
-        return slots.button();
-      }
-      return createVNode(Button, {
-        "round": true,
-        "type": props.buttonType,
-        "text": props.buttonText,
-        "class": bem$2("button", props.buttonType),
-        "color": props.buttonColor,
-        "loading": props.loading,
-        "disabled": props.disabled,
-        "onClick": onClickButton
-      }, null);
-    };
-    return () => createVNode("div", {
-      "class": [bem$2(), {
-        "van-safe-area-bottom": props.safeAreaInsetBottom
-      }]
-    }, [slots.top == null ? void 0 : slots.top(), renderTip(), createVNode("div", {
-      "class": bem$2("bar")
-    }, [slots.default == null ? void 0 : slots.default(), renderText(), renderButton()])]);
-  }
-});
-var SubmitBar = withInstall(_SubmitBar);
-var [name$1, bem$1] = createNamespace("tabbar");
-var tabbarProps = {
-  route: Boolean,
-  fixed: truthProp,
-  border: truthProp,
-  zIndex: numericProp,
-  placeholder: Boolean,
-  activeColor: String,
-  beforeChange: Function,
-  inactiveColor: String,
-  modelValue: makeNumericProp(0),
-  safeAreaInsetBottom: {
-    type: Boolean,
-    default: null
-  }
-};
-var TABBAR_KEY = Symbol(name$1);
-var _Tabbar = defineComponent({
-  name: name$1,
-  props: tabbarProps,
-  emits: ["change", "update:modelValue"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var root = ref();
-    var {
-      linkChildren
-    } = useChildren(TABBAR_KEY);
-    var renderPlaceholder = usePlaceholder(root, bem$1);
-    var enableSafeArea = () => {
-      var _props$safeAreaInsetB;
-      return (_props$safeAreaInsetB = props.safeAreaInsetBottom) != null ? _props$safeAreaInsetB : props.fixed;
-    };
-    var renderTabbar = () => {
-      var {
-        fixed,
-        zIndex,
-        border
-      } = props;
-      return createVNode("div", {
-        "ref": root,
-        "role": "tablist",
-        "style": getZIndexStyle(zIndex),
-        "class": [bem$1({
-          fixed
-        }), {
-          [BORDER_TOP_BOTTOM]: border,
-          "van-safe-area-bottom": enableSafeArea()
-        }]
-      }, [slots.default == null ? void 0 : slots.default()]);
-    };
-    var setActive = (active, afterChange) => {
-      callInterceptor(props.beforeChange, {
-        args: [active],
-        done() {
-          emit("update:modelValue", active);
-          emit("change", active);
-          afterChange();
-        }
-      });
-    };
-    linkChildren({
-      props,
-      setActive
-    });
-    return () => {
-      if (props.fixed && props.placeholder) {
-        return renderPlaceholder(renderTabbar);
-      }
-      return renderTabbar();
-    };
-  }
-});
-var Tabbar = withInstall(_Tabbar);
-var [name, bem] = createNamespace("tabbar-item");
-var tabbarItemProps = extend$1({}, routeProps, {
-  dot: Boolean,
-  icon: String,
-  name: numericProp,
-  badge: numericProp,
-  badgeProps: Object,
-  iconPrefix: String
-});
-var _TabbarItem = defineComponent({
-  name,
-  props: tabbarItemProps,
-  emits: ["click"],
-  setup(props, _ref) {
-    var {
-      emit,
-      slots
-    } = _ref;
-    var route2 = useRoute$1();
-    var vm = getCurrentInstance().proxy;
-    var {
-      parent,
-      index: index2
-    } = useParent(TABBAR_KEY);
-    if (!parent) {
-      return;
-    }
-    var active = computed(() => {
-      var _props$name;
-      var {
-        route: route3,
-        modelValue
-      } = parent.props;
-      if (route3 && "$route" in vm) {
-        var {
-          $route
-        } = vm;
-        var {
-          to
-        } = props;
-        var config = isObject$3(to) ? to : {
-          path: to
-        };
-        return !!$route.matched.find((val) => {
-          var pathMatched = "path" in config && config.path === val.path;
-          var nameMatched = "name" in config && config.name === val.name;
-          return pathMatched || nameMatched;
-        });
-      }
-      return ((_props$name = props.name) != null ? _props$name : index2.value) === modelValue;
-    });
-    var onClick = (event) => {
-      if (!active.value) {
-        var _props$name2;
-        parent.setActive((_props$name2 = props.name) != null ? _props$name2 : index2.value, route2);
-      }
-      emit("click", event);
-    };
-    var renderIcon = () => {
-      if (slots.icon) {
-        return slots.icon({
-          active: active.value
-        });
-      }
-      if (props.icon) {
-        return createVNode(Icon, {
-          "name": props.icon,
-          "classPrefix": props.iconPrefix
-        }, null);
-      }
-    };
-    return () => {
-      var {
-        dot,
-        badge
-      } = props;
-      var {
-        activeColor,
-        inactiveColor
-      } = parent.props;
-      var color = active.value ? activeColor : inactiveColor;
-      return createVNode("div", {
-        "role": "tab",
-        "class": bem({
-          active: active.value
-        }),
-        "style": {
-          color
-        },
-        "tabindex": 0,
-        "aria-selected": active.value,
-        "onClick": onClick
-      }, [createVNode(Badge, mergeProps({
-        "dot": dot,
-        "class": bem("icon"),
-        "content": badge
-      }, props.badgeProps), {
-        default: renderIcon
-      }), createVNode("div", {
-        "class": bem("text")
-      }, [slots.default == null ? void 0 : slots.default({
-        active: active.value
-      })])]);
-    };
-  }
-});
-var TabbarItem = withInstall(_TabbarItem);
 var base = "";
 var index$d = "";
 var index$c = "";
@@ -9211,8 +9113,8 @@ class ApiProxy {
     let currentSettings = Object.assign({}, defaultSettings);
     try {
       const raw = localStorage.getItem(localSettingsSaveId);
-      const data2 = JSON.parse(raw);
-      Object.assign(currentSettings, data2);
+      const data = JSON.parse(raw);
+      Object.assign(currentSettings, data);
     } catch (e) {
     }
     this.fallbacks = {
@@ -9314,7 +9216,7 @@ function setupDevtoolsPlugin(pluginDescriptor, setupFn) {
 let activePinia;
 const setActivePinia = (pinia) => activePinia = pinia;
 const piniaSymbol = Symbol();
-function isPlainObject$2(o) {
+function isPlainObject$1(o) {
   return o && typeof o === "object" && Object.prototype.toString.call(o) === "[object Object]" && typeof o.toJSON !== "function";
 }
 var MutationType;
@@ -9355,9 +9257,9 @@ function createPinia() {
   });
   return pinia;
 }
-const noop$1 = () => {
+const noop$2 = () => {
 };
-function addSubscription(subscriptions, callback, detached, onCleanup = noop$1) {
+function addSubscription(subscriptions, callback, detached, onCleanup = noop$2) {
   subscriptions.push(callback);
   const removeSubscription = () => {
     const idx = subscriptions.indexOf(callback);
@@ -9380,7 +9282,7 @@ function mergeReactiveObjects(target, patchToApply) {
   for (const key in patchToApply) {
     const subPatch = patchToApply[key];
     const targetValue = target[key];
-    if (isPlainObject$2(targetValue) && isPlainObject$2(subPatch) && !isRef(subPatch) && !isReactive(subPatch)) {
+    if (isPlainObject$1(targetValue) && isPlainObject$1(subPatch) && !isRef(subPatch) && !isReactive(subPatch)) {
       target[key] = mergeReactiveObjects(targetValue, subPatch);
     } else {
       target[key] = subPatch;
@@ -9390,7 +9292,7 @@ function mergeReactiveObjects(target, patchToApply) {
 }
 const skipHydrateSymbol = Symbol();
 function shouldHydrate(obj) {
-  return !isPlainObject$2(obj) || !obj.hasOwnProperty(skipHydrateSymbol);
+  return !isPlainObject$1(obj) || !obj.hasOwnProperty(skipHydrateSymbol);
 }
 const { assign: assign$2 } = Object;
 function isComputed(o) {
@@ -9469,7 +9371,7 @@ function createSetupStore($id, setup, options = {}, pinia, hot) {
     isSyncListening = true;
     triggerSubscriptions(subscriptions, subscriptionMutation, pinia.state.value[$id]);
   }
-  const $reset = noop$1;
+  const $reset = noop$2;
   function $dispose() {
     scope.stop();
     subscriptions = [];
@@ -9661,7 +9563,7 @@ function applyToParams(fn, params) {
   }
   return newParams;
 }
-const noop = () => {
+const noop$1 = () => {
 };
 const TRAILING_SLASH_RE = /\/$/;
 const removeTrailingSlash = (path) => path.replace(TRAILING_SLASH_RE, "");
@@ -9928,18 +9830,18 @@ function useHistoryStateNavigation(base2) {
       location2[replace2 ? "replace" : "assign"](url);
     }
   }
-  function replace(to, data2) {
-    const state = assign$1({}, history2.state, buildState(historyState.value.back, to, historyState.value.forward, true), data2, { position: historyState.value.position });
+  function replace(to, data) {
+    const state = assign$1({}, history2.state, buildState(historyState.value.back, to, historyState.value.forward, true), data, { position: historyState.value.position });
     changeLocation(to, state, true);
     currentLocation.value = to;
   }
-  function push(to, data2) {
+  function push(to, data) {
     const currentState = assign$1({}, historyState.value, history2.state, {
       forward: to,
       scroll: computeScrollPosition()
     });
     changeLocation(currentState.current, currentState, true);
-    const state = assign$1({}, buildState(currentLocation.value, to, null), { position: currentState.position + 1 }, data2);
+    const state = assign$1({}, buildState(currentLocation.value, to, null), { position: currentState.position + 1 }, data);
     changeLocation(to, state, false);
     currentLocation.value = to;
   }
@@ -10355,7 +10257,7 @@ function createRouterMatcher(routes, globalOptions) {
     }
     return originalMatcher ? () => {
       removeRoute(originalMatcher);
-    } : noop;
+    } : noop$1;
   }
   function removeRoute(matcherRef) {
     if (isRouteName(matcherRef)) {
@@ -10484,10 +10386,10 @@ function isAliasRecord(record) {
 function mergeMetaFields(matched) {
   return matched.reduce((meta, record) => assign$1(meta, record.meta), {});
 }
-function mergeOptions(defaults2, partialOptions) {
+function mergeOptions(defaults, partialOptions) {
   const options = {};
-  for (const key in defaults2) {
-    options[key] = key in partialOptions ? partialOptions[key] : defaults2[key];
+  for (const key in defaults) {
+    options[key] = key in partialOptions ? partialOptions[key] : defaults[key];
   }
   return options;
 }
@@ -10586,21 +10488,21 @@ function normalizeQuery(query) {
   return normalizedQuery;
 }
 function useCallbacks() {
-  let handlers = [];
+  let handlers2 = [];
   function add2(handler) {
-    handlers.push(handler);
+    handlers2.push(handler);
     return () => {
-      const i = handlers.indexOf(handler);
+      const i = handlers2.indexOf(handler);
       if (i > -1)
-        handlers.splice(i, 1);
+        handlers2.splice(i, 1);
     };
   }
   function reset2() {
-    handlers = [];
+    handlers2 = [];
   }
   return {
     add: add2,
-    list: () => handlers,
+    list: () => handlers2,
     reset: reset2
   };
 }
@@ -10684,7 +10586,7 @@ function useLink(props) {
   const isExactActive = computed(() => activeRecordIndex.value > -1 && activeRecordIndex.value === currentRoute.matched.length - 1 && isSameRouteLocationParams(currentRoute.params, route2.value.params));
   function navigate(e = {}) {
     if (guardEvent(e)) {
-      return router[unref(props.replace) ? "replace" : "push"](unref(props.to)).catch(noop);
+      return router[unref(props.replace) ? "replace" : "push"](unref(props.to)).catch(noop$1);
     }
     return Promise.resolve();
   }
@@ -10824,10 +10726,10 @@ const RouterViewImpl = /* @__PURE__ */ defineComponent({
     };
   }
 });
-function normalizeSlot(slot, data2) {
+function normalizeSlot(slot, data) {
   if (!slot)
     return null;
-  const slotContent = slot(data2);
+  const slotContent = slot(data);
   return slotContent.length === 1 ? slotContent[0] : slotContent;
 }
 const RouterView = RouterViewImpl;
@@ -10953,13 +10855,13 @@ function createRouter(options) {
   function pushWithRedirect(to, redirectedFrom) {
     const targetLocation = pendingLocation = resolve2(to);
     const from = currentRoute.value;
-    const data2 = to.state;
+    const data = to.state;
     const force = to.force;
     const replace2 = to.replace === true;
     const shouldRedirect = handleRedirectRecord(targetLocation);
     if (shouldRedirect)
       return pushWithRedirect(assign$1(locationAsObject(shouldRedirect), {
-        state: data2,
+        state: data,
         force,
         replace: replace2
       }), redirectedFrom || targetLocation);
@@ -10974,13 +10876,13 @@ function createRouter(options) {
       if (failure2) {
         if (isNavigationFailure(failure2, 2)) {
           return pushWithRedirect(assign$1(locationAsObject(failure2.to), {
-            state: data2,
+            state: data,
             force,
             replace: replace2
           }), redirectedFrom || toLocation);
         }
       } else {
-        failure2 = finalizeNavigation(toLocation, from, true, replace2, data2);
+        failure2 = finalizeNavigation(toLocation, from, true, replace2, data);
       }
       triggerAfterEach(toLocation, from, failure2);
       return failure2;
@@ -11049,7 +10951,7 @@ function createRouter(options) {
     for (const guard of afterGuards.list())
       guard(to, from, failure);
   }
-  function finalizeNavigation(toLocation, from, isPush, replace2, data2) {
+  function finalizeNavigation(toLocation, from, isPush, replace2, data) {
     const error = checkCanceledNavigation(toLocation, from);
     if (error)
       return error;
@@ -11059,9 +10961,9 @@ function createRouter(options) {
       if (replace2 || isFirstNavigation)
         routerHistory.replace(toLocation.fullPath, assign$1({
           scroll: isFirstNavigation && state && state.scroll
-        }, data2));
+        }, data));
       else
-        routerHistory.push(toLocation.fullPath, data2);
+        routerHistory.push(toLocation.fullPath, data);
     }
     currentRoute.value = toLocation;
     handleScroll(toLocation, from, isPush, isFirstNavigation);
@@ -11073,7 +10975,7 @@ function createRouter(options) {
       const toLocation = resolve2(to);
       const shouldRedirect = handleRedirectRecord(toLocation);
       if (shouldRedirect) {
-        pushWithRedirect(assign$1(shouldRedirect, { replace: true }), toLocation).catch(noop);
+        pushWithRedirect(assign$1(shouldRedirect, { replace: true }), toLocation).catch(noop$1);
         return;
       }
       pendingLocation = toLocation;
@@ -11090,7 +10992,7 @@ function createRouter(options) {
             if (isNavigationFailure(failure, 4 | 16) && !info.delta && info.type === NavigationType.pop) {
               routerHistory.go(-1, false);
             }
-          }).catch(noop);
+          }).catch(noop$1);
           return Promise.reject();
         }
         if (info.delta)
@@ -11106,7 +11008,7 @@ function createRouter(options) {
           }
         }
         triggerAfterEach(toLocation, from, failure);
-      }).catch(noop);
+      }).catch(noop$1);
     });
   }
   let readyHandlers = useCallbacks();
@@ -11237,1049 +11139,356 @@ function useRoute() {
 var index$2 = "";
 var index$1 = "";
 var index = "";
-var axios$2 = { exports: {} };
-var bind$2 = function bind(fn, thisArg) {
-  return function wrap() {
-    var args = new Array(arguments.length);
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-    return fn.apply(thisArg, args);
-  };
-};
-var bind$1 = bind$2;
-var toString = Object.prototype.toString;
-function isArray$1(val) {
-  return toString.call(val) === "[object Array]";
-}
-function isUndefined(val) {
-  return typeof val === "undefined";
-}
-function isBuffer(val) {
-  return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor) && typeof val.constructor.isBuffer === "function" && val.constructor.isBuffer(val);
-}
-function isArrayBuffer(val) {
-  return toString.call(val) === "[object ArrayBuffer]";
-}
-function isFormData(val) {
-  return typeof FormData !== "undefined" && val instanceof FormData;
-}
-function isArrayBufferView(val) {
-  var result;
-  if (typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView) {
-    result = ArrayBuffer.isView(val);
-  } else {
-    result = val && val.buffer && val.buffer instanceof ArrayBuffer;
-  }
-  return result;
-}
-function isString$1(val) {
-  return typeof val === "string";
-}
-function isNumber$1(val) {
-  return typeof val === "number";
-}
-function isObject$2(val) {
-  return val !== null && typeof val === "object";
-}
-function isPlainObject$1(val) {
-  if (toString.call(val) !== "[object Object]") {
-    return false;
-  }
-  var prototype = Object.getPrototypeOf(val);
-  return prototype === null || prototype === Object.prototype;
-}
-function isDate$1(val) {
-  return toString.call(val) === "[object Date]";
-}
-function isFile(val) {
-  return toString.call(val) === "[object File]";
-}
-function isBlob(val) {
-  return toString.call(val) === "[object Blob]";
-}
-function isFunction$1(val) {
-  return toString.call(val) === "[object Function]";
-}
-function isStream(val) {
-  return isObject$2(val) && isFunction$1(val.pipe);
-}
-function isURLSearchParams(val) {
-  return typeof URLSearchParams !== "undefined" && val instanceof URLSearchParams;
-}
-function trim(str) {
-  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, "");
-}
-function isStandardBrowserEnv() {
-  if (typeof navigator !== "undefined" && (navigator.product === "ReactNative" || navigator.product === "NativeScript" || navigator.product === "NS")) {
-    return false;
-  }
-  return typeof window !== "undefined" && typeof document !== "undefined";
-}
-function forEach(obj, fn) {
-  if (obj === null || typeof obj === "undefined") {
-    return;
-  }
-  if (typeof obj !== "object") {
-    obj = [obj];
-  }
-  if (isArray$1(obj)) {
-    for (var i = 0, l = obj.length; i < l; i++) {
-      fn.call(null, obj[i], i, obj);
-    }
-  } else {
-    for (var key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        fn.call(null, obj[key], key, obj);
-      }
-    }
-  }
-}
-function merge() {
-  var result = {};
-  function assignValue(val, key) {
-    if (isPlainObject$1(result[key]) && isPlainObject$1(val)) {
-      result[key] = merge(result[key], val);
-    } else if (isPlainObject$1(val)) {
-      result[key] = merge({}, val);
-    } else if (isArray$1(val)) {
-      result[key] = val.slice();
-    } else {
-      result[key] = val;
-    }
-  }
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    forEach(arguments[i], assignValue);
-  }
-  return result;
-}
-function extend(a, b, thisArg) {
-  forEach(b, function assignValue(val, key) {
-    if (thisArg && typeof val === "function") {
-      a[key] = bind$1(val, thisArg);
-    } else {
-      a[key] = val;
-    }
-  });
-  return a;
-}
-function stripBOM(content) {
-  if (content.charCodeAt(0) === 65279) {
-    content = content.slice(1);
-  }
-  return content;
-}
-var utils$d = {
-  isArray: isArray$1,
-  isArrayBuffer,
-  isBuffer,
-  isFormData,
-  isArrayBufferView,
-  isString: isString$1,
-  isNumber: isNumber$1,
-  isObject: isObject$2,
-  isPlainObject: isPlainObject$1,
-  isUndefined,
-  isDate: isDate$1,
-  isFile,
-  isBlob,
-  isFunction: isFunction$1,
-  isStream,
-  isURLSearchParams,
-  isStandardBrowserEnv,
-  forEach,
-  merge,
-  extend,
-  trim,
-  stripBOM
-};
-var utils$c = utils$d;
-function encode(val) {
-  return encodeURIComponent(val).replace(/%3A/gi, ":").replace(/%24/g, "$").replace(/%2C/gi, ",").replace(/%20/g, "+").replace(/%5B/gi, "[").replace(/%5D/gi, "]");
-}
-var buildURL$2 = function buildURL(url, params, paramsSerializer) {
-  if (!params) {
-    return url;
-  }
-  var serializedParams;
-  if (paramsSerializer) {
-    serializedParams = paramsSerializer(params);
-  } else if (utils$c.isURLSearchParams(params)) {
-    serializedParams = params.toString();
-  } else {
-    var parts = [];
-    utils$c.forEach(params, function serialize(val, key) {
-      if (val === null || typeof val === "undefined") {
-        return;
-      }
-      if (utils$c.isArray(val)) {
-        key = key + "[]";
-      } else {
-        val = [val];
-      }
-      utils$c.forEach(val, function parseValue2(v) {
-        if (utils$c.isDate(v)) {
-          v = v.toISOString();
-        } else if (utils$c.isObject(v)) {
-          v = JSON.stringify(v);
-        }
-        parts.push(encode(key) + "=" + encode(v));
-      });
-    });
-    serializedParams = parts.join("&");
-  }
-  if (serializedParams) {
-    var hashmarkIndex = url.indexOf("#");
-    if (hashmarkIndex !== -1) {
-      url = url.slice(0, hashmarkIndex);
-    }
-    url += (url.indexOf("?") === -1 ? "?" : "&") + serializedParams;
-  }
-  return url;
-};
-var utils$b = utils$d;
-function InterceptorManager$1() {
-  this.handlers = [];
-}
-InterceptorManager$1.prototype.use = function use(fulfilled, rejected, options) {
-  this.handlers.push({
-    fulfilled,
-    rejected,
-    synchronous: options ? options.synchronous : false,
-    runWhen: options ? options.runWhen : null
-  });
-  return this.handlers.length - 1;
-};
-InterceptorManager$1.prototype.eject = function eject(id) {
-  if (this.handlers[id]) {
-    this.handlers[id] = null;
-  }
-};
-InterceptorManager$1.prototype.forEach = function forEach2(fn) {
-  utils$b.forEach(this.handlers, function forEachHandler(h2) {
-    if (h2 !== null) {
-      fn(h2);
-    }
-  });
-};
-var InterceptorManager_1 = InterceptorManager$1;
-var utils$a = utils$d;
-var normalizeHeaderName$1 = function normalizeHeaderName(headers, normalizedName) {
-  utils$a.forEach(headers, function processHeader(value, name2) {
-    if (name2 !== normalizedName && name2.toUpperCase() === normalizedName.toUpperCase()) {
-      headers[normalizedName] = value;
-      delete headers[name2];
-    }
-  });
-};
-var enhanceError$2 = function enhanceError(error, config, code, request2, response) {
-  error.config = config;
-  if (code) {
-    error.code = code;
-  }
-  error.request = request2;
-  error.response = response;
-  error.isAxiosError = true;
-  error.toJSON = function toJSON() {
-    return {
-      message: this.message,
-      name: this.name,
-      description: this.description,
-      number: this.number,
-      fileName: this.fileName,
-      lineNumber: this.lineNumber,
-      columnNumber: this.columnNumber,
-      stack: this.stack,
-      config: this.config,
-      code: this.code,
-      status: this.response && this.response.status ? this.response.status : null
-    };
-  };
-  return error;
-};
-var enhanceError$1 = enhanceError$2;
-var createError$2 = function createError(message, config, code, request2, response) {
-  var error = new Error(message);
-  return enhanceError$1(error, config, code, request2, response);
-};
-var createError$1 = createError$2;
-var settle$1 = function settle(resolve2, reject, response) {
-  var validateStatus2 = response.config.validateStatus;
-  if (!response.status || !validateStatus2 || validateStatus2(response.status)) {
-    resolve2(response);
-  } else {
-    reject(createError$1("Request failed with status code " + response.status, response.config, null, response.request, response));
-  }
-};
-var utils$9 = utils$d;
-var cookies$1 = utils$9.isStandardBrowserEnv() ? function standardBrowserEnv() {
-  return {
-    write: function write(name2, value, expires, path, domain, secure) {
-      var cookie = [];
-      cookie.push(name2 + "=" + encodeURIComponent(value));
-      if (utils$9.isNumber(expires)) {
-        cookie.push("expires=" + new Date(expires).toGMTString());
-      }
-      if (utils$9.isString(path)) {
-        cookie.push("path=" + path);
-      }
-      if (utils$9.isString(domain)) {
-        cookie.push("domain=" + domain);
-      }
-      if (secure === true) {
-        cookie.push("secure");
-      }
-      document.cookie = cookie.join("; ");
-    },
-    read: function read(name2) {
-      var match = document.cookie.match(new RegExp("(^|;\\s*)(" + name2 + ")=([^;]*)"));
-      return match ? decodeURIComponent(match[3]) : null;
-    },
-    remove: function remove2(name2) {
-      this.write(name2, "", Date.now() - 864e5);
-    }
-  };
-}() : function nonStandardBrowserEnv() {
-  return {
-    write: function write() {
-    },
-    read: function read() {
-      return null;
-    },
-    remove: function remove2() {
-    }
-  };
-}();
-var isAbsoluteURL$1 = function isAbsoluteURL(url) {
-  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
-};
-var combineURLs$1 = function combineURLs(baseURL, relativeURL) {
-  return relativeURL ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
-};
-var isAbsoluteURL2 = isAbsoluteURL$1;
-var combineURLs2 = combineURLs$1;
-var buildFullPath$1 = function buildFullPath(baseURL, requestedURL) {
-  if (baseURL && !isAbsoluteURL2(requestedURL)) {
-    return combineURLs2(baseURL, requestedURL);
-  }
-  return requestedURL;
-};
-var utils$8 = utils$d;
-var ignoreDuplicateOf = [
-  "age",
-  "authorization",
-  "content-length",
-  "content-type",
-  "etag",
-  "expires",
-  "from",
-  "host",
-  "if-modified-since",
-  "if-unmodified-since",
-  "last-modified",
-  "location",
-  "max-forwards",
-  "proxy-authorization",
-  "referer",
-  "retry-after",
-  "user-agent"
-];
-var parseHeaders$1 = function parseHeaders(headers) {
-  var parsed = {};
-  var key;
-  var val;
-  var i;
-  if (!headers) {
-    return parsed;
-  }
-  utils$8.forEach(headers.split("\n"), function parser(line) {
-    i = line.indexOf(":");
-    key = utils$8.trim(line.substr(0, i)).toLowerCase();
-    val = utils$8.trim(line.substr(i + 1));
-    if (key) {
-      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
-        return;
-      }
-      if (key === "set-cookie") {
-        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
-      } else {
-        parsed[key] = parsed[key] ? parsed[key] + ", " + val : val;
-      }
-    }
-  });
-  return parsed;
-};
-var utils$7 = utils$d;
-var isURLSameOrigin$1 = utils$7.isStandardBrowserEnv() ? function standardBrowserEnv2() {
-  var msie = /(msie|trident)/i.test(navigator.userAgent);
-  var urlParsingNode = document.createElement("a");
-  var originURL;
-  function resolveURL(url) {
-    var href = url;
-    if (msie) {
-      urlParsingNode.setAttribute("href", href);
-      href = urlParsingNode.href;
-    }
-    urlParsingNode.setAttribute("href", href);
-    return {
-      href: urlParsingNode.href,
-      protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, "") : "",
-      host: urlParsingNode.host,
-      search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, "") : "",
-      hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, "") : "",
-      hostname: urlParsingNode.hostname,
-      port: urlParsingNode.port,
-      pathname: urlParsingNode.pathname.charAt(0) === "/" ? urlParsingNode.pathname : "/" + urlParsingNode.pathname
-    };
-  }
-  originURL = resolveURL(window.location.href);
-  return function isURLSameOrigin2(requestURL) {
-    var parsed = utils$7.isString(requestURL) ? resolveURL(requestURL) : requestURL;
-    return parsed.protocol === originURL.protocol && parsed.host === originURL.host;
-  };
-}() : function nonStandardBrowserEnv2() {
-  return function isURLSameOrigin2() {
+function tryOnScopeDispose(fn) {
+  if (getCurrentScope()) {
+    onScopeDispose(fn);
     return true;
+  }
+  return false;
+}
+const isClient = typeof window !== "undefined";
+const isString$1 = (val) => typeof val === "string";
+const noop = () => {
+};
+function createFilterWrapper(filter, fn) {
+  function wrapper(...args) {
+    filter(() => fn.apply(this, args), { fn, thisArg: this, args });
+  }
+  return wrapper;
+}
+const bypassFilter = (invoke) => {
+  return invoke();
+};
+function tryOnMounted(fn, sync = true) {
+  if (getCurrentInstance())
+    onMounted(fn);
+  else if (sync)
+    fn();
+  else
+    nextTick(fn);
+}
+var __getOwnPropSymbols$5 = Object.getOwnPropertySymbols;
+var __hasOwnProp$5 = Object.prototype.hasOwnProperty;
+var __propIsEnum$5 = Object.prototype.propertyIsEnumerable;
+var __objRest$5 = (source, exclude) => {
+  var target = {};
+  for (var prop in source)
+    if (__hasOwnProp$5.call(source, prop) && exclude.indexOf(prop) < 0)
+      target[prop] = source[prop];
+  if (source != null && __getOwnPropSymbols$5)
+    for (var prop of __getOwnPropSymbols$5(source)) {
+      if (exclude.indexOf(prop) < 0 && __propIsEnum$5.call(source, prop))
+        target[prop] = source[prop];
+    }
+  return target;
+};
+function watchWithFilter(source, cb, options = {}) {
+  const _a2 = options, {
+    eventFilter = bypassFilter
+  } = _a2, watchOptions = __objRest$5(_a2, [
+    "eventFilter"
+  ]);
+  return watch(source, createFilterWrapper(eventFilter, cb), watchOptions);
+}
+const defaultWindow = isClient ? window : void 0;
+isClient ? window.document : void 0;
+isClient ? window.navigator : void 0;
+isClient ? window.location : void 0;
+function useEventListener(...args) {
+  let target;
+  let event;
+  let listener;
+  let options;
+  if (isString$1(args[0])) {
+    [event, listener, options] = args;
+    target = defaultWindow;
+  } else {
+    [target, event, listener, options] = args;
+  }
+  if (!target)
+    return noop;
+  let cleanup = noop;
+  const stopWatch = watch(() => unref(target), (el) => {
+    cleanup();
+    if (!el)
+      return;
+    el.addEventListener(event, listener, options);
+    cleanup = () => {
+      el.removeEventListener(event, listener, options);
+      cleanup = noop;
+    };
+  }, { immediate: true, flush: "post" });
+  const stop = () => {
+    stopWatch();
+    cleanup();
   };
-}();
-function Cancel$3(message) {
-  this.message = message;
+  tryOnScopeDispose(stop);
+  return stop;
 }
-Cancel$3.prototype.toString = function toString2() {
-  return "Cancel" + (this.message ? ": " + this.message : "");
-};
-Cancel$3.prototype.__CANCEL__ = true;
-var Cancel_1 = Cancel$3;
-var utils$6 = utils$d;
-var settle2 = settle$1;
-var cookies = cookies$1;
-var buildURL$1 = buildURL$2;
-var buildFullPath2 = buildFullPath$1;
-var parseHeaders2 = parseHeaders$1;
-var isURLSameOrigin = isURLSameOrigin$1;
-var createError2 = createError$2;
-var defaults$4 = defaults_1;
-var Cancel$2 = Cancel_1;
-var xhr = function xhrAdapter(config) {
-  return new Promise(function dispatchXhrRequest(resolve2, reject) {
-    var requestData = config.data;
-    var requestHeaders = config.headers;
-    var responseType = config.responseType;
-    var onCanceled;
-    function done() {
-      if (config.cancelToken) {
-        config.cancelToken.unsubscribe(onCanceled);
-      }
-      if (config.signal) {
-        config.signal.removeEventListener("abort", onCanceled);
-      }
-    }
-    if (utils$6.isFormData(requestData)) {
-      delete requestHeaders["Content-Type"];
-    }
-    var request2 = new XMLHttpRequest();
-    if (config.auth) {
-      var username = config.auth.username || "";
-      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : "";
-      requestHeaders.Authorization = "Basic " + btoa(username + ":" + password);
-    }
-    var fullPath = buildFullPath2(config.baseURL, config.url);
-    request2.open(config.method.toUpperCase(), buildURL$1(fullPath, config.params, config.paramsSerializer), true);
-    request2.timeout = config.timeout;
-    function onloadend() {
-      if (!request2) {
-        return;
-      }
-      var responseHeaders = "getAllResponseHeaders" in request2 ? parseHeaders2(request2.getAllResponseHeaders()) : null;
-      var responseData = !responseType || responseType === "text" || responseType === "json" ? request2.responseText : request2.response;
-      var response = {
-        data: responseData,
-        status: request2.status,
-        statusText: request2.statusText,
-        headers: responseHeaders,
-        config,
-        request: request2
-      };
-      settle2(function _resolve(value) {
-        resolve2(value);
-        done();
-      }, function _reject(err) {
-        reject(err);
-        done();
-      }, response);
-      request2 = null;
-    }
-    if ("onloadend" in request2) {
-      request2.onloadend = onloadend;
-    } else {
-      request2.onreadystatechange = function handleLoad() {
-        if (!request2 || request2.readyState !== 4) {
-          return;
-        }
-        if (request2.status === 0 && !(request2.responseURL && request2.responseURL.indexOf("file:") === 0)) {
-          return;
-        }
-        setTimeout(onloadend);
-      };
-    }
-    request2.onabort = function handleAbort() {
-      if (!request2) {
-        return;
-      }
-      reject(createError2("Request aborted", config, "ECONNABORTED", request2));
-      request2 = null;
-    };
-    request2.onerror = function handleError2() {
-      reject(createError2("Network Error", config, null, request2));
-      request2 = null;
-    };
-    request2.ontimeout = function handleTimeout() {
-      var timeoutErrorMessage = config.timeout ? "timeout of " + config.timeout + "ms exceeded" : "timeout exceeded";
-      var transitional2 = config.transitional || defaults$4.transitional;
-      if (config.timeoutErrorMessage) {
-        timeoutErrorMessage = config.timeoutErrorMessage;
-      }
-      reject(createError2(timeoutErrorMessage, config, transitional2.clarifyTimeoutError ? "ETIMEDOUT" : "ECONNABORTED", request2));
-      request2 = null;
-    };
-    if (utils$6.isStandardBrowserEnv()) {
-      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ? cookies.read(config.xsrfCookieName) : void 0;
-      if (xsrfValue) {
-        requestHeaders[config.xsrfHeaderName] = xsrfValue;
-      }
-    }
-    if ("setRequestHeader" in request2) {
-      utils$6.forEach(requestHeaders, function setRequestHeader(val, key) {
-        if (typeof requestData === "undefined" && key.toLowerCase() === "content-type") {
-          delete requestHeaders[key];
-        } else {
-          request2.setRequestHeader(key, val);
-        }
-      });
-    }
-    if (!utils$6.isUndefined(config.withCredentials)) {
-      request2.withCredentials = !!config.withCredentials;
-    }
-    if (responseType && responseType !== "json") {
-      request2.responseType = config.responseType;
-    }
-    if (typeof config.onDownloadProgress === "function") {
-      request2.addEventListener("progress", config.onDownloadProgress);
-    }
-    if (typeof config.onUploadProgress === "function" && request2.upload) {
-      request2.upload.addEventListener("progress", config.onUploadProgress);
-    }
-    if (config.cancelToken || config.signal) {
-      onCanceled = function(cancel) {
-        if (!request2) {
-          return;
-        }
-        reject(!cancel || cancel && cancel.type ? new Cancel$2("canceled") : cancel);
-        request2.abort();
-        request2 = null;
-      };
-      config.cancelToken && config.cancelToken.subscribe(onCanceled);
-      if (config.signal) {
-        config.signal.aborted ? onCanceled() : config.signal.addEventListener("abort", onCanceled);
-      }
-    }
-    if (!requestData) {
-      requestData = null;
-    }
-    request2.send(requestData);
+function useMediaQuery(query, options = {}) {
+  const { window: window2 = defaultWindow } = options;
+  let mediaQuery;
+  const matches2 = ref(false);
+  const update = () => {
+    if (!window2)
+      return;
+    if (!mediaQuery)
+      mediaQuery = window2.matchMedia(query);
+    matches2.value = mediaQuery.matches;
+  };
+  tryOnMounted(() => {
+    update();
+    if (!mediaQuery)
+      return;
+    if ("addEventListener" in mediaQuery)
+      mediaQuery.addEventListener("change", update);
+    else
+      mediaQuery.addListener(update);
+    tryOnScopeDispose(() => {
+      if ("removeEventListener" in mediaQuery)
+        mediaQuery.removeEventListener("change", update);
+      else
+        mediaQuery.removeListener(update);
+    });
   });
-};
-var utils$5 = utils$d;
-var normalizeHeaderName2 = normalizeHeaderName$1;
-var enhanceError2 = enhanceError$2;
-var DEFAULT_CONTENT_TYPE = {
-  "Content-Type": "application/x-www-form-urlencoded"
-};
-function setContentTypeIfUnset(headers, value) {
-  if (!utils$5.isUndefined(headers) && utils$5.isUndefined(headers["Content-Type"])) {
-    headers["Content-Type"] = value;
-  }
+  return matches2;
 }
-function getDefaultAdapter() {
-  var adapter;
-  if (typeof XMLHttpRequest !== "undefined") {
-    adapter = xhr;
-  } else if (typeof process !== "undefined" && Object.prototype.toString.call(process) === "[object process]") {
-    adapter = xhr;
-  }
-  return adapter;
+const _global = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+const globalKey = "__vueuse_ssr_handlers__";
+_global[globalKey] = _global[globalKey] || {};
+const handlers = _global[globalKey];
+function getSSRHandler(key, fallback) {
+  return handlers[key] || fallback;
 }
-function stringifySafely(rawValue, parser, encoder) {
-  if (utils$5.isString(rawValue)) {
+function guessSerializerType(rawInit) {
+  return rawInit == null ? "any" : rawInit instanceof Set ? "set" : rawInit instanceof Map ? "map" : typeof rawInit === "boolean" ? "boolean" : typeof rawInit === "string" ? "string" : typeof rawInit === "object" ? "object" : Array.isArray(rawInit) ? "object" : !Number.isNaN(rawInit) ? "number" : "any";
+}
+const StorageSerializers = {
+  boolean: {
+    read: (v) => v === "true",
+    write: (v) => String(v)
+  },
+  object: {
+    read: (v) => JSON.parse(v),
+    write: (v) => JSON.stringify(v)
+  },
+  number: {
+    read: (v) => Number.parseFloat(v),
+    write: (v) => String(v)
+  },
+  any: {
+    read: (v) => v,
+    write: (v) => String(v)
+  },
+  string: {
+    read: (v) => v,
+    write: (v) => String(v)
+  },
+  map: {
+    read: (v) => new Map(JSON.parse(v)),
+    write: (v) => JSON.stringify(Array.from(v.entries()))
+  },
+  set: {
+    read: (v) => new Set(JSON.parse(v)),
+    write: (v) => JSON.stringify(Array.from(v.entries()))
+  }
+};
+function useStorage(key, initialValue, storage, options = {}) {
+  var _a2;
+  const {
+    flush = "pre",
+    deep = true,
+    listenToStorageChanges = true,
+    writeDefaults = true,
+    shallow,
+    window: window2 = defaultWindow,
+    eventFilter,
+    onError = (e) => {
+      console.error(e);
+    }
+  } = options;
+  const rawInit = unref(initialValue);
+  const type = guessSerializerType(rawInit);
+  const data = (shallow ? shallowRef : ref)(initialValue);
+  const serializer = (_a2 = options.serializer) != null ? _a2 : StorageSerializers[type];
+  if (!storage) {
     try {
-      (parser || JSON.parse)(rawValue);
-      return utils$5.trim(rawValue);
+      storage = getSSRHandler("getDefaultStorage", () => {
+        var _a22;
+        return (_a22 = defaultWindow) == null ? void 0 : _a22.localStorage;
+      })();
     } catch (e) {
-      if (e.name !== "SyntaxError") {
-        throw e;
-      }
+      onError(e);
     }
   }
-  return (encoder || JSON.stringify)(rawValue);
-}
-var defaults$3 = {
-  transitional: {
-    silentJSONParsing: true,
-    forcedJSONParsing: true,
-    clarifyTimeoutError: false
-  },
-  adapter: getDefaultAdapter(),
-  transformRequest: [function transformRequest(data2, headers) {
-    normalizeHeaderName2(headers, "Accept");
-    normalizeHeaderName2(headers, "Content-Type");
-    if (utils$5.isFormData(data2) || utils$5.isArrayBuffer(data2) || utils$5.isBuffer(data2) || utils$5.isStream(data2) || utils$5.isFile(data2) || utils$5.isBlob(data2)) {
-      return data2;
-    }
-    if (utils$5.isArrayBufferView(data2)) {
-      return data2.buffer;
-    }
-    if (utils$5.isURLSearchParams(data2)) {
-      setContentTypeIfUnset(headers, "application/x-www-form-urlencoded;charset=utf-8");
-      return data2.toString();
-    }
-    if (utils$5.isObject(data2) || headers && headers["Content-Type"] === "application/json") {
-      setContentTypeIfUnset(headers, "application/json");
-      return stringifySafely(data2);
-    }
-    return data2;
-  }],
-  transformResponse: [function transformResponse(data2) {
-    var transitional2 = this.transitional || defaults$3.transitional;
-    var silentJSONParsing = transitional2 && transitional2.silentJSONParsing;
-    var forcedJSONParsing = transitional2 && transitional2.forcedJSONParsing;
-    var strictJSONParsing = !silentJSONParsing && this.responseType === "json";
-    if (strictJSONParsing || forcedJSONParsing && utils$5.isString(data2) && data2.length) {
-      try {
-        return JSON.parse(data2);
-      } catch (e) {
-        if (strictJSONParsing) {
-          if (e.name === "SyntaxError") {
-            throw enhanceError2(e, this, "E_JSON_PARSE");
-          }
-          throw e;
-        }
-      }
-    }
-    return data2;
-  }],
-  timeout: 0,
-  xsrfCookieName: "XSRF-TOKEN",
-  xsrfHeaderName: "X-XSRF-TOKEN",
-  maxContentLength: -1,
-  maxBodyLength: -1,
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300;
-  },
-  headers: {
-    common: {
-      "Accept": "application/json, text/plain, */*"
-    }
-  }
-};
-utils$5.forEach(["delete", "get", "head"], function forEachMethodNoData(method) {
-  defaults$3.headers[method] = {};
-});
-utils$5.forEach(["post", "put", "patch"], function forEachMethodWithData(method) {
-  defaults$3.headers[method] = utils$5.merge(DEFAULT_CONTENT_TYPE);
-});
-var defaults_1 = defaults$3;
-var utils$4 = utils$d;
-var defaults$2 = defaults_1;
-var transformData$1 = function transformData(data2, headers, fns) {
-  var context = this || defaults$2;
-  utils$4.forEach(fns, function transform2(fn) {
-    data2 = fn.call(context, data2, headers);
-  });
-  return data2;
-};
-var isCancel$1 = function isCancel(value) {
-  return !!(value && value.__CANCEL__);
-};
-var utils$3 = utils$d;
-var transformData2 = transformData$1;
-var isCancel2 = isCancel$1;
-var defaults$1 = defaults_1;
-var Cancel$1 = Cancel_1;
-function throwIfCancellationRequested(config) {
-  if (config.cancelToken) {
-    config.cancelToken.throwIfRequested();
-  }
-  if (config.signal && config.signal.aborted) {
-    throw new Cancel$1("canceled");
-  }
-}
-var dispatchRequest$1 = function dispatchRequest(config) {
-  throwIfCancellationRequested(config);
-  config.headers = config.headers || {};
-  config.data = transformData2.call(config, config.data, config.headers, config.transformRequest);
-  config.headers = utils$3.merge(config.headers.common || {}, config.headers[config.method] || {}, config.headers);
-  utils$3.forEach(["delete", "get", "head", "post", "put", "patch", "common"], function cleanHeaderConfig(method) {
-    delete config.headers[method];
-  });
-  var adapter = config.adapter || defaults$1.adapter;
-  return adapter(config).then(function onAdapterResolution(response) {
-    throwIfCancellationRequested(config);
-    response.data = transformData2.call(config, response.data, response.headers, config.transformResponse);
-    return response;
-  }, function onAdapterRejection(reason) {
-    if (!isCancel2(reason)) {
-      throwIfCancellationRequested(config);
-      if (reason && reason.response) {
-        reason.response.data = transformData2.call(config, reason.response.data, reason.response.headers, config.transformResponse);
-      }
-    }
-    return Promise.reject(reason);
-  });
-};
-var utils$2 = utils$d;
-var mergeConfig$2 = function mergeConfig(config1, config2) {
-  config2 = config2 || {};
-  var config = {};
-  function getMergedValue(target, source2) {
-    if (utils$2.isPlainObject(target) && utils$2.isPlainObject(source2)) {
-      return utils$2.merge(target, source2);
-    } else if (utils$2.isPlainObject(source2)) {
-      return utils$2.merge({}, source2);
-    } else if (utils$2.isArray(source2)) {
-      return source2.slice();
-    }
-    return source2;
-  }
-  function mergeDeepProperties(prop) {
-    if (!utils$2.isUndefined(config2[prop])) {
-      return getMergedValue(config1[prop], config2[prop]);
-    } else if (!utils$2.isUndefined(config1[prop])) {
-      return getMergedValue(void 0, config1[prop]);
-    }
-  }
-  function valueFromConfig2(prop) {
-    if (!utils$2.isUndefined(config2[prop])) {
-      return getMergedValue(void 0, config2[prop]);
-    }
-  }
-  function defaultToConfig2(prop) {
-    if (!utils$2.isUndefined(config2[prop])) {
-      return getMergedValue(void 0, config2[prop]);
-    } else if (!utils$2.isUndefined(config1[prop])) {
-      return getMergedValue(void 0, config1[prop]);
-    }
-  }
-  function mergeDirectKeys(prop) {
-    if (prop in config2) {
-      return getMergedValue(config1[prop], config2[prop]);
-    } else if (prop in config1) {
-      return getMergedValue(void 0, config1[prop]);
-    }
-  }
-  var mergeMap = {
-    "url": valueFromConfig2,
-    "method": valueFromConfig2,
-    "data": valueFromConfig2,
-    "baseURL": defaultToConfig2,
-    "transformRequest": defaultToConfig2,
-    "transformResponse": defaultToConfig2,
-    "paramsSerializer": defaultToConfig2,
-    "timeout": defaultToConfig2,
-    "timeoutMessage": defaultToConfig2,
-    "withCredentials": defaultToConfig2,
-    "adapter": defaultToConfig2,
-    "responseType": defaultToConfig2,
-    "xsrfCookieName": defaultToConfig2,
-    "xsrfHeaderName": defaultToConfig2,
-    "onUploadProgress": defaultToConfig2,
-    "onDownloadProgress": defaultToConfig2,
-    "decompress": defaultToConfig2,
-    "maxContentLength": defaultToConfig2,
-    "maxBodyLength": defaultToConfig2,
-    "transport": defaultToConfig2,
-    "httpAgent": defaultToConfig2,
-    "httpsAgent": defaultToConfig2,
-    "cancelToken": defaultToConfig2,
-    "socketPath": defaultToConfig2,
-    "responseEncoding": defaultToConfig2,
-    "validateStatus": mergeDirectKeys
-  };
-  utils$2.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
-    var merge2 = mergeMap[prop] || mergeDeepProperties;
-    var configValue = merge2(prop);
-    utils$2.isUndefined(configValue) && merge2 !== mergeDirectKeys || (config[prop] = configValue);
-  });
-  return config;
-};
-var data = {
-  "version": "0.24.0"
-};
-var VERSION$2 = data.version;
-var validators$1 = {};
-["object", "boolean", "number", "function", "string", "symbol"].forEach(function(type, i) {
-  validators$1[type] = function validator2(thing) {
-    return typeof thing === type || "a" + (i < 1 ? "n " : " ") + type;
-  };
-});
-var deprecatedWarnings = {};
-validators$1.transitional = function transitional(validator2, version2, message) {
-  function formatMessage(opt, desc) {
-    return "[Axios v" + VERSION$2 + "] Transitional option '" + opt + "'" + desc + (message ? ". " + message : "");
-  }
-  return function(value, opt, opts) {
-    if (validator2 === false) {
-      throw new Error(formatMessage(opt, " has been removed" + (version2 ? " in " + version2 : "")));
-    }
-    if (version2 && !deprecatedWarnings[opt]) {
-      deprecatedWarnings[opt] = true;
-      console.warn(formatMessage(opt, " has been deprecated since v" + version2 + " and will be removed in the near future"));
-    }
-    return validator2 ? validator2(value, opt, opts) : true;
-  };
-};
-function assertOptions(options, schema, allowUnknown) {
-  if (typeof options !== "object") {
-    throw new TypeError("options must be an object");
-  }
-  var keys = Object.keys(options);
-  var i = keys.length;
-  while (i-- > 0) {
-    var opt = keys[i];
-    var validator2 = schema[opt];
-    if (validator2) {
-      var value = options[opt];
-      var result = value === void 0 || validator2(value, opt, options);
-      if (result !== true) {
-        throw new TypeError("option " + opt + " must be " + result);
-      }
-      continue;
-    }
-    if (allowUnknown !== true) {
-      throw Error("Unknown option " + opt);
-    }
-  }
-}
-var validator$1 = {
-  assertOptions,
-  validators: validators$1
-};
-var utils$1 = utils$d;
-var buildURL2 = buildURL$2;
-var InterceptorManager = InterceptorManager_1;
-var dispatchRequest2 = dispatchRequest$1;
-var mergeConfig$1 = mergeConfig$2;
-var validator = validator$1;
-var validators = validator.validators;
-function Axios$1(instanceConfig) {
-  this.defaults = instanceConfig;
-  this.interceptors = {
-    request: new InterceptorManager(),
-    response: new InterceptorManager()
-  };
-}
-Axios$1.prototype.request = function request(config) {
-  if (typeof config === "string") {
-    config = arguments[1] || {};
-    config.url = arguments[0];
-  } else {
-    config = config || {};
-  }
-  config = mergeConfig$1(this.defaults, config);
-  if (config.method) {
-    config.method = config.method.toLowerCase();
-  } else if (this.defaults.method) {
-    config.method = this.defaults.method.toLowerCase();
-  } else {
-    config.method = "get";
-  }
-  var transitional2 = config.transitional;
-  if (transitional2 !== void 0) {
-    validator.assertOptions(transitional2, {
-      silentJSONParsing: validators.transitional(validators.boolean),
-      forcedJSONParsing: validators.transitional(validators.boolean),
-      clarifyTimeoutError: validators.transitional(validators.boolean)
-    }, false);
-  }
-  var requestInterceptorChain = [];
-  var synchronousRequestInterceptors = true;
-  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-    if (typeof interceptor.runWhen === "function" && interceptor.runWhen(config) === false) {
+  function read(event) {
+    if (!storage || event && event.key !== key)
       return;
-    }
-    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
-    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
-  });
-  var responseInterceptorChain = [];
-  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
-  });
-  var promise;
-  if (!synchronousRequestInterceptors) {
-    var chain = [dispatchRequest2, void 0];
-    Array.prototype.unshift.apply(chain, requestInterceptorChain);
-    chain = chain.concat(responseInterceptorChain);
-    promise = Promise.resolve(config);
-    while (chain.length) {
-      promise = promise.then(chain.shift(), chain.shift());
-    }
-    return promise;
-  }
-  var newConfig = config;
-  while (requestInterceptorChain.length) {
-    var onFulfilled = requestInterceptorChain.shift();
-    var onRejected = requestInterceptorChain.shift();
     try {
-      newConfig = onFulfilled(newConfig);
-    } catch (error) {
-      onRejected(error);
-      break;
+      const rawValue = event ? event.newValue : storage.getItem(key);
+      if (rawValue == null) {
+        data.value = rawInit;
+        if (writeDefaults && rawInit !== null)
+          storage.setItem(key, serializer.write(rawInit));
+      } else if (typeof rawValue !== "string") {
+        data.value = rawValue;
+      } else {
+        data.value = serializer.read(rawValue);
+      }
+    } catch (e) {
+      onError(e);
     }
   }
-  try {
-    promise = dispatchRequest2(newConfig);
-  } catch (error) {
-    return Promise.reject(error);
+  read();
+  if (window2 && listenToStorageChanges)
+    useEventListener(window2, "storage", (e) => setTimeout(() => read(e), 0));
+  if (storage) {
+    watchWithFilter(data, () => {
+      try {
+        if (data.value == null)
+          storage.removeItem(key);
+        else
+          storage.setItem(key, serializer.write(data.value));
+      } catch (e) {
+        onError(e);
+      }
+    }, {
+      flush,
+      deep,
+      eventFilter
+    });
   }
-  while (responseInterceptorChain.length) {
-    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
-  }
-  return promise;
-};
-Axios$1.prototype.getUri = function getUri(config) {
-  config = mergeConfig$1(this.defaults, config);
-  return buildURL2(config.url, config.params, config.paramsSerializer).replace(/^\?/, "");
-};
-utils$1.forEach(["delete", "get", "head", "options"], function forEachMethodNoData2(method) {
-  Axios$1.prototype[method] = function(url, config) {
-    return this.request(mergeConfig$1(config || {}, {
-      method,
-      url,
-      data: (config || {}).data
-    }));
-  };
-});
-utils$1.forEach(["post", "put", "patch"], function forEachMethodWithData2(method) {
-  Axios$1.prototype[method] = function(url, data2, config) {
-    return this.request(mergeConfig$1(config || {}, {
-      method,
-      url,
-      data: data2
-    }));
-  };
-});
-var Axios_1 = Axios$1;
-var Cancel = Cancel_1;
-function CancelToken(executor) {
-  if (typeof executor !== "function") {
-    throw new TypeError("executor must be a function.");
-  }
-  var resolvePromise;
-  this.promise = new Promise(function promiseExecutor(resolve2) {
-    resolvePromise = resolve2;
-  });
-  var token = this;
-  this.promise.then(function(cancel) {
-    if (!token._listeners)
-      return;
-    var i;
-    var l = token._listeners.length;
-    for (i = 0; i < l; i++) {
-      token._listeners[i](cancel);
-    }
-    token._listeners = null;
-  });
-  this.promise.then = function(onfulfilled) {
-    var _resolve;
-    var promise = new Promise(function(resolve2) {
-      token.subscribe(resolve2);
-      _resolve = resolve2;
-    }).then(onfulfilled);
-    promise.cancel = function reject() {
-      token.unsubscribe(_resolve);
-    };
-    return promise;
-  };
-  executor(function cancel(message) {
-    if (token.reason) {
-      return;
-    }
-    token.reason = new Cancel(message);
-    resolvePromise(token.reason);
-  });
+  return data;
 }
-CancelToken.prototype.throwIfRequested = function throwIfRequested() {
-  if (this.reason) {
-    throw this.reason;
-  }
-};
-CancelToken.prototype.subscribe = function subscribe(listener) {
-  if (this.reason) {
-    listener(this.reason);
-    return;
-  }
-  if (this._listeners) {
-    this._listeners.push(listener);
-  } else {
-    this._listeners = [listener];
-  }
-};
-CancelToken.prototype.unsubscribe = function unsubscribe(listener) {
-  if (!this._listeners) {
-    return;
-  }
-  var index2 = this._listeners.indexOf(listener);
-  if (index2 !== -1) {
-    this._listeners.splice(index2, 1);
-  }
-};
-CancelToken.source = function source() {
-  var cancel;
-  var token = new CancelToken(function executor(c) {
-    cancel = c;
-  });
-  return {
-    token,
-    cancel
-  };
-};
-var CancelToken_1 = CancelToken;
-var spread = function spread2(callback) {
-  return function wrap(arr) {
-    return callback.apply(null, arr);
-  };
-};
-var isAxiosError = function isAxiosError2(payload) {
-  return typeof payload === "object" && payload.isAxiosError === true;
-};
-var utils = utils$d;
-var bind2 = bind$2;
-var Axios = Axios_1;
-var mergeConfig2 = mergeConfig$2;
-var defaults = defaults_1;
-function createInstance(defaultConfig) {
-  var context = new Axios(defaultConfig);
-  var instance = bind2(Axios.prototype.request, context);
-  utils.extend(instance, Axios.prototype, context);
-  utils.extend(instance, context);
-  instance.create = function create(instanceConfig) {
-    return createInstance(mergeConfig2(defaultConfig, instanceConfig));
-  };
-  return instance;
+function usePreferredDark(options) {
+  return useMediaQuery("(prefers-color-scheme: dark)", options);
 }
-var axios$1 = createInstance(defaults);
-axios$1.Axios = Axios;
-axios$1.Cancel = Cancel_1;
-axios$1.CancelToken = CancelToken_1;
-axios$1.isCancel = isCancel$1;
-axios$1.VERSION = data.version;
-axios$1.all = function all(promises) {
-  return Promise.all(promises);
+var __defProp$f = Object.defineProperty;
+var __getOwnPropSymbols$h = Object.getOwnPropertySymbols;
+var __hasOwnProp$h = Object.prototype.hasOwnProperty;
+var __propIsEnum$h = Object.prototype.propertyIsEnumerable;
+var __defNormalProp$f = (obj, key, value) => key in obj ? __defProp$f(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues$f = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp$h.call(b, prop))
+      __defNormalProp$f(a, prop, b[prop]);
+  if (__getOwnPropSymbols$h)
+    for (var prop of __getOwnPropSymbols$h(b)) {
+      if (__propIsEnum$h.call(b, prop))
+        __defNormalProp$f(a, prop, b[prop]);
+    }
+  return a;
 };
-axios$1.spread = spread;
-axios$1.isAxiosError = isAxiosError;
-axios$2.exports = axios$1;
-axios$2.exports.default = axios$1;
-var axios = axios$2.exports;
+function useColorMode(options = {}) {
+  const {
+    selector = "html",
+    attribute = "class",
+    window: window2 = defaultWindow,
+    storage,
+    storageKey = "vueuse-color-scheme",
+    listenToStorageChanges = true,
+    storageRef
+  } = options;
+  const modes = __spreadValues$f({
+    auto: "",
+    light: "light",
+    dark: "dark"
+  }, options.modes || {});
+  const preferredDark = usePreferredDark({ window: window2 });
+  const preferredMode = computed(() => preferredDark.value ? "dark" : "light");
+  const store = storageRef || (storageKey == null ? ref("auto") : useStorage(storageKey, "auto", storage, { window: window2, listenToStorageChanges }));
+  const state = computed({
+    get() {
+      return store.value === "auto" ? preferredMode.value : store.value;
+    },
+    set(v) {
+      store.value = v;
+    }
+  });
+  const updateHTMLAttrs = getSSRHandler("updateHTMLAttrs", (selector2, attribute2, value) => {
+    const el = window2 == null ? void 0 : window2.document.querySelector(selector2);
+    if (!el)
+      return;
+    if (attribute2 === "class") {
+      const current2 = value.split(/\s/g);
+      Object.values(modes).flatMap((i) => (i || "").split(/\s/g)).filter(Boolean).forEach((v) => {
+        if (current2.includes(v))
+          el.classList.add(v);
+        else
+          el.classList.remove(v);
+      });
+    } else {
+      el.setAttribute(attribute2, value);
+    }
+  });
+  function defaultOnChanged(mode) {
+    var _a2;
+    updateHTMLAttrs(selector, attribute, (_a2 = modes[mode]) != null ? _a2 : mode);
+  }
+  function onChanged(mode) {
+    if (options.onChanged)
+      options.onChanged(mode, defaultOnChanged);
+    else
+      defaultOnChanged(mode);
+  }
+  watch(state, onChanged, { flush: "post", immediate: true });
+  tryOnMounted(() => onChanged(state.value));
+  return state;
+}
+var __defProp$e = Object.defineProperty;
+var __defProps$7 = Object.defineProperties;
+var __getOwnPropDescs$7 = Object.getOwnPropertyDescriptors;
+var __getOwnPropSymbols$g = Object.getOwnPropertySymbols;
+var __hasOwnProp$g = Object.prototype.hasOwnProperty;
+var __propIsEnum$g = Object.prototype.propertyIsEnumerable;
+var __defNormalProp$e = (obj, key, value) => key in obj ? __defProp$e(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues$e = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp$g.call(b, prop))
+      __defNormalProp$e(a, prop, b[prop]);
+  if (__getOwnPropSymbols$g)
+    for (var prop of __getOwnPropSymbols$g(b)) {
+      if (__propIsEnum$g.call(b, prop))
+        __defNormalProp$e(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps$7 = (a, b) => __defProps$7(a, __getOwnPropDescs$7(b));
+function useDark(options = {}) {
+  const {
+    valueDark = "dark",
+    valueLight = "",
+    window: window2 = defaultWindow
+  } = options;
+  const mode = useColorMode(__spreadProps$7(__spreadValues$e({}, options), {
+    onChanged: (mode2, defaultHandler) => {
+      var _a2;
+      if (options.onChanged)
+        (_a2 = options.onChanged) == null ? void 0 : _a2.call(options, mode2 === "dark");
+      else
+        defaultHandler(mode2);
+    },
+    modes: {
+      dark: valueDark,
+      light: valueLight
+    }
+  }));
+  const preferredDark = usePreferredDark({ window: window2 });
+  const isDark = computed({
+    get() {
+      return mode.value === "dark";
+    },
+    set(v) {
+      if (v === preferredDark.value)
+        mode.value = "auto";
+      else
+        mode.value = v ? "dark" : "light";
+    }
+  });
+  return isDark;
+}
+var _a, _b;
+isClient && (window == null ? void 0 : window.navigator) && ((_a = window == null ? void 0 : window.navigator) == null ? void 0 : _a.platform) && /iP(ad|hone|od)/.test((_b = window == null ? void 0 : window.navigator) == null ? void 0 : _b.platform);
 /*!
   * @intlify/shared v9.1.9
   * (c) 2021 kazuya kawaguchi
@@ -12287,7 +11496,7 @@ var axios = axios$2.exports;
   */
 const hasSymbol = typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol";
 const makeSymbol = (name2) => hasSymbol ? Symbol(name2) : name2;
-const generateFormatCacheKey = (locale, key, source2) => friendlyJSONstringify({ l: locale, k: key, s: source2 });
+const generateFormatCacheKey = (locale, key, source) => friendlyJSONstringify({ l: locale, k: key, s: source });
 const friendlyJSONstringify = (json) => JSON.stringify(json).replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029").replace(/\u0027/g, "\\u0027");
 const isNumber = (val) => typeof val === "number" && isFinite(val);
 const isDate = (val) => toTypeString(val) === "[object Date]";
@@ -12329,16 +11538,16 @@ function createEmitter() {
   const emitter = {
     events,
     on(event, handler) {
-      const handlers = events.get(event);
-      const added = handlers && handlers.push(handler);
+      const handlers2 = events.get(event);
+      const added = handlers2 && handlers2.push(handler);
       if (!added) {
         events.set(event, [handler]);
       }
     },
     off(event, handler) {
-      const handlers = events.get(event);
-      if (handlers) {
-        handlers.splice(handlers.indexOf(handler) >>> 0, 1);
+      const handlers2 = events.get(event);
+      if (handlers2) {
+        handlers2.splice(handlers2.indexOf(handler) >>> 0, 1);
       }
     },
     emit(event, payload) {
@@ -12676,10 +11885,10 @@ function defaultOnError(error) {
 function createPosition(line, column, offset) {
   return { line, column, offset };
 }
-function createLocation(start, end, source2) {
+function createLocation(start, end, source) {
   const loc = { start, end };
-  if (source2 != null) {
-    loc.source = source2;
+  if (source != null) {
+    loc.source = source;
   }
   return loc;
 }
@@ -12760,9 +11969,9 @@ function createScanner(str) {
 const EOF = void 0;
 const LITERAL_DELIMITER = "'";
 const ERROR_DOMAIN$1 = "tokenizer";
-function createTokenizer(source2, options = {}) {
+function createTokenizer(source, options = {}) {
   const location2 = options.location !== false;
-  const _scnr = createScanner(source2);
+  const _scnr = createScanner(source);
   const currentOffset = () => _scnr.index();
   const currentPosition = () => createPosition(_scnr.line(), _scnr.column(), _scnr.index());
   const _initLoc = currentPosition();
@@ -13587,16 +12796,16 @@ function createParser(options = {}) {
       return parsePlural(tokenizer, offset, startLoc, msgNode);
     }
   }
-  function parse2(source2) {
-    const tokenizer = createTokenizer(source2, assign({}, options));
+  function parse2(source) {
+    const tokenizer = createTokenizer(source, assign({}, options));
     const context = tokenizer.context();
     const node = startNode(0, context.offset, context.startLoc);
     if (location2 && node.loc) {
-      node.loc.source = source2;
+      node.loc.source = source;
     }
     node.body = parseResource(tokenizer);
     if (context.currentType !== 14) {
-      emitError(tokenizer, 13, context.lastStartLoc, 0, source2[context.offset] || "");
+      emitError(tokenizer, 13, context.lastStartLoc, 0, source[context.offset] || "");
     }
     endNode(node, tokenizer.currentOffset(), tokenizer.currentPosition());
     return node;
@@ -13818,10 +13027,10 @@ const generate = (ast, options = {}) => {
     map: map ? map.toJSON() : void 0
   };
 };
-function baseCompile(source2, options = {}) {
+function baseCompile(source, options = {}) {
   const assignedOptions = assign({}, options);
   const parser = createParser(assignedOptions);
-  const ast = parser.parse(source2);
+  const ast = parser.parse(source);
   transform(ast, assignedOptions);
   return generate(ast, assignedOptions);
 }
@@ -13951,8 +13160,8 @@ function getLocaleChain(ctx, fallback, start) {
     while (isArray(block)) {
       block = appendBlockToChain(chain, block, fallback);
     }
-    const defaults2 = isArray(fallback) ? fallback : isPlainObject(fallback) ? fallback["default"] ? fallback["default"] : null : fallback;
-    block = isString(defaults2) ? [defaults2] : defaults2;
+    const defaults = isArray(fallback) ? fallback : isPlainObject(fallback) ? fallback["default"] ? fallback["default"] : null : fallback;
+    block = isString(defaults) ? [defaults] : defaults;
     if (isArray(block)) {
       appendBlockToChain(chain, block, false);
     }
@@ -14000,12 +13209,12 @@ function updateFallbackLocale(ctx, locale, fallback) {
   context.__localeChainCache = new Map();
   getLocaleChain(ctx, fallback, locale);
 }
-const defaultOnCacheKey = (source2) => source2;
+const defaultOnCacheKey = (source) => source;
 let compileCache = Object.create(null);
-function compileToFunction(source2, options = {}) {
+function compileToFunction(source, options = {}) {
   {
     const onCacheKey = options.onCacheKey || defaultOnCacheKey;
-    const key = onCacheKey(source2);
+    const key = onCacheKey(source);
     const cached = compileCache[key];
     if (cached) {
       return cached;
@@ -14016,7 +13225,7 @@ function compileToFunction(source2, options = {}) {
       occurred = true;
       onError(err);
     };
-    const { code } = baseCompile(source2, options);
+    const { code } = baseCompile(source, options);
     const msg = new Function(`return ${code}`)();
     return !occurred ? compileCache[key] = msg : msg;
   }
@@ -14153,7 +13362,7 @@ function parseTranslateArgs(...args) {
   }
   return [key, options];
 }
-function getCompileOptions(context, locale, key, source2, warnHtmlMessage, errorDetector) {
+function getCompileOptions(context, locale, key, source, warnHtmlMessage, errorDetector) {
   return {
     warnHtmlMessage,
     onError: (err) => {
@@ -14162,7 +13371,7 @@ function getCompileOptions(context, locale, key, source2, warnHtmlMessage, error
         throw err;
       }
     },
-    onCacheKey: (source3) => generateFormatCacheKey(locale, key, source3)
+    onCacheKey: (source2) => generateFormatCacheKey(locale, key, source2)
   };
 }
 function getMessageContextOptions(context, locale, message, options) {
@@ -15225,7 +14434,7 @@ function getComposer$2(i18n, instance) {
   }
 }
 function vTDirective(i18n) {
-  const bind3 = (el, { instance, value, modifiers }) => {
+  const bind = (el, { instance, value, modifiers }) => {
     if (!instance || !instance.$) {
       throw createI18nError(22);
     }
@@ -15234,8 +14443,8 @@ function vTDirective(i18n) {
     el.textContent = composer.t(...makeParams(parsedValue));
   };
   return {
-    beforeMount: bind3,
-    beforeUpdate: bind3
+    beforeMount: bind,
+    beforeUpdate: bind
   };
 }
 function parseValue(value) {
@@ -15890,7 +15099,7 @@ if (__INTLIFY_PROD_DEVTOOLS__) {
   target.__INTLIFY__ = true;
   setDevToolsHook(target.__INTLIFY_DEVTOOLS_GLOBAL_HOOK__);
 }
-var enUS = {
+var stdin_default = {
   name: "Name",
   tel: "Phone",
   save: "Save",
@@ -15900,24 +15109,18 @@ var enUS = {
   loading: "Loading...",
   noCoupon: "No coupons",
   nameEmpty: "Please fill in the name",
+  addContact: "Add contact",
   telInvalid: "Malformed phone number",
   vanCalendar: {
     end: "End",
     start: "Start",
     title: "Calendar",
-    startEnd: "Start/End",
     weekdays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    monthTitle: (year, month) => year + "/" + month,
-    rangePrompt: (maxRange) => "Choose no more than " + maxRange + " days"
+    monthTitle: (year, month) => `${year}/${month}`,
+    rangePrompt: (maxRange) => `Choose no more than ${maxRange} days`
   },
   vanCascader: {
     select: "Select"
-  },
-  vanContactCard: {
-    addText: "Add contact info"
-  },
-  vanContactList: {
-    addText: "Add new contact"
   },
   vanPagination: {
     prev: "Previous",
@@ -15928,16 +15131,16 @@ var enUS = {
     loosing: "Loose to refresh..."
   },
   vanSubmitBar: {
-    label: "Total\uFF1A"
+    label: "Total:"
   },
   vanCoupon: {
     unlimited: "Unlimited",
-    discount: (discount) => discount * 10 + "% off",
-    condition: (condition) => "At least " + condition
+    discount: (discount) => `${discount * 10}% off`,
+    condition: (condition) => `At least ${condition}`
   },
   vanCouponCell: {
     title: "Coupon",
-    count: (count) => "You have " + count + " coupons"
+    count: (count) => `You have ${count} coupons`
   },
   vanCouponList: {
     exchange: "Exchange",
@@ -15952,14 +15155,11 @@ var enUS = {
     areaEmpty: "Please select a receiving area",
     addressEmpty: "Address can not be empty",
     postalEmpty: "Wrong postal code",
+    addressDetail: "Address",
     defaultAddress: "Set as the default address"
-  },
-  vanAddressEditDetail: {
-    label: "Address",
-    placeholder: "Address"
   },
   vanAddressList: {
     add: "Add new address"
   }
 };
-export { zhCN as A, enUS as B, createApp as C, renderList as D, CellGroup as E, Fragment as F, Cell as G, ref as H, createTextVNode as I, Checkbox as J, KeepAlive as K, Lazyload as L, storeToRefs as M, NavBar as N, toDisplayString$1 as O, Image$1 as P, Field as Q, Button as R, SubmitBar as S, TabbarItem as T, Badge as U, createPinia as a, useRoute as b, createBlock as c, computed as d, unref as e, createElementBlock as f, createVNode as g, resolveDynamicComponent as h, defineComponent as i, createBaseVNode as j, defineStore as k, renderSlot as l, mergeProps as m, normalizeClass as n, openBlock as o, Tabbar as p, createCommentVNode as q, resolveComponent as r, createRouter as s, createWebHashHistory as t, useRouter as u, axios as v, withCtx as w, Toast as x, createI18n as y, Locale as z };
+export { Locale as A, stdin_default$m as B, stdin_default as C, createApp as D, Cell as E, CellGroup as F, Fragment as G, renderList as H, ref as I, Checkbox as J, KeepAlive as K, Lazyload as L, Toast as M, NavBar as N, createTextVNode as O, storeToRefs as P, Image$1 as Q, Field as R, SubmitBar as S, TabbarItem as T, toDisplayString$1 as U, Button as V, Badge as W, createPinia as a, useRoute as b, createBlock as c, computed as d, unref as e, createElementBlock as f, createVNode as g, resolveDynamicComponent as h, defineComponent as i, defineStore as j, useStorage as k, useDark as l, mergeProps as m, createBaseVNode as n, openBlock as o, renderSlot as p, normalizeClass as q, resolveComponent as r, Tabbar as s, normalizeProps as t, useRouter as u, createCommentVNode as v, withCtx as w, createRouter as x, createWebHashHistory as y, createI18n as z };

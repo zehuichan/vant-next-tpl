@@ -10,6 +10,18 @@
 /* font-weight */
 /* gutter */
 /* shadow @antd4.0 https://ant.design/docs/spec/shadow-cn */
+:root,
+.van-theme-ligtht {
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --bg-color-page: #f5f5f5;
+}
+.van-theme-dark {
+  --text-secondary: hsla(0, 0%, 100%, 0.55);
+  --bg-color-page: #242424;
+}
+.van-theme-dark img {
+  filter: brightness(0.85);
+}
 .fr {
   float: right;
 }
@@ -29,7 +41,7 @@
   font-weight: 500;
 }
 .text-primary {
-  color: #c03131;
+  color: #74a5e7;
 }
 .text-text {
   color: #2e2f30;
@@ -43,19 +55,19 @@
 .text-lll {
   color: #d2d6dc;
 }
-.text-aux-primary {
+.text-primary {
   color: #74a5e7;
 }
-.text-aux-success {
+.text-success {
   color: #b8cb50;
 }
-.text-aux-danger {
+.text-danger {
   color: #ff8462;
 }
-.text-aux-warning {
+.text-warning {
   color: #fab646;
 }
-.text-aux-default {
+.text-default {
   color: #baa27a;
 }
 .text-12 {
@@ -89,26 +101,26 @@
   background-color: #fff;
 }
 .bg-primary {
-  background-color: #c03131;
-  color: #fff;
-}
-.bg-aux-primary {
   background-color: #74a5e7;
   color: #fff;
 }
-.bg-aux-success {
+.bg-primary {
+  background-color: #74a5e7;
+  color: #fff;
+}
+.bg-success {
   background-color: #b8cb50;
   color: #fff;
 }
-.bg-aux-danger {
+.bg-danger {
   background-color: #ff8462;
   color: #fff;
 }
-.bg-aux-warning {
+.bg-warning {
   background-color: #fab646;
   color: #fff;
 }
-.bg-aux-default {
+.bg-default {
   background-color: #baa27a;
   color: #fff;
 }
@@ -171,13 +183,13 @@
 body {
   line-height: 1.5715;
   font-size: 3.73333vw;
-  color: var(--vant-FG-0);
+  color: var(--text-secondary);
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
   -webkit-tap-highlight-color: transparent;
-  background: var(--vant-BG-0);
+  background-color: var(--bg-color-page);
 }
 label {
   font-weight: 400;
@@ -318,155 +330,6 @@ code + code {
 /* font-weight */
 /* gutter */
 /* shadow @antd4.0 https://ant.design/docs/spec/shadow-cn */
-:root {
-  --vant-BG-0: #ededed;
-  --vant-BG-1: #f7f7f7;
-  --vant-BG-2: #fff;
-  --vant-BG-3: #f7f7f7;
-  --vant-BG-4: #4c4c4c;
-  --vant-BG-5: #fff;
-  --vant-FG-0: rgba(0, 0, 0, 0.9);
-  --vant-FG-HALF: rgba(0, 0, 0, 0.9);
-  --vant-FG-1: rgba(0, 0, 0, 0.5);
-  --vant-FG-2: rgba(0, 0, 0, 0.3);
-  --vant-FG-3: rgba(0, 0, 0, 0.1);
-  --vant-FG-4: rgba(0, 0, 0, 0.15);
-  --vant-RED: #fa5151;
-  --vant-ORANGE: #fa9d3b;
-  --vant-YELLOW: #ffc300;
-  --vant-GREEN: #91d300;
-  --vant-LIGHTGREEN: #95ec69;
-  --vant-BRAND: #07c160;
-  --vant-BLUE: #10aeff;
-  --vant-INDIGO: #1485ee;
-  --vant-PURPLE: #6467f0;
-  --vant-WHITE: #fff;
-  --vant-LINK: #576b95;
-  --vant-TEXTGREEN: #06ae56;
-  --vant-FG: #000;
-  --vant-BG: #fff;
-  --vant-TAG-TEXT-ORANGE: #fa9d3b;
-  --vant-TAG-BACKGROUND-ORANGE: rgba(250, 157, 59, 0.1);
-  --vant-TAG-TEXT-GREEN: #06ae56;
-  --vant-TAG-BACKGROUND-GREEN: rgba(6, 174, 86, 0.1);
-  --vant-TAG-TEXT-BLUE: #10aeff;
-  --vant-TAG-BACKGROUND-BLUE: rgba(16, 174, 255, 0.1);
-  --vant-TAG-TEXT-BLACK: rgba(0, 0, 0, 0.5);
-  --vant-TAG-BACKGROUND-BLACK: rgba(0, 0, 0, 0.05);
-}
-html.dark {
-  --vant-BG-0: #111;
-  --vant-BG-1: #1e1e1e;
-  --vant-BG-2: #191919;
-  --vant-BG-3: #202020;
-  --vant-BG-4: #404040;
-  --vant-BG-5: #2c2c2c;
-  --vant-FG-0: rgba(255, 255, 255, 0.8);
-  --vant-FG-HALF: rgba(255, 255, 255, 0.6);
-  --vant-FG-1: rgba(255, 255, 255, 0.5);
-  --vant-FG-2: rgba(255, 255, 255, 0.3);
-  --vant-FG-3: rgba(255, 255, 255, 0.1);
-  --vant-FG-4: rgba(255, 255, 255, 0.15);
-  --vant-RED: #fa5151;
-  --vant-ORANGE: #c87d2f;
-  --vant-YELLOW: #cc9c00;
-  --vant-GREEN: #74a800;
-  --vant-LIGHTGREEN: #3eb575;
-  --vant-BRAND: #07c160;
-  --vant-BLUE: #10aeff;
-  --vant-INDIGO: #1196ff;
-  --vant-PURPLE: #8183ff;
-  --vant-WHITE: rgba(255, 255, 255, 0.8);
-  --vant-LINK: #7d90a9;
-  --vant-TEXTGREEN: #259c5c;
-  --vant-FG: #fff;
-  --vant-BG: #000;
-  --vant-TAG-TEXT-ORANGE: rgba(250, 157, 59, 0.6);
-  --vant-TAG-BACKGROUND-ORANGE: rgba(250, 157, 59, 0.1);
-  --vant-TAG-TEXT-GREEN: rgba(6, 174, 86, 0.6);
-  --vant-TAG-BACKGROUND-GREEN: rgba(6, 174, 86, 0.1);
-  --vant-TAG-TEXT-BLUE: rgba(16, 174, 255, 0.6);
-  --vant-TAG-BACKGROUND-BLUE: rgba(16, 174, 255, 0.1);
-  --vant-TAG-TEXT-BLACK: rgba(255, 255, 255, 0.5);
-  --vant-TAG-BACKGROUND-BLACK: rgba(255, 255, 255, 0.05);
-  --van-black: var(--vant-FG-0);
-  --van-gray-1: #323233;
-  --van-gray-2: #646566;
-  --van-gray-3: var(--vant-FG-3);
-  --van-gray-4: #c8c9cc;
-  --van-gray-5: #dcdee0;
-  --van-gray-6: var(--vant-FG-1);
-  --van-gray-7: #f2f3f5;
-  --van-gray-8: #f7f8fa;
-  --van-primary-color: var(--vant-BLUE);
-  --van-success-color: var(--vant-BRAND);
-  --van-danger-color: var(--vant-RED);
-  --van-warning-color: var(--vant-YELLOW);
-  --van-text-color: var(--vant-FG-0);
-  --van-active-color: rgba(255, 255, 255, 0.126);
-  --van-active-opacity: 0.8;
-  --van-background-color: var(--vant-BG-0);
-  --van-background-color-light: var(--vant-BG-1);
-  --van-text-link-color: var(--vant-LINK);
-  --van-border-color: var(--vant-FG-3);
-}
-html.dark {
-  --van-button-default-color: var(--vant-FG-0);
-  --van-button-default-background-color: transparent;
-  --van-button-default-border-color: var(--vant-FG-0);
-  --van-button-plain-background-color: transparent;
-}
-html.dark {
-  --van-cell-background-color: var(--vant-BG-2);
-  --van-cell-group-background-color: var(--vant-BG-2);
-}
-html.dark .van-cell__value--alone {
-  color: var(--vant-FG-0);
-}
-html.dark {
-  --van-popup-background-color: var(--vant-BG-1);
-}
-html.dark {
-  --van-toast-background-color: var(--vant-BG-4);
-}
-html.dark {
-  --van-cascader-tab-color: var(--vant-FG-0);
-}
-html.dark {
-  --van-switch-background-color: var(--vant-BG-3);
-  --van-switch-border: var(--van-border-radius-sm) solid var(--vant-FG-3);
-}
-html.dark {
-  --van-picker-background-color: var(--vant-BG-2);
-  --van-picker-option-text-color: var(--vant-FG-0);
-}
-html.dark .van-picker__mask {
-  background-image: linear-gradient(180deg, rgba(25, 25, 25, 0.95), rgba(25, 25, 25, 0.6)), linear-gradient(0deg, rgba(25, 25, 25, 0.95), rgba(25, 25, 25, 0.6));
-}
-html.dark {
-  --van-tabbar-background-color: #1e1e1e;
-  --van-tabbar-item-active-background-color: #1e1e1e;
-}
-html.dark {
-  --van-action-sheet-description-color: var(--vant-FG-1);
-  --van-action-sheet-item-background: var(--vant-BG-2);
-  --van-action-sheet-cancel-text-color: var(--vant-FG-1);
-  --van-action-sheet-cancel-padding-color: var(--vant-BG-1);
-}
-html.dark {
-  --van-dialog-background-color: var(--vant-BG-2);
-}
-html.dark {
-  --van-tab-active-text-color: var(--vant-FG-0);
-  --van-tabs-nav-background-color: var(--vant-BG-2);
-}
-/* safe-area */
-/* color */
-/* text */
-/* font */
-/* font-weight */
-/* gutter */
-/* shadow @antd4.0 https://ant.design/docs/spec/shadow-cn */
 /* safe-area */
 /* color */
 /* text */
@@ -510,6 +373,22 @@ html.dark {
   font-size: 3.73333vw;
   line-height: 1.517;
 }
+/* safe-area */
+/* color */
+/* text */
+/* font */
+/* font-weight */
+/* gutter */
+/* shadow @antd4.0 https://ant.design/docs/spec/shadow-cn */
+.mode-picker {
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
+}
+.mode-picker .iconfont {
+  font-size: 5.33333vw;
+  color: var(--vant-FG-0);
+}
 
 .iconfont {
   width: 1em;
@@ -518,17 +397,6 @@ html.dark {
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
-}
-/* safe-area */
-/* color */
-/* text */
-/* font */
-/* font-weight */
-/* gutter */
-/* shadow @antd4.0 https://ant.design/docs/spec/shadow-cn */
-.mode-picker .iconfont {
-  font-size: 5.33333vw;
-  color: var(--vant-FG-0);
 }
 /* safe-area */
 /* color */

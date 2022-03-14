@@ -14,7 +14,7 @@ var __spreadValues = (a, b) => {
     }
   return a;
 };
-import { r as resolveComponent, o as openBlock, c as createBlock, L as Lazyload, a as createPinia, u as useRouter, b as useRoute, d as computed, m as mergeProps, e as unref, N as NavBar, f as createElementBlock, g as createVNode, w as withCtx, h as resolveDynamicComponent, K as KeepAlive, i as defineComponent, j as createBaseVNode, k as defineStore, l as renderSlot, n as normalizeClass, T as TabbarItem, p as Tabbar, q as createCommentVNode, s as createRouter, t as createWebHashHistory, v as axios, x as Toast, y as createI18n, z as Locale, A as zhCN, B as enUS, C as createApp } from "./vendor.646982f2.js";
+import { r as resolveComponent, o as openBlock, c as createBlock, L as Lazyload, a as createPinia, u as useRouter, b as useRoute, d as computed, N as NavBar, m as mergeProps, e as unref, f as createElementBlock, g as createVNode, w as withCtx, h as resolveDynamicComponent, K as KeepAlive, i as defineComponent, j as defineStore, k as useStorage, l as useDark, n as createBaseVNode, p as renderSlot, q as normalizeClass, T as TabbarItem, s as Tabbar, t as normalizeProps, v as createCommentVNode, x as createRouter, y as createWebHashHistory, z as createI18n, A as Locale, B as stdin_default, C as stdin_default$1, D as createApp } from "./vendor.a1806f2f.js";
 const p = function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -65,14 +65,13 @@ var _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const _sfc_main$7 = {};
-function _sfc_render$3(_ctx, _cache) {
+const _sfc_main$6 = {};
+function _sfc_render$2(_ctx, _cache) {
   const _component_router_view = resolveComponent("router-view");
   return openBlock(), createBlock(_component_router_view);
 }
-var App = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["render", _sfc_render$3]]);
+var App = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$2]]);
 var index = "";
-var dark = "";
 function setupVant(app) {
   app.use(Lazyload);
 }
@@ -113,37 +112,17 @@ const __vitePreload = function preload(baseModule, deps) {
     }
   })).then(() => baseModule());
 };
-var settings = {
-  title: "vant next tpl",
-  copyright: "2018 - present Zehui Chan_",
-  navbar: {
-    showTitle: true,
-    leftArrow: true,
-    border: false,
-    fixed: false,
-    placeholder: false,
-    safeAreaInsetTop: true
-  },
-  tabbar: {
-    route: true,
-    fixed: true,
-    placeholder: true,
-    items: []
-  },
-  errorLog: ["production", "staging", "development"]
-};
 var AppNavBar_vue_vue_type_style_index_0_lang = "";
-const _sfc_main$6 = {
+const __default__$1 = {
+  inheritAttrs: false
+};
+const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
   setup(__props) {
     const router2 = useRouter();
     const route = useRoute();
-    const attrs = computed(() => {
-      var _a, _b;
-      return Object.assign({}, __spreadValues({}, settings.navbar), ((_a = route.meta.navbar) == null ? void 0 : _a.showTitle) && { title: route.meta.title }, !((_b = route.meta.navbar) == null ? void 0 : _b.showTitle) && { leftText: route.meta.title }, __spreadValues({}, route.meta.navbar));
-    });
     const classname = computed(() => {
-      var _a;
-      return (_a = route.meta.navbar) == null ? void 0 : _a.classname;
+      var _a, _b;
+      return (_b = (_a = route == null ? void 0 : route.meta) == null ? void 0 : _a.navbar) == null ? void 0 : _b.classname;
     });
     const onClickLeft = () => {
       router2.back();
@@ -152,22 +131,19 @@ const _sfc_main$6 = {
       const _component_van_nav_bar = NavBar;
       return openBlock(), createBlock(_component_van_nav_bar, mergeProps({
         class: ["v-nav-bar", unref(classname)]
-      }, unref(attrs), {
-        fixed: false,
-        onClickLeft
-      }), null, 16, ["class"]);
+      }, _ctx.$attrs, { onClickLeft }), null, 16, ["class"]);
     };
   }
-};
+});
 var AppMain_vue_vue_type_style_index_0_lang = "";
-const _hoisted_1$5 = { class: "app-main" };
-const _sfc_main$5 = {
+const _hoisted_1$4 = { class: "app-main" };
+const _sfc_main$4 = {
   setup(__props) {
     const route = useRoute();
     const key = computed(() => route.path);
     return (_ctx, _cache) => {
       const _component_router_view = resolveComponent("router-view");
-      return openBlock(), createElementBlock("div", _hoisted_1$5, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4, [
         createVNode(_component_router_view, null, {
           default: withCtx(({ Component, route: route2 }) => [
             (openBlock(), createBlock(KeepAlive, null, [
@@ -188,8 +164,29 @@ defineComponent({
     title: String
   }
 });
+const useAppStore = defineStore({
+  id: "app",
+  state: () => {
+    return {
+      mode: useStorage("vantTheme"),
+      isDark: useDark({
+        selector: "body",
+        valueDark: "van-theme-dark",
+        valueLight: "van-theme-ligtht",
+        storageKey: "vantTheme"
+      })
+    };
+  },
+  actions: {
+    changeMode(mode) {
+      this.isDark = mode === "dark";
+      this.mode = mode;
+    }
+  }
+});
 var index_vue_vue_type_style_index_0_lang$4 = "";
-const _sfc_main$4 = defineComponent({
+var index_vue_vue_type_style_index_0_lang$3 = "";
+const _sfc_main$3 = defineComponent({
   name: "VSvgIcon",
   props: {
     name: String,
@@ -208,8 +205,8 @@ const _sfc_main$4 = defineComponent({
     };
   }
 });
-const _hoisted_1$4 = ["xlink:href"];
-function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
+const _hoisted_1$3 = ["xlink:href"];
+function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
   return openBlock(), createElementBlock("svg", mergeProps({
     class: [_ctx.classPrefix, "iconfont"],
     style: { fontSize: _ctx.addUnit(_ctx.size) },
@@ -217,151 +214,10 @@ function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
   }, _ctx.$attrs), [
     createBaseVNode("use", {
       "xlink:href": `#${_ctx.name}`
-    }, null, 8, _hoisted_1$4)
+    }, null, 8, _hoisted_1$3)
   ], 16);
 }
-var VSvgIcon = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$2]]);
-const trim = function(s) {
-  return (s || "").replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, "");
-};
-function hasClass(el, cls) {
-  if (!el || !cls)
-    return false;
-  if (cls.indexOf(" ") !== -1)
-    throw new Error("className should not contain space.");
-  if (el.classList) {
-    return el.classList.contains(cls);
-  } else {
-    return ` ${el.className} `.indexOf(` ${cls} `) > -1;
-  }
-}
-function addClass(el, cls) {
-  if (!el)
-    return;
-  let curClass = el.className;
-  const classes = (cls || "").split(" ");
-  for (let i = 0, j = classes.length; i < j; i++) {
-    const clsName = classes[i];
-    if (!clsName)
-      continue;
-    if (el.classList) {
-      el.classList.add(clsName);
-    } else if (!hasClass(el, clsName)) {
-      curClass += ` ${clsName}`;
-    }
-  }
-  if (!el.classList) {
-    el.className = curClass;
-  }
-}
-function removeClass(el, cls) {
-  if (!el || !cls)
-    return;
-  const classes = cls.split(" ");
-  let curClass = ` ${el.className} `;
-  for (let i = 0, j = classes.length; i < j; i++) {
-    const clsName = classes[i];
-    if (!clsName)
-      continue;
-    if (el.classList) {
-      el.classList.remove(clsName);
-    } else if (hasClass(el, clsName)) {
-      curClass = curClass.replace(` ${clsName} `, " ");
-    }
-  }
-  if (!el.classList) {
-    el.className = trim(curClass);
-  }
-}
-const prefix = "test_appid";
-class Cache {
-  setItem(key, value) {
-    try {
-      localStorage.setItem(prefix + key, JSON.stringify(value));
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  getItem(key) {
-    try {
-      return JSON.parse(localStorage.getItem(prefix + key));
-    } catch (e) {
-      return "";
-    }
-  }
-  removeItem(key) {
-    return localStorage.removeItem(prefix + key);
-  }
-  setSession(key, value) {
-    try {
-      sessionStorage.setItem(prefix + key, JSON.stringify(value));
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  getSession(key) {
-    try {
-      return JSON.parse(sessionStorage.getItem(prefix + key));
-    } catch (e) {
-      return "";
-    }
-  }
-  removeSession(key) {
-    return sessionStorage.removeItem(prefix + key);
-  }
-}
-var cache = new Cache();
-const useAppStore = defineStore({
-  id: "app",
-  state: () => {
-    return {
-      theme: cache.getItem("theme") || "light"
-    };
-  },
-  getters: {},
-  actions: {
-    setThemeMode(theme) {
-      const isDark = theme === "dark";
-      isDark ? addClass(document.documentElement, "dark") : removeClass(document.documentElement, "dark");
-      cache.setItem("theme", theme);
-      this.theme = theme;
-    }
-  }
-});
-var index_vue_vue_type_style_index_0_lang$3 = "";
-const _sfc_main$3 = defineComponent({
-  name: "ModePicker",
-  setup() {
-    const appStore = useAppStore();
-    const theme = computed(() => appStore.theme);
-    const toggle = (theme2) => {
-      appStore.setThemeMode(theme2);
-    };
-    return {
-      theme,
-      toggle
-    };
-  },
-  components: {
-    VSvgIcon
-  }
-});
-const _hoisted_1$3 = { class: "mode-picker" };
-function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
-  const _component_v_svg_icon = VSvgIcon;
-  return openBlock(), createElementBlock("div", _hoisted_1$3, [
-    _ctx.theme === "dark" ? (openBlock(), createBlock(_component_v_svg_icon, {
-      key: 0,
-      name: "icon-Daytimemode",
-      onClick: _cache[0] || (_cache[0] = ($event) => _ctx.toggle("light"))
-    })) : (openBlock(), createBlock(_component_v_svg_icon, {
-      key: 1,
-      name: "icon-nightmode",
-      onClick: _cache[1] || (_cache[1] = ($event) => _ctx.toggle("dark"))
-    }))
-  ]);
-}
-var ModePicker = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$1]]);
+var VSvgIcon = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$1]]);
 var index_vue_vue_type_style_index_0_lang$2 = "";
 defineComponent({
   name: "Divider",
@@ -417,18 +273,15 @@ const _hoisted_2 = /* @__PURE__ */ createBaseVNode("span", null, "\u901B\u901B",
 const _hoisted_3 = /* @__PURE__ */ createBaseVNode("span", null, "\u6D88\u606F", -1);
 const _hoisted_4 = /* @__PURE__ */ createBaseVNode("span", null, "\u8D2D\u7269\u8F66", -1);
 const _hoisted_5 = /* @__PURE__ */ createBaseVNode("span", null, "\u6211\u7684", -1);
-const _sfc_main$1 = {
+const __default__ = {
+  inheritAttrs: false
+};
+const _sfc_main$1 = /* @__PURE__ */ Object.assign(__default__, {
   setup(__props) {
     return (_ctx, _cache) => {
       const _component_van_tabbar_item = TabbarItem;
       const _component_van_tabbar = Tabbar;
-      return openBlock(), createBlock(_component_van_tabbar, {
-        class: "v-tabbar",
-        route: "",
-        fixed: false,
-        placeholder: "",
-        "safe-area-inset-bottom": ""
-      }, {
+      return openBlock(), createBlock(_component_van_tabbar, mergeProps({ class: "v-tabbar" }, _ctx.$attrs, { route: "" }), {
         default: withCtx(() => [
           createVNode(_component_van_tabbar_item, {
             replace: "",
@@ -492,20 +345,45 @@ const _sfc_main$1 = {
           })
         ]),
         _: 1
-      });
+      }, 16);
     };
   }
+});
+var settings = {
+  title: "vant next tpl",
+  copyright: "2018 - present Zehui Chan_",
+  navbar: {
+    showTitle: true,
+    leftArrow: true,
+    border: false,
+    fixed: false,
+    placeholder: false,
+    safeAreaInsetTop: true
+  },
+  tabbar: {
+    route: true,
+    fixed: true,
+    placeholder: true,
+    safeAreaInsetBottom: true
+  },
+  errorLog: ["production", "staging", "development"]
 };
 var index_vue_vue_type_style_index_0_lang = "";
 const _hoisted_1 = { class: "basic-layout app-wrapper" };
 const _sfc_main = {
   setup(__props) {
+    useRouter();
     const route = useRoute();
+    const navbar = computed(() => {
+      var _a, _b;
+      return Object.assign({}, __spreadValues({}, settings.navbar), ((_a = route.meta.navbar) == null ? void 0 : _a.showTitle) && { title: route.meta.title }, !((_b = route.meta.navbar) == null ? void 0 : _b.showTitle) && { leftText: route.meta.title }, __spreadValues({}, route.meta.navbar));
+    });
+    const tabbar = computed(() => Object.assign({}, __spreadValues({}, settings.tabbar), __spreadValues({}, route.meta.tabbar)));
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1, [
-        unref(route).meta.navbar ? (openBlock(), createBlock(unref(_sfc_main$6), { key: 0 })) : createCommentVNode("", true),
-        createVNode(unref(_sfc_main$5)),
-        unref(route).meta.tabbar ? (openBlock(), createBlock(unref(_sfc_main$1), { key: 1 })) : createCommentVNode("", true)
+        unref(route).meta.navbar ? (openBlock(), createBlock(unref(_sfc_main$5), normalizeProps(mergeProps({ key: 0 }, unref(navbar))), null, 16)) : createCommentVNode("", true),
+        createVNode(unref(_sfc_main$4)),
+        unref(route).meta.tabbar ? (openBlock(), createBlock(unref(_sfc_main$1), normalizeProps(mergeProps({ key: 1 }, unref(tabbar))), null, 16)) : createCommentVNode("", true)
       ]);
     };
   }
@@ -518,7 +396,7 @@ const routes = [
     children: [
       {
         path: "/home",
-        component: () => __vitePreload(() => import("./index.d1fed094.js"), true ? ["assets/index.d1fed094.js","assets/index.d54d9699.css","assets/index.dfe82eeb.css","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.090e01a7.js"), true ? ["assets/index.090e01a7.js","assets/index.d54d9699.css","assets/index.f7de366d.css","assets/vendor.a1806f2f.js","assets/vendor.b3a0ed05.css"] : void 0),
         meta: {
           title: "\u9996\u9875",
           navbar: {
@@ -530,7 +408,7 @@ const routes = [
       },
       {
         path: "/circle",
-        component: () => __vitePreload(() => import("./index.22cd1bec.js"), true ? ["assets/index.22cd1bec.js","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.e94597ec.js"), true ? ["assets/index.e94597ec.js","assets/vendor.a1806f2f.js","assets/vendor.b3a0ed05.css"] : void 0),
         meta: {
           title: "\u901B\u901B",
           navbar: {
@@ -542,7 +420,7 @@ const routes = [
       },
       {
         path: "/message",
-        component: () => __vitePreload(() => import("./index.b7caad58.js"), true ? ["assets/index.b7caad58.js","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.c11f730b.js"), true ? ["assets/index.c11f730b.js","assets/vendor.a1806f2f.js","assets/vendor.b3a0ed05.css"] : void 0),
         meta: {
           title: "\u6D88\u606F",
           navbar: {
@@ -554,7 +432,7 @@ const routes = [
       },
       {
         path: "/cart",
-        component: () => __vitePreload(() => import("./index.377a1b71.js"), true ? ["assets/index.377a1b71.js","assets/index.d0f35ebc.css","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.377e5203.js"), true ? ["assets/index.377e5203.js","assets/index.1e868721.css","assets/vendor.a1806f2f.js","assets/vendor.b3a0ed05.css"] : void 0),
         meta: {
           title: "\u8D2D\u7269\u8F66",
           navbar: {
@@ -566,7 +444,7 @@ const routes = [
       },
       {
         path: "/center",
-        component: () => __vitePreload(() => import("./index.14d22955.js"), true ? ["assets/index.14d22955.js","assets/index.2f4998b5.css","assets/index.dfe82eeb.css","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./index.682b5a91.js"), true ? ["assets/index.682b5a91.js","assets/index.46722a09.css","assets/index.f7de366d.css","assets/vendor.a1806f2f.js","assets/vendor.b3a0ed05.css"] : void 0),
         meta: {
           title: "\u5173\u4E8E\u6211",
           tabbar: true
@@ -574,7 +452,7 @@ const routes = [
       },
       {
         path: "/mockjs",
-        component: () => __vitePreload(() => import("./mockjs.127e1bfb.js"), true ? ["assets/mockjs.127e1bfb.js","assets/index.dfe82eeb.css","assets/vendor.646982f2.js","assets/vendor.f0fd9895.css"] : void 0),
+        component: () => __vitePreload(() => import("./mockjs.f8399f7b.js"), true ? ["assets/mockjs.f8399f7b.js","assets/index.f7de366d.css","assets/vendor.a1806f2f.js","assets/vendor.b3a0ed05.css"] : void 0),
         name: "Mockjs",
         meta: {
           title: "Mockjs",
@@ -596,36 +474,6 @@ const router = createRouter({
 function setupRouter(app) {
   app.use(router);
 }
-let message = " (-\u3002-)!!! \u670D\u52A1\u5668\u5F00\u5C0F\u5DEE\u4E86\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5\u3002";
-const http = axios.create({
-  baseURL: "/vant-next-tpl/",
-  timeout: 50 * 1e3
-});
-http.interceptors.request.use((config) => {
-  return config;
-}, (error) => {
-  console.log(`err,${error}`);
-  return Promise.reject(error);
-});
-http.interceptors.response.use((response) => {
-  const res = response.data;
-  if (res.code === 200) {
-    return res;
-  } else {
-    Toast(`status: ${res.code}, ${message}`);
-    return Promise.reject({ message, name: "httpRequestError", response });
-  }
-}, (error) => {
-  console.log(`err,${error}`);
-  Toast(`err, ${error}`);
-  return Promise.reject(error);
-});
-function userInfo() {
-  return http({
-    url: "/user/info",
-    method: "get"
-  });
-}
 const useUserStore = defineStore({
   id: "user",
   state: () => {
@@ -638,8 +486,13 @@ const useUserStore = defineStore({
   actions: {
     async getUserInfo() {
       try {
-        const res = await userInfo();
-        this.userinfo = res.data;
+        this.userinfo = {
+          "avatar": "http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLYMVgaumib5h42GP4pAlLTQCpzFAmUZTVUg4MmH9eFyb4shrm6Ux2Ocic1ic0ekTWEYVfxibGcMMC3UQ/132",
+          "cellphone": "15800066380",
+          "username": "chan_",
+          "realname": "\u9648\u6CFD\u8F89",
+          "github": "https://github.com/zehuichan"
+        };
         return Promise.resolve();
       } catch (error) {
         return Promise.reject(error);
@@ -655,11 +508,10 @@ function useTitle(pageTitle) {
   return `${title}`;
 }
 function setupRouterGuard(router2) {
-  const appStore = useAppStore();
+  useAppStore();
   const userStore = useUserStore();
   router2.beforeEach(async (to, from) => {
     document.title = useTitle(to.meta.title);
-    appStore.setThemeMode(appStore.theme);
     const hasInfo = userStore.userinfo;
     if (hasInfo)
       ;
@@ -693,13 +545,51 @@ var zhLocale = {
     my: "\u5173\u4E8E\u6211"
   }
 };
+const prefix = "test_appid";
+class Cache {
+  setItem(key, value) {
+    try {
+      localStorage.setItem(prefix + key, JSON.stringify(value));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  getItem(key) {
+    try {
+      return JSON.parse(localStorage.getItem(prefix + key));
+    } catch (e) {
+      return "";
+    }
+  }
+  removeItem(key) {
+    return localStorage.removeItem(prefix + key);
+  }
+  setSession(key, value) {
+    try {
+      sessionStorage.setItem(prefix + key, JSON.stringify(value));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  getSession(key) {
+    try {
+      return JSON.parse(sessionStorage.getItem(prefix + key));
+    } catch (e) {
+      return "";
+    }
+  }
+  removeSession(key) {
+    return sessionStorage.removeItem(prefix + key);
+  }
+}
+var cache = new Cache();
 const messages = {
   en: enLocale,
   zh: zhLocale
 };
 const options = {
-  zh: ["zh-CN", zhCN],
-  en: ["en-US", enUS]
+  zh: ["zh-CN", stdin_default],
+  en: ["en-US", stdin_default$1]
 };
 function getLanguage() {
   const chooseLanguage = cache.getItem("language");
@@ -784,4 +674,4 @@ async function bootstrap() {
   app.mount("#app");
 }
 void bootstrap();
-export { ModePicker as M, VToolBar as V, _export_sfc as _, useErrorLogStore as a, VSvgIcon as b, http as h, useUserStore as u };
+export { VSvgIcon as V, _export_sfc as _, useUserStore as a, useErrorLogStore as b, VToolBar as c, useAppStore as u };
