@@ -9,8 +9,8 @@ export default {
     showTitle: true,
     leftArrow: true,
     border: false,
-    fixed: true,
-    placeholder: true,
+    fixed: false,
+    placeholder: false,
     safeAreaInsetTop: true
   },
 
@@ -18,7 +18,8 @@ export default {
   tabbar: {
     route: true,
     fixed: true,
-    placeholder: true
+    placeholder: true,
+    safeAreaInsetBottom: true
   },
 
   /**

@@ -23,6 +23,7 @@ const key = computed(() => route.path)
 .app-main {
   position: relative;
   -webkit-overflow-scrolling: touch;
+  flex: 1;
   overflow-y: auto; // 关键， 超出部分滚动
 }
 </style>
