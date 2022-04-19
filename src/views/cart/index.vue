@@ -1,5 +1,5 @@
 <template>
-  <van-submit-bar :price="3050" button-text="提交订单" @submit="onSubmit">
+  <van-submit-bar :price="3050" button-text="提交订单" @submit="onSubmit" :safe-area-inset-bottom="false">
     <van-checkbox v-model="checked">全选</van-checkbox>
   </van-submit-bar>
 </template>
@@ -14,6 +14,6 @@ const onSubmit = () => Toast('点击按钮')
 
 <style lang="less">
 .van-submit-bar {
-  bottom: 50px;
+  position: absolute;
 }
 </style>

@@ -1,28 +1,26 @@
-import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
-import { useTitle } from '@/hooks'
+import { useTitle } from '@vueuse/core'
 
 export function setupRouterGuard(router) {
-  const appStore = useAppStore()
   const userStore = useUserStore()
 
-  router.beforeEach(async (to, from) => {
-
+  router.beforeEach(async (to, from, next) => {
     // set page title
-    document.title = useTitle(to.meta.title)
+    useTitle(to.meta.title)
 
     const hasInfo = userStore.userinfo
 
     if (hasInfo) {
-
+      next()
     } else {
       try {
         // 拉取基本信息
         userStore.getUserInfo()
+        next({ ...to, replace: true })
       } catch (error) {
         console.log('error', error)
         userStore.resetUserInfo()
-        return '/500'
+        next('/500')
       }
     }
 

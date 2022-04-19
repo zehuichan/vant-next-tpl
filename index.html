@@ -9,12 +9,17 @@
   />
   <title><%= title %></title>
   <script src="//at.alicdn.com/t/font_1656657_c7pvc6hw67k.js"></script>
+</head>
+<!--在 iOS 上点击组件时，无法触发点击反馈效果？-->
+<!--https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari/33681490#33681490-->
+<body ontouchstart="">
+<div id="app">
   <style>
     body {
       margin: 0;
     }
 
-    .first-loading-wrp {
+    .app-loading {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -26,30 +31,26 @@
       background-color: #f0f2f5;
     }
 
-    .first-loading-content {
+    .app-loading-wrap {
       display: flex;
     }
 
-    .first-loading-content > img {
+    .app-loading-wrap .app-loading-logo {
+      width: 28px;
       height: 28px;
     }
 
-    .first-loading-content > p {
+    .app-loading-wrap .app-loading-title {
       font-weight: 500;
       margin: 0;
       padding-left: 12px;
       font-size: 18px
     }
   </style>
-</head>
-<!--在 iOS 上点击组件时，无法触发点击反馈效果？-->
-<!--https://stackoverflow.com/questions/3885018/active-pseudo-class-doesnt-work-in-mobile-safari/33681490#33681490-->
-<body ontouchstart="">
-<div id="app">
-  <div class="first-loading-wrp">
-    <div class="first-loading-content">
-      <img src="/mona-loading-dimmed.gif" alt="loading">
-      <p>ZehuiChan_ Design.</p>
+  <div class="app-loading">
+    <div class="app-loading-wrap">
+      <img src="/mona-loading-dimmed.gif" class="app-loading-logo" width="28" height="28" alt="loading">
+      <p class="app-loading-title">ZehuiChan_ Design.</p>
     </div>
   </div>
 </div>

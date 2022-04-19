@@ -18,6 +18,7 @@ const RouteView = {
 }
 
 const routes = [
+  { path: '/:path(.*)*', redirect: '/404' },
   { path: '/', redirect: '/home' },
   {
     path: '/BasicLayout',
@@ -92,8 +93,7 @@ const routes = [
         }
       },
     ]
-  },
-  { path: '/:path(.*)*', redirect: '/404' }
+  }
 ]
 
 // init router
