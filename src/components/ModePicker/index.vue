@@ -6,10 +6,7 @@
 </template>
 
 <script setup>
-// store
 import { useAppStore } from '@/store/modules/app'
-// components
-import { VSvgIcon } from '@/components'
 
 const appStore = useAppStore()
 </script>

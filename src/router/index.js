@@ -104,7 +104,7 @@ export const router = createRouter({
   history: createWebHashHistory(),
   routes: routes,
   strict: true,
-  // scrollBehavior: () => ({ left: 0, top: 0 }),
+  // scrollBehavior: (to, from, savedPosition) => ({ left: 0, top: 0 }),
 })
 
 // config router

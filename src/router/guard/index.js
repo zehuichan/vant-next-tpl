@@ -1,6 +1,8 @@
 import { useUserStore } from '@/store/modules/user'
 import { useTitle } from '@vueuse/core'
 
+import { createPermissionGuard } from './permission'
+
 export function setupRouterGuard(router) {
   const userStore = useUserStore()
 
