@@ -18,10 +18,13 @@ const RouteView = {
 }
 
 const routes = [
-  { path: '/:path(.*)*', redirect: '/404' },
+  { path: '/:pathMatch(.*)', redirect: '/404' },
+  { path: '/403', component: () => import('@/views/error-page/403.vue') },
+  { path: '/404', component: () => import('@/views/error-page/404.vue') },
+  { path: '/500', component: () => import('@/views/error-page/500.vue') },
   { path: '/', redirect: '/home' },
   {
-    path: '/BasicLayout',
+    path: '/',
     component: Layout,
     children: [
       {
