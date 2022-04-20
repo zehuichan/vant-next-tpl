@@ -1,29 +1,29 @@
 import { nextTick, ref } from 'vue'
-import { useScript } from '.'
+import { useScriptTag } from '@vueuse/core'
 import { wxconfig } from '@/api/user'
 
 export default function useWeixin(options = { debug: false }) {
+  const { load } = useScriptTag('//res.wx.qq.com/open/js/jweixin-1.6.0.js')
   const ready = ref(false)
-  const wx = ref(undefined)
-  const { toPromise } = useScript('//res.wx.qq.com/open/js/jweixin-1.6.0.js')
+  const instance = ref(null)
 
   async function initWxConfig() {
-    await toPromise()
+    await load()
     await nextTick()
-    wx.value = window.wx
+    instance.value = window.wx
     const url = encodeURIComponent(location.href.split('#')[0])
     const res = await wxconfig(url)
     const config = Object.assign({}, res, options)
-    wx.value.config(config)
-    wx.value.ready(() => {
+    instance.value.config(config)
+    instance.value.ready(() => {
       ready.value = true
     })
-    wx.value.error(() => {
+    instance.value.error(() => {
       ready.value = false
     })
   }
 
   !ready.value && initWxConfig()
 
-  return [ready, wx]
+  return [ready, instance]
 }
