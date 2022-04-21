@@ -1,7 +1,7 @@
-import VSvgIcon from './VSvgIcon/index.vue'
-import ModePicker from './ModePicker/index.vue'
-import Divider from './Divider/index.vue'
-import VToolBar from './VToolBar/index.vue'
+import VSvgIcon from './VSvgIcon'
+import ModePicker from './ModePicker'
+import Divider from './Divider'
+import VToolBar from './VToolBar'
 
 
 const components = [

@@ -40,6 +40,5 @@ export default {
 </script>
 
 <script setup>
-// components
-import { VSvgIcon } from '@/components'
+
 </script>

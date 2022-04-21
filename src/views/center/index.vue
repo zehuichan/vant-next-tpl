@@ -37,8 +37,6 @@ import { ref } from 'vue'
 // store
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store/modules/user'
-// components
-import { ModePicker } from '@/components'
 
 const userStore = useUserStore()
 const { userinfo } = storeToRefs(userStore)

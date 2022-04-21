@@ -22,8 +22,6 @@ import { storeToRefs } from 'pinia'
 import { mockData } from '@/api/test'
 // store
 import { useErrorLogStore } from '@/store/modules/errorLog'
-// components
-import { VSvgIcon, VToolBar } from '@/components'
 
 const errorLogStore = useErrorLogStore()
 const { logs } = storeToRefs(errorLogStore)
