@@ -12,8 +12,8 @@
     "gh-pages": "npm run build:prod && gh-pages -d dist || gh-pages.sh"
   },
   "dependencies": {
-    "@antv/f2": "^4.0.15",
-    "@vueuse/core": "^8.2.6",
+    "@antv/f2": "^4.0.16",
+    "@vueuse/core": "^8.3.1",
     "axios": "^0.26.1",
     "dayjs": "^1.11.1",
     "mitt": "^3.0.0",

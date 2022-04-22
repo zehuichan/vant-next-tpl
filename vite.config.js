@@ -55,7 +55,7 @@ export default ({ command, mode }) => {
       proxy: createProxy(VITE_PROXY)
     },
     build: {
-      minify: false,
+      minify: 'terser',
       // target: 'es2015',
       // outDir: 'dist',
       terserOptions: {

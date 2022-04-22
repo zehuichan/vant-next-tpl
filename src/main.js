@@ -15,19 +15,10 @@ import { setupErrorLog } from './plugins/error-log'
 async function bootstrap() {
   const app = createApp(App)
 
-  // Configure store
   setupStore(app)
-
-  // Configure vant-ui
   setupVant(app)
-
-  // Register global components
   registerComponents(app)
-
-  // Configure routing
   setupRouter(app)
-
-  // router-guard
   setupRouterGuard(router)
   setupI18n(app)
   setupErrorLog(app)
