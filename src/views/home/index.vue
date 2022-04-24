@@ -38,7 +38,7 @@ const previewImage = () => {
   })
 }
 
-const auth = () => redirectTo('/mock')
+const auth = () => redirectTo()
 
 const { code } = useUrlSearchParams('history')
 
