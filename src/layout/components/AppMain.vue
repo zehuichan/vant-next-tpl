@@ -8,6 +8,9 @@
         />
       </keep-alive>
     </router-view>
+    <div class="divider-wrapper">
+      <divider>Zehui Design.</divider>
+    </div>
   </div>
 </template>
 
