@@ -1,21 +1,18 @@
 <template>
   <van-cell-group title="jweixin-1.6.0">
-    <van-cell title="scanQRCode" is-link @click="scanQRCode"/>
-    <van-cell title="previewImage" is-link @click="previewImage"/>
+    <van-cell title="scanQRCode" :value="'' + ready" is-link @click="scanQRCode"/>
+    <van-cell title="previewImage" :value="'' + ready" is-link @click="previewImage"/>
   </van-cell-group>
   <van-cell-group title="jweixin-auth">
-    <van-cell title="auth" is-link @click="auth"/>
+    <van-cell title="auth" :label="code" is-link @click="auth"/>
   </van-cell-group>
-  {{ ready }}
-  {{ code }}
 </template>
 
 <script setup>
-import { useUrlSearchParams } from '@vueuse/core'
 import { useAuth, useWeixin } from '@/hooks'
 
 const [ready, wx] = useWeixin()
-const [redirectTo] = useAuth()
+const [code, redirectTo] = useAuth()
 
 const scanQRCode = () => {
   wx.value.scanQRCode({
@@ -39,9 +36,6 @@ const previewImage = () => {
 }
 
 const auth = () => redirectTo()
-
-const { code } = useUrlSearchParams('history')
-
 </script>
 
 <style lang="less">
