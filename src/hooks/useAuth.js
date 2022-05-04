@@ -4,7 +4,7 @@ import { useUrlSearchParams } from '@vueuse/core'
 const SCOPES = ['snsapi_base', 'snsapi_userinfo']
 
 export default function useAuth(scope = 1) {
-  const _code = ref(undefined)
+  const auth_code = ref(undefined)
 
   function redirectTo(redirect_uri) {
     const { protocol, host, pathname, hash } = location
@@ -14,8 +14,8 @@ export default function useAuth(scope = 1) {
 
   watchEffect(() => {
     const { code } = useUrlSearchParams('history')
-    _code.value = code
+    auth_code.value = code
   })
 
-  return [_code, redirectTo]
+  return [auth_code, redirectTo]
 }
