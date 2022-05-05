@@ -8,6 +8,8 @@ also support pinia
 
 default store for pinia
 
+npx npm-check-updates -u
+
 ## Project setup
 
 ```
