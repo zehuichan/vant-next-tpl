@@ -1,4 +1,4 @@
-import { useUserStore } from '@/store/modules/user'
+import { useUserStore } from '@/store'
 import { useTitle } from '@vueuse/core'
 
 import { createPermissionGuard } from './permission'

@@ -1,4 +1,4 @@
-import { nextTick, ref } from 'vue'
+import { nextTick, ref, watchEffect } from 'vue'
 import { useScriptTag } from '@vueuse/core'
 import { wxconfig } from '@/api/user'
 
@@ -7,23 +7,27 @@ export default function useWeixin(options = { debug: false }) {
   const ready = ref(false)
   const instance = ref(null)
 
+  watchEffect(!ready.value && initWxConfig)
+
   async function initWxConfig() {
     await load()
     await nextTick()
     instance.value = window.wx
-    const url = encodeURIComponent(location.href.split('#')[0])
-    const res = await wxconfig(url)
-    const config = Object.assign({}, res, options)
-    instance.value.config(config)
-    instance.value.ready(() => {
-      ready.value = true
-    })
-    instance.value.error(() => {
+    try {
+      const url = encodeURIComponent(location.href.split('#')[0])
+      const res = await wxconfig(url)
+      const config = Object.assign({}, res, options)
+      instance.value.config(config)
+      instance.value.ready(() => {
+        ready.value = true
+      })
+      instance.value.error(() => {
+        ready.value = false
+      })
+    } catch (e) {
       ready.value = false
-    })
+    }
   }
-
-  !ready.value && initWxConfig()
 
   return [ready, instance]
 }

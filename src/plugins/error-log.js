@@ -1,4 +1,4 @@
-import { useErrorLogStore } from '@/store/modules/errorLog'
+import { useErrorLogStore } from '@/store'
 import { is } from '@/utils'
 import settings from '@/settings'
 

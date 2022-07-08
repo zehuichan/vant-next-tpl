@@ -1,22 +1,18 @@
 import { defineStore } from 'pinia'
-import { useDark, useStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core'
 
 export const useAppStore = defineStore({
   id: 'app',
-  state: () => {
-    return {
-      mode: useStorage('vantTheme'),
-      isDark: useDark({
-        selector: 'body',
-        valueDark: 'van-theme-dark',
-        valueLight: 'van-theme-ligtht',
-        storageKey: 'vantTheme'
-      })
+  state: () => ({
+    mode: useStorage('vantTheme', 'light'),
+  }),
+  getters: {
+    isDark() {
+      return this.mode === 'dark'
     }
   },
   actions: {
     changeMode(mode) {
-      this.isDark = mode === 'dark'
       this.mode = mode
     }
   },

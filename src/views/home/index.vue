@@ -6,18 +6,13 @@
   <van-cell-group title="jweixin-auth">
     <van-cell title="auth" :label="code" is-link @click="auth" />
   </van-cell-group>
-  <van-cell-group title="hooks">
-    <van-field label="name" v-model="state.name" placeholder="name" />
-    <van-field label="color" v-model="state.color" placeholder="color" />
-    <van-field label="size" v-model="state.size" placeholder="size" />
-  </van-cell-group>
 </template>
 
 <script setup>
-import { useAuth, useWeixin, useStorage } from '@/hooks'
+import { useAuth, useWeixin } from '@/hooks'
 
 const [ready, wx] = useWeixin()
-const [code, redirectTo] = useAuth()
+const [code, authTo] = useAuth()
 
 const scanQRCode = () => {
   wx.value.scanQRCode({
@@ -40,13 +35,7 @@ const previewImage = () => {
   })
 }
 
-const auth = () => redirectTo()
-
-const state = useStorage('form', {
-  name: 'Banana',
-  color: 'Yellow',
-  size: 'Medium'
-})
+const auth = () => authTo()
 </script>
 
 <style lang="less">

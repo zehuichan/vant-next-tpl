@@ -21,7 +21,7 @@ import { storeToRefs } from 'pinia'
 // api
 import { mockData } from '@/api/test'
 // store
-import { useErrorLogStore } from '@/store/modules/errorLog'
+import { useErrorLogStore } from '@/store'
 
 const errorLogStore = useErrorLogStore()
 const { logs } = storeToRefs(errorLogStore)

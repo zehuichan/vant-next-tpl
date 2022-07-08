@@ -8,25 +8,25 @@
           <div class="text">{{ userinfo.github }}</div>
         </div>
         <div class="avatar">
-          <van-image :src="userinfo.avatar" width="100%" height="100%"/>
+          <van-image :src="userinfo.avatar" width="100%" height="100%" />
         </div>
       </div>
     </div>
     <van-cell-group title="info" inset>
-      <van-field v-model="userinfo.realname" label="姓名" readonly/>
-      <van-field v-model="userinfo.cellphone" label="手机" readonly/>
+      <van-field v-model="userinfo.realname" label="姓名" readonly />
+      <van-field v-model="userinfo.cellphone" label="手机" readonly />
     </van-cell-group>
     <van-cell-group title="setting" inset>
       <van-cell title="模式">
         <template #value>
-          <mode-picker/>
+          <mode-picker />
         </template>
       </van-cell>
     </van-cell-group>
     <van-cell-group title="about" inset>
-      <van-field v-model="appInfo.name" label="name" readonly/>
-      <van-field v-model="appInfo.version" label="version" readonly/>
-      <van-field v-model="appInfo.lastBuildTime" label="lastBuildTime" readonly/>
+      <van-field v-model="appInfo.name" label="name" readonly />
+      <van-field v-model="appInfo.version" label="version" readonly />
+      <van-field v-model="appInfo.lastBuildTime" label="lastBuildTime" readonly />
     </van-cell-group>
   </div>
 </template>
@@ -36,7 +36,7 @@
 import { ref } from 'vue'
 // store
 import { storeToRefs } from 'pinia'
-import { useUserStore } from '@/store/modules/user'
+import { useUserStore } from '@/store'
 
 const userStore = useUserStore()
 const { userinfo } = storeToRefs(userStore)
