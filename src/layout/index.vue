@@ -42,8 +42,6 @@ const tabbar = computed(() => Object.assign(
 
 <style lang="less">
 .basic-layout {
-  display: flex;
-  flex-direction: column;
   height: 100%;
 }
 
