@@ -2,7 +2,6 @@
 @import "./var.less";
 @import "./unit.less";
 @import "./tap.less";
-@import "./vant-ui.less";
 @import "./transition.less";
 
 body {
@@ -19,18 +18,20 @@ label {
 }
 
 html {
-  height: 100%;
+  min-height: 100vh;
+  height: auto;
   box-sizing: border-box;
 }
 
 html,
 body {
-  height: 100%;
-  width: 100%;
+  min-height: 100vh;
+  height: auto;
 }
 
 #app {
-  height: 100%;
+  min-height: 100vh;
+  height: auto;
 }
 
 *,
@@ -86,7 +87,7 @@ div:focus {
 }
 
 .divider-wrapper {
-  padding: 16px 80px;
+  padding: 0 64px;
 }
 
 .main-container {

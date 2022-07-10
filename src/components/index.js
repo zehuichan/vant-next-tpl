@@ -3,7 +3,6 @@ import ModePicker from './ModePicker'
 import Divider from './Divider'
 import VToolBar from './VToolBar'
 
-
 const components = [
   VSvgIcon,
   ModePicker,

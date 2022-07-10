@@ -12,7 +12,7 @@
 import { useAuth, useWeixin } from '@/hooks'
 
 const [ready, wx] = useWeixin()
-const [code, authTo] = useAuth()
+const [code, authorize] = useAuth()
 
 const scanQRCode = () => {
   wx.value.scanQRCode({
@@ -35,7 +35,7 @@ const previewImage = () => {
   })
 }
 
-const auth = () => authTo()
+const auth = () => authorize()
 </script>
 
 <style lang="less">

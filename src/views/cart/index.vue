@@ -14,6 +14,6 @@ const onSubmit = () => Toast('点击按钮')
 
 <style lang="less">
 .van-submit-bar {
-  position: absolute;
+  bottom: 50px;
 }
 </style>

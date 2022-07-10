@@ -9,8 +9,8 @@ export default {
     showTitle: true,
     leftArrow: true,
     border: false,
-    fixed: false,
-    placeholder: false,
+    fixed: true,
+    placeholder: true,
     safeAreaInsetTop: true
   },
 
