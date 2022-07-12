@@ -5,6 +5,7 @@ node_modules
 # local env files
 .env.local
 .env.*.local
+.eslintcache
 
 # Log files
 npm-debug.log*
@@ -15,7 +16,6 @@ package-lock.json*
 
 # Editor directories and files
 .idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj

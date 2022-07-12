@@ -8,35 +8,79 @@
     "build:stage": "vite build --mode staging",
     "serve": "vite preview",
     "release": "release-it && git push --follow-tags origin master",
+    "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock}/**/*.{vue,js,jsx,ts,tsx}\" --fix",
+    "lint:prettier": "prettier --write  \"src/**/*.{js,json,jsx,tsx,css,less,scss,vue,html,md}\"",
+    "lint:stylelint": "stylelint --cache --fix \"**/*.{vue,less,postcss,css,scss}\" --cache --cache-location node_modules/.cache/stylelint/",
+    "lint:lint-staged": "lint-staged",
+    "prepare": "husky install",
     "gh-pages": "npm run build:prod && gh-pages -d dist || gh-pages.sh"
   },
   "dependencies": {
     "@antv/f2": "^4.0.25",
-    "@vueuse/core": "^8.9.0",
+    "@vueuse/core": "^8.9.1",
     "axios": "^0.27.2",
     "dayjs": "^1.11.3",
     "mitt": "^3.0.0",
     "mockjs": "^1.1.0",
-    "pinia": "^2.0.14",
+    "pinia": "^2.0.15",
     "vant": "^4.0.0-alpha.4",
     "vue": "^3.2.37",
     "vue-i18n": "^9.1.10",
-    "vue-router": "^4.1.1"
+    "vue-router": "^4.1.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
     "@vitejs/plugin-vue-jsx": "^1.3.10",
     "@vue/compiler-sfc": "^3.2.37",
     "autoprefixer": "^10.4.7",
+    "eslint": "^8.19.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.2.0",
     "gh-pages": "^4.0.0",
+    "husky": "^8.0.1",
     "less": "^4.1.3",
+    "lint-staged": "^13.0.3",
+    "postcss": "^8.4.14",
+    "postcss-html": "^1.5.0",
+    "postcss-less": "^6.0.0",
     "postcss-px-to-viewport": "^1.1.1",
     "release-it": "^15.1.1",
+    "stylelint": "^14.9.1",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recommended": "^8.0.0",
+    "stylelint-config-recommended-vue": "^1.4.0",
+    "stylelint-config-standard": "^26.0.0",
+    "stylelint-order": "^5.0.0",
     "unplugin-vue-components": "^0.21.1",
-    "vite": "^2.9.13",
+    "vite": "^2.9.14",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-html": "^3.2.0",
     "vite-plugin-mock": "^2.9.6"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "{!(package)*.json,*.code-snippets,.!(browserslist)*rc}": [
+      "prettier --write--parser json"
+    ],
+    "package.json": [
+      "prettier --write"
+    ],
+    "*.vue": [
+      "eslint --fix",
+      "prettier --write",
+      "stylelint --fix"
+    ],
+    "*.{scss,less,styl,html}": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write"
+    ]
   },
   "release-it": {
     "npm": {

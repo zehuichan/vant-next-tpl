@@ -1,5 +1,10 @@
 <template>
-  <van-submit-bar :price="3050" button-text="提交订单" @submit="onSubmit" :safe-area-inset-bottom="false">
+  <van-submit-bar
+    :price="3050"
+    button-text="提交订单"
+    @submit="onSubmit"
+    :safe-area-inset-bottom="false"
+  >
     <van-checkbox v-model="checked">全选</van-checkbox>
   </van-submit-bar>
 </template>

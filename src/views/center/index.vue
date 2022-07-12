@@ -26,7 +26,11 @@
     <van-cell-group title="about" inset>
       <van-field v-model="appInfo.name" label="name" readonly />
       <van-field v-model="appInfo.version" label="version" readonly />
-      <van-field v-model="appInfo.lastBuildTime" label="lastBuildTime" readonly />
+      <van-field
+        v-model="appInfo.lastBuildTime"
+        label="lastBuildTime"
+        readonly
+      />
     </van-cell-group>
   </div>
 </template>
@@ -46,7 +50,6 @@ const value = ref('')
 
 <style lang="less">
 .center {
-
   .user-info {
     position: relative;
     display: flex;
@@ -54,7 +57,7 @@ const value = ref('')
     justify-content: space-between;
     padding: 16px;
     height: 268px;
-    background: url("./brand.jpg") 0 0 no-repeat;
+    background: url('./brand.jpg') 0 0 no-repeat;
     background-size: 100% 268px;
     color: @white;
   }
@@ -76,13 +79,9 @@ const value = ref('')
   }
 
   .user {
-
     .name {
       font-size: @font18;
       font-weight: @fw-600;
-    }
-
-    .text {
     }
   }
 }

@@ -2,9 +2,9 @@
   <div class="demo-block">
     <div v-if="title" class="demo-block__title">{{ title }}</div>
     <div v-if="card" class="demo-block__card">
-      <slot/>
+      <slot />
     </div>
-    <slot v-else/>
+    <slot v-else />
   </div>
 </template>
 
@@ -15,7 +15,7 @@ export default defineComponent({
   name: 'DemoBlock',
   props: {
     card: Boolean,
-    title: String,
+    title: String
   }
 })
 </script>

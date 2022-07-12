@@ -1,11 +1,8 @@
 <template>
   <div class="app-main">
-    <router-view v-slot="{Component, route}">
+    <router-view v-slot="{ Component, route }">
       <keep-alive>
-        <component
-          :is="Component"
-          :key="route.path"
-        />
+        <component :is="Component" :key="route.path" />
       </keep-alive>
     </router-view>
     <div class="divider-wrapper">
@@ -14,9 +11,7 @@
   </div>
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>
 
 <style lang="less">
 .app-main {

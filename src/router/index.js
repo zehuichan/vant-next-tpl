@@ -34,10 +34,10 @@ const routes = [
           title: '首页',
           navbar: {
             showTitle: false,
-            leftArrow: false,
+            leftArrow: false
           },
-          tabbar: true,
-        },
+          tabbar: true
+        }
       },
       {
         path: '/circle',
@@ -46,10 +46,10 @@ const routes = [
           title: '逛逛',
           navbar: {
             showTitle: false,
-            leftArrow: false,
+            leftArrow: false
           },
-          tabbar: true,
-        },
+          tabbar: true
+        }
       },
       {
         path: '/message',
@@ -58,10 +58,10 @@ const routes = [
           title: '消息',
           navbar: {
             showTitle: false,
-            leftArrow: false,
+            leftArrow: false
           },
-          tabbar: true,
-        },
+          tabbar: true
+        }
       },
       {
         path: '/cart',
@@ -70,18 +70,18 @@ const routes = [
           title: '购物车',
           navbar: {
             showTitle: false,
-            leftArrow: false,
+            leftArrow: false
           },
-          tabbar: true,
-        },
+          tabbar: true
+        }
       },
       {
         path: '/center',
         component: () => import('@/views/center/index.vue'),
         meta: {
           title: '关于我',
-          tabbar: true,
-        },
+          tabbar: true
+        }
       },
       {
         path: '/mockjs',
@@ -90,11 +90,11 @@ const routes = [
         meta: {
           title: 'Mockjs',
           navbar: {
-            showTitle: false,
+            showTitle: false
           },
           tabbar: false
         }
-      },
+      }
     ]
   }
 ]
@@ -103,7 +103,7 @@ const routes = [
 export const router = createRouter({
   history: createWebHashHistory(),
   routes: routes,
-  strict: true,
+  strict: true
   // scrollBehavior: (to, from, savedPosition) => ({ left: 0, top: 0 }),
 })
 

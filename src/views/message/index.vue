@@ -2,10 +2,6 @@
   <div>message</div>
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style lang="less">
-
-</style>
+<style lang="less"></style>

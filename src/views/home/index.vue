@@ -1,7 +1,17 @@
 <template>
   <van-cell-group title="jweixin-1.6.0">
-    <van-cell title="scanQRCode" :value="'' + ready" is-link @click="scanQRCode" />
-    <van-cell title="previewImage" :value="'' + ready" is-link @click="previewImage" />
+    <van-cell
+      title="scanQRCode"
+      :value="'' + ready"
+      is-link
+      @click="scanQRCode"
+    />
+    <van-cell
+      title="previewImage"
+      :value="'' + ready"
+      is-link
+      @click="previewImage"
+    />
   </van-cell-group>
   <van-cell-group title="jweixin-auth">
     <van-cell title="auth" :label="code" is-link @click="auth" />
@@ -38,6 +48,4 @@ const previewImage = () => {
 const auth = () => authorize()
 </script>
 
-<style lang="less">
-
-</style>
+<style lang="less"></style>

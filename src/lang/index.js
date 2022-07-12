@@ -14,7 +14,7 @@ import cache from '@/utils/cache'
 
 const messages = {
   en: enLocale,
-  zh: zhLocale,
+  zh: zhLocale
 }
 
 const options = {
@@ -27,7 +27,9 @@ export function getLanguage() {
   if (chooseLanguage) return chooseLanguage
 
   // if has not choose language
-  const language = (navigator.language || navigator.browserLanguage).toLowerCase()
+  const language = (
+    navigator.language || navigator.browserLanguage
+  ).toLowerCase()
   const locales = Object.keys(messages)
   for (const locale of locales) {
     if (language.indexOf(locale) > -1) {

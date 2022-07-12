@@ -1,7 +1,12 @@
 <template>
   <div
     class="divider"
-    :class="[_type, className, {'divider-dashed': dashed}, {'divider-with-text':$slots && $slots.default}]"
+    :class="[
+      _type,
+      className,
+      { 'divider-dashed': dashed },
+      { 'divider-with-text': $slots && $slots.default }
+    ]"
   >
     <div class="divider-inner-text" v-if="$slots && $slots.default">
       <slot></slot>

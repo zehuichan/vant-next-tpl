@@ -10,10 +10,10 @@ const http = axios.create({
 })
 
 http.interceptors.request.use(
-  config => {
+  (config) => {
     return config
   },
-  error => {
+  (error) => {
     console.log(`err,${error}`)
     return Promise.reject(error)
   }
@@ -24,7 +24,11 @@ http.interceptors.response.use(
     const code = response.status
     if (code < 200 || code > 300) {
       Toast(`status: ${res.code}, ${message}`)
-      return Promise.reject({ message: message, name: 'httpRequestError', response })
+      return Promise.reject({
+        message: message,
+        name: 'httpRequestError',
+        response
+      })
     } else {
       return response.data
     }

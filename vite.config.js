@@ -11,7 +11,7 @@ const { name, version } = pkg
 const __APP_INFO__ = {
   name,
   version,
-  lastBuildTime: dayjs().format(),
+  lastBuildTime: dayjs().format('YYYY-MM-DD HH:mm:ss')
 }
 
 function resolve(dir) {
@@ -34,18 +34,13 @@ export default ({ command, mode }) => {
     base: VITE_PUBLIC_PATH,
     root: root,
     define: {
-      __APP_INFO__: JSON.stringify(__APP_INFO__),
+      __APP_INFO__: JSON.stringify(__APP_INFO__)
     },
     plugins: createVitePlugins(viteEnv, isBuild),
-    resolve: {
-      alias: {
-        '@': resolve('src')
-      }
-    },
     css: {
       preprocessorOptions: {
         less: {
-          additionalData: `@import "@/assets/less/var.less";`,
+          additionalData: `@import "@/assets/less/var.less";`
         }
       }
     },
@@ -62,18 +57,15 @@ export default ({ command, mode }) => {
         compress: {
           keep_infinity: true,
           // Used to delete console in production environment
-          drop_console: VITE_DROP_CONSOLE,
-        },
+          drop_console: VITE_DROP_CONSOLE
+        }
       },
       // Turning off brotliSize display can slightly reduce packaging time
       brotliSize: false,
-      chunkSizeWarningLimit: 2000,
+      chunkSizeWarningLimit: 2000
     },
     optimizeDeps: {
-      include: [
-        '@vue/runtime-core',
-        '@vue/shared',
-      ]
-    },
+      include: ['@vue/runtime-core', '@vue/shared']
+    }
   }
 }

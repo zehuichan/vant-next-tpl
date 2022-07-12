@@ -25,12 +25,9 @@ export function setupRouterGuard(router) {
         next('/500')
       }
     }
-
   })
 
-  router.afterEach((to, from) => {
-
-  })
+  router.afterEach((to, from) => {})
 
   router.onError((error) => {
     console.log(error, '路由错误')

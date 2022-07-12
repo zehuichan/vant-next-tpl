@@ -14,7 +14,9 @@ export default {
     safeAreaInsetTop: true
   },
 
-  // todo tabbar default options
+  /**
+   * tabbar default options
+   */
   tabbar: {
     route: true,
     fixed: true,

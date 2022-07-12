@@ -4,7 +4,7 @@ import { useStorage } from '@vueuse/core'
 export const useAppStore = defineStore({
   id: 'app',
   state: () => ({
-    mode: useStorage('vantTheme', 'light'),
+    mode: useStorage('vantTheme', 'light')
   }),
   getters: {
     isDark() {
@@ -15,5 +15,5 @@ export const useAppStore = defineStore({
     changeMode(mode) {
       this.mode = mode
     }
-  },
+  }
 })

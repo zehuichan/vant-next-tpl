@@ -1,5 +1,3 @@
 const whiteList = []
 
-
-export function createPermissionGuard(router) {
-}
+export function createPermissionGuard(router) {}

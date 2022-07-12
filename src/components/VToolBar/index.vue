@@ -2,10 +2,10 @@
   <div class="v-tool-bar__placeholder">
     <div class="v-tool-bar van-clearfix">
       <div class="fl">
-        <slot name="extra"/>
+        <slot name="extra" />
       </div>
-      <div class="fr" :class="'v-tool-bar__'+ align">
-        <slot/>
+      <div class="fr" :class="'v-tool-bar__' + align">
+        <slot />
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@ export default defineComponent({
   props: {
     align: {
       type: String,
-      default: 'left',
+      default: 'left'
     }
   }
 })
