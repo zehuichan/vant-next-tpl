@@ -1,13 +1,11 @@
 import { defineStore } from 'pinia'
-import { store } from '../'
+import { store } from '..'
 
 export const useErrorLogStore = defineStore({
   id: 'errorLog',
-  state: () => {
-    return {
-      logs: []
-    }
-  },
+  state: () => ({
+    logs: []
+  }),
   actions: {
     addErrorLog(log) {
       this.logs.push(log)
@@ -18,6 +16,7 @@ export const useErrorLogStore = defineStore({
   }
 })
 
+// Need to be used outside the setup
 export function useErrorLogStoreWithOut() {
   return useErrorLogStore(store)
 }

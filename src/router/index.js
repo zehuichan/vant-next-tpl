@@ -12,11 +12,6 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 // basic components
 import Layout from '@/layout/index.vue'
 
-const RouteView = {
-  name: 'RouteView',
-  render: (h) => h('router-view')
-}
-
 const routes = [
   { path: '/:pathMatch(.*)', redirect: '/404' },
   { path: '/403', component: () => import('@/views/error-page/403.vue') },
@@ -101,7 +96,7 @@ const routes = [
 
 // init router
 export const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHashHistory(import.meta.env.VITE_PUBLIC_PATH),
   routes: routes,
   strict: true
   // scrollBehavior: (to, from, savedPosition) => ({ left: 0, top: 0 }),

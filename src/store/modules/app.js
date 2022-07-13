@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
+import { store } from '..'
 
 export const useAppStore = defineStore({
   id: 'app',
@@ -17,3 +18,8 @@ export const useAppStore = defineStore({
     }
   }
 })
+
+// Need to be used outside the setup
+export function useAppStoreWithOut() {
+  return useAppStore(store)
+}

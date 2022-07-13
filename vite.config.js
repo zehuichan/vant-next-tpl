@@ -37,6 +37,11 @@ export default ({ command, mode }) => {
       __APP_INFO__: JSON.stringify(__APP_INFO__)
     },
     plugins: createVitePlugins(viteEnv, isBuild),
+    resolve: {
+      alias: {
+        '@': resolve('src')
+      }
+    },
     css: {
       preprocessorOptions: {
         less: {

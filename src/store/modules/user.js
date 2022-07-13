@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia'
+import { store } from '..'
 
 export const useUserStore = defineStore({
   id: 'user',
-  state: () => {
-    return {
-      token: undefined,
-      userinfo: null
-    }
-  },
+  state: () => ({
+    token: undefined,
+    userinfo: null
+  }),
   getters: {},
   actions: {
     async getUserInfo() {
@@ -27,3 +26,7 @@ export const useUserStore = defineStore({
     }
   }
 })
+
+export function useUserStoreWithOut() {
+  return useUserStore(store)
+}
