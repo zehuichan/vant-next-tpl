@@ -2,11 +2,13 @@
 
 ## description
 
-base vue3 + router@4 + vuex@4 + vant@next
+base on vue3 + router@4 + vueuse + vant@4
 
 also support pinia
 
 default store for pinia
+
+## updates
 
 npx npm-check-updates -u
 
