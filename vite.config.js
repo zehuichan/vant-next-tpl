@@ -45,7 +45,7 @@ export default ({ command, mode }) => {
     css: {
       preprocessorOptions: {
         less: {
-          additionalData: `@import "@/assets/less/var.less";`
+          additionalData: `@import "@/styles/var.less";`
         }
       }
     },

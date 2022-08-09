@@ -15,6 +15,7 @@
   </van-cell-group>
   <van-cell-group title="jweixin-auth">
     <van-cell title="auth" :label="code" is-link @click="auth" />
+    <van-cell title="showToast" is-link @click="() => showToast(123)" />
   </van-cell-group>
 </template>
 
@@ -23,6 +24,7 @@ import { useAuth, useWeixin } from '@/hooks'
 
 const [ready, wx] = useWeixin()
 const [code, authorize] = useAuth()
+import { showToast } from 'vant'
 
 const scanQRCode = () => {
   wx.value.scanQRCode({

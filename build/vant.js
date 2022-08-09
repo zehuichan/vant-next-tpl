@@ -3,6 +3,6 @@ import { VantResolver } from 'unplugin-vue-components/resolvers'
 
 export function configVantPlugin() {
   return Components({
-    resolvers: [VantResolver()],
+    resolvers: [VantResolver()]
   })
 }

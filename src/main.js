@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 
 // global css
-import './assets/less/index.less'
+import './styles/index.less'
 
 import { setupVant } from './plugins/vant'
 import { setupStore } from './store'
